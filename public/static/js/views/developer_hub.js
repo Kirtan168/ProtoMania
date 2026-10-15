@@ -10,7 +10,7 @@ import { showToast } from "../components/toast.js";
 export async function renderDeveloperHubView(container) {
   let activeTab = "overview"; // 'overview', 'apis', 'schema', 'flows', 'security', 'diagnostics'
 
-  // 2-SECOND INTERLOCKING GEARS TRANSITION
+  // 4-SECOND INTERLOCKING GEARS TRANSITION
   container.innerHTML = `
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex items-center justify-center min-h-[70vh]">
       <div id="dev-gear-transition" class="w-full max-w-xl card-proto p-8 sm:p-12 border-[#D8FF3E]/40 bg-[#141812] flex flex-col items-center justify-center space-y-6 relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]">
@@ -21,7 +21,7 @@ export async function renderDeveloperHubView(container) {
         <div class="relative z-10 flex items-center space-x-2 text-xs font-mono text-[#D8FF3E] bg-[#1B1E19] px-4 py-1.5 rounded-full border border-[#D8FF3E]/30 shadow-[0_0_15px_rgba(216,255,62,0.15)]">
           <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-ping"></span>
           <span class="font-bold tracking-widest">DEVELOPER HUB INITIALIZING</span>
-          <span class="text-[#858A80]">SYS.ENG // 2.0</span>
+          <span class="text-[#858A80]">SYS.ENG // EVAL</span>
         </div>
 
         <!-- INTERLOCKING 3D GEARS STAGE -->
@@ -58,7 +58,7 @@ export async function renderDeveloperHubView(container) {
               <circle cx="262" cy="150" r="20" fill="#111410" stroke="#34382F" stroke-width="1.8" />
               <circle cx="262" cy="150" r="8" fill="#858A80" />
               <line x1="262" y1="133" x2="262" y2="167" stroke="#111410" stroke-width="2" />
-              <line x1="245" y1="150" x2="279" y2="150" stroke="#111410" stroke-width="2" />
+              <line x1="245" y1="150" x2="279" y2="150" stroke="#111410" stroke-width="2.5" />
             </g>
 
             <!-- Gear 3: Planetary Violet High-Speed Gear (Counter-Clockwise Fast) -->
@@ -70,13 +70,13 @@ export async function renderDeveloperHubView(container) {
           </svg>
         </div>
 
-        <!-- Live Telemetry Ticker & 2s Progress -->
+        <!-- Live Telemetry Ticker & 4s Progress -->
         <div class="relative z-10 flex flex-col items-center space-y-3 w-full max-w-md">
           <div id="dev-gear-status-text" class="text-xs font-mono text-[#D8FF3E] tracking-wider text-center h-4 transition-all duration-200">
             INITIALIZING SYSTEM ARCHITECTURE...
           </div>
           
-          <!-- Animated 2-Second Progress Bar -->
+          <!-- Animated 4-Second Progress Bar -->
           <div class="w-full bg-[#1B1E19] h-2 rounded-full overflow-hidden border border-[#34382F]/80 p-0.5">
             <div id="dev-gear-progress-bar" class="h-full bg-gradient-to-r from-[#D8FF3E] via-[#c4ec2a] to-[#9C8AFF] rounded-full transition-all ease-linear" style="width: 0%; box-shadow: 0 0 14px rgba(216,255,62,0.6);"></div>
           </div>
@@ -90,11 +90,11 @@ export async function renderDeveloperHubView(container) {
     </div>
   `;
 
-  // Start smooth 2s progress bar animation
+  // Start smooth 4s progress bar animation
   requestAnimationFrame(() => {
     const pBar = document.getElementById('dev-gear-progress-bar');
     if (pBar) {
-      pBar.style.transition = 'width 2000ms cubic-bezier(0.2, 0.8, 0.4, 1)';
+      pBar.style.transition = 'width 4000ms cubic-bezier(0.2, 0.8, 0.4, 1)';
       pBar.style.width = '100%';
     }
   });
@@ -104,18 +104,23 @@ export async function renderDeveloperHubView(container) {
 
   const step1 = setTimeout(() => {
     if (pText) pText.textContent = "SYNCHRONIZING 24+ REST API ENDPOINTS...";
-    if (pPct) pPct.textContent = "45%";
-  }, 650);
+    if (pPct) pPct.textContent = "28%";
+  }, 950);
 
   const step2 = setTimeout(() => {
-    if (pText) pText.textContent = "VERIFYING DATABASE SCHEMAS & LATENCY...";
-    if (pPct) pPct.textContent = "80%";
-  }, 1300);
+    if (pText) pText.textContent = "INSPECTING SQLITE DATABASE SCHEMAS & TABLES...";
+    if (pPct) pPct.textContent = "58%";
+  }, 1950);
 
   const step3 = setTimeout(() => {
+    if (pText) pText.textContent = "CALCULATING QUERY LATENCY & REPOSITORY HEALTH...";
+    if (pPct) pPct.textContent = "84%";
+  }, 2950);
+
+  const step4 = setTimeout(() => {
     if (pText) pText.textContent = "ACCESS GRANTED // OPENING DEVELOPER HUB";
     if (pPct) pPct.textContent = "100%";
-  }, 1900);
+  }, 3750);
 
   try {
     const [overview, apisData, schemaData, healthData] = await Promise.all([
@@ -123,18 +128,19 @@ export async function renderDeveloperHubView(container) {
       api.getDevApis(),
       api.getDevSchema(),
       api.getDevHealth(),
-      new Promise(resolve => setTimeout(resolve, 2000)) // Exact 2.0s gear transition
+      new Promise(resolve => setTimeout(resolve, 4000)) // Exact 4.0s gear transition
     ]);
 
     clearTimeout(step1);
     clearTimeout(step2);
     clearTimeout(step3);
+    clearTimeout(step4);
 
     // Opening Page Transition (Gears exit smoothly)
     const transCard = document.getElementById('dev-gear-transition');
     if (transCard) {
       transCard.classList.add('dev-transition-exit');
-      await new Promise(resolve => setTimeout(resolve, 350));
+      await new Promise(resolve => setTimeout(resolve, 380));
     }
 
     renderPortal(overview, apisData, schemaData, healthData);

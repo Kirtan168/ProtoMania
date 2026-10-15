@@ -321,3 +321,134 @@ h1, h2, h3, .font-heading {
 .hero-tilt:hover {
   transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-4px);
 }
+
+/* =========================================================
+   CINEMATIC OPENING INTRO (DUMBBELL SLAM & GYM DOORS SPLIT)
+   ========================================================= */
+
+@keyframes screenSlamShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-8px, 12px) rotate(-1.5deg); }
+  30% { transform: translate(7px, -9px) rotate(1.2deg); }
+  45% { transform: translate(-5px, 6px) rotate(-0.8deg); }
+  60% { transform: translate(4px, -4px) rotate(0.4deg); }
+  80% { transform: translate(-2px, 2px) rotate(-0.2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.intro-screen-shake {
+  animation: screenSlamShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shockwaveExpandAnim {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 40px rgba(216, 255, 62, 0.8), inset 0 0 20px rgba(216, 255, 62, 0.8);
+  }
+  60% {
+    opacity: 0.85;
+    box-shadow: 0 0 70px rgba(216, 255, 62, 0.6), inset 0 0 40px rgba(216, 255, 62, 0.4);
+  }
+  100% {
+    width: 900px;
+    height: 900px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 100px rgba(216, 255, 62, 0);
+  }
+}
+
+.intro-shockwave-active {
+  animation: shockwaveExpandAnim 0.75s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+/* Hero Revealed Stagger Sequence */
+.hero-revealed #hero-main-title {
+  animation: heroTitleEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-revealed #hero-budget-planner {
+  animation: heroPlannerEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+@keyframes heroTitleEnter {
+  0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes heroPlannerEnter {
+  0% { opacity: 0; transform: translateY(40px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Gen Z Staggered Cards Entrance */
+.stagger-1 { animation: staggerIn 0.35s ease-out 0.05s both; }
+.stagger-2 { animation: staggerIn 0.35s ease-out 0.12s both; }
+.stagger-3 { animation: staggerIn 0.35s ease-out 0.19s both; }
+.stagger-4 { animation: staggerIn 0.35s ease-out 0.26s both; }
+
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Gen Z Gaming Interactive Button */
+.btn-acid-gaming {
+  background: linear-gradient(135deg, #D8FF3E 0%, #b8e622 100%);
+  color: #111410;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(216, 255, 62, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-acid-gaming:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 35px rgba(216, 255, 62, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-acid-gaming:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Custom Neon Budget Slider */
+input[type=range].slider-cyber {
+  -webkit-appearance: none;
+  background: #1B1E19;
+  height: 8px;
+  border-radius: 9999px;
+  border: 1px solid #34382F;
+  outline: none;
+}
+
+input[type=range].slider-cyber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #D8FF3E;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(216, 255, 62, 0.8), 0 0 0 3px #111410;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type=range].slider-cyber::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 24px rgba(216, 255, 62, 1), 0 0 0 4px #111410;
+}
+
+input[type=range].slider-cyber::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #D8FF3E;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 16px rgba(216, 255, 62, 0.8);
+}
+

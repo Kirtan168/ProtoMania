@@ -7,6 +7,7 @@
 import { api } from "../api.js";
 import { state } from "../state.js";
 import { showToast } from "../components/toast.js";
+import { animateValue } from "../utils.js";
 
 export async function renderMealsView(container) {
   let activeMode = "hostel";
@@ -47,7 +48,7 @@ export async function renderMealsView(container) {
           </div>
 
           <!-- Top CTA: Grocery List -->
-          <button id="open-grocery-btn" class="btn-acid text-xs px-4 py-2.5 font-bold flex items-center space-x-2 shadow-md self-start md:self-auto">
+          <button id="open-grocery-btn" class="btn-acid text-xs px-4 py-2.5 font-bold flex items-center space-x-2 shadow-md self-start md:self-auto cursor-pointer">
             <i data-lucide="shopping-bag" class="w-4 h-4 fill-current"></i>
             <span>Generate 7-Day Grocery List</span>
           </button>
@@ -64,7 +65,7 @@ export async function renderMealsView(container) {
               { id: 'exam_week', label: 'Exam-Week Mode' },
               { id: 'veg_muscle', label: 'Veg Muscle Mode' }
             ].map(m => `
-              <button class="mode-btn px-3 py-1.5 rounded-lg border transition-all ${activeMode === m.id ? 'border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold' : 'border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]'}" data-mode="${m.id}">
+              <button class="mode-btn px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${activeMode === m.id ? 'border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold' : 'border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]'}" data-mode="${m.id}">
                 ${m.label}
               </button>
             `).join('')}
@@ -75,26 +76,26 @@ export async function renderMealsView(container) {
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
           <div class="card-proto p-4 space-y-1">
             <span class="text-[10px] text-[#858A80]">Total Planned Protein</span>
-            <div class="text-xl font-bold text-[#D8FF3E]">${plan.total_protein_g}g</div>
+            <div id="meal-stat-protein" class="text-xl font-bold text-[#D8FF3E]">${plan.total_protein_g}g</div>
           </div>
           <div class="card-proto p-4 space-y-1">
             <span class="text-[10px] text-[#858A80]">Total Daily Calories</span>
-            <div class="text-xl font-bold text-[#F4F5EF]">${plan.total_calories} kcal</div>
+            <div id="meal-stat-calories" class="text-xl font-bold text-[#F4F5EF]">${plan.total_calories} kcal</div>
           </div>
           <div class="card-proto p-4 space-y-1">
             <span class="text-[10px] text-[#858A80]">Estimated Cost</span>
-            <div class="text-xl font-bold text-[#F4F5EF]">₹${plan.total_price_inr}</div>
+            <div id="meal-stat-cost" class="text-xl font-bold text-[#F4F5EF]">₹${plan.total_price_inr}</div>
           </div>
           <div class="card-proto p-4 space-y-1">
             <span class="text-[10px] text-[#858A80]">Budget Remaining</span>
-            <div class="text-xl font-bold ${plan.budget_remaining_inr >= 0 ? 'text-[#D8FF3E]' : 'text-red-400'}">₹${plan.budget_remaining_inr}</div>
+            <div id="meal-stat-remaining" class="text-xl font-bold ${plan.budget_remaining_inr >= 0 ? 'text-[#D8FF3E]' : 'text-red-400'}">₹${plan.budget_remaining_inr}</div>
           </div>
         </div>
 
         <!-- Meal Cards Timeline -->
         <div class="space-y-6">
           ${plan.meals.map((m, idx) => `
-            <div class="card-proto p-6 border-[#34382F] hover:border-[#D8FF3E]/30 transition-all space-y-5">
+            <div class="stagger-${Math.min(idx + 1, 4)} card-proto p-6 border-[#34382F] hover:border-[#D8FF3E]/30 transition-all space-y-5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#34382F] pb-4">
                 <div class="flex items-center space-x-3">
                   <span class="w-8 h-8 rounded-full bg-[#D8FF3E]/10 text-[#D8FF3E] flex items-center justify-center font-mono font-bold text-xs">
@@ -154,6 +155,10 @@ export async function renderMealsView(container) {
     `;
 
     if (window.lucide) window.lucide.createIcons();
+    animateValue(document.getElementById("meal-stat-protein"), 0, plan.total_protein_g, 500, "", "g");
+    animateValue(document.getElementById("meal-stat-calories"), 0, plan.total_calories, 500, "", " kcal");
+    animateValue(document.getElementById("meal-stat-cost"), 0, plan.total_price_inr, 500, "₹", "");
+    animateValue(document.getElementById("meal-stat-remaining"), 0, plan.budget_remaining_inr, 500, "₹", "");
     attachListeners();
   }
 

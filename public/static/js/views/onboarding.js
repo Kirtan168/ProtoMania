@@ -302,7 +302,7 @@ export function renderOnboardingView(container) {
               <span class="text-xs text-[#858A80] font-bold">Adjust Daily Amount:</span>
               <span class="text-2xl font-mono font-black text-[#D8FF3E]">₹<span id="budget-display">${data.daily_budget_inr}</span> <span class="text-xs text-[#858A80]">/ day</span></span>
             </div>
-            <input type="range" id="input-budget-slider" min="30" max="300" step="5" value="${data.daily_budget_inr}" class="w-full accent-[#D8FF3E] cursor-pointer" />
+            <input type="range" id="input-budget-slider" min="30" max="300" step="5" value="${data.daily_budget_inr}" class="slider-cyber w-full cursor-pointer" />
             <div class="flex justify-between text-[10px] text-[#858A80] font-mono">
               <span>₹30 (Ultra Budget)</span>
               <span>₹80 (Balanced Student)</span>

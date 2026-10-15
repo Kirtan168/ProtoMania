@@ -73,13 +73,23 @@ export function initFooter() {
           <div>
             © 2026 <strong class="text-[#F4F5EF]">PROTOMANIA</strong>. Your Body. Your Budget. Your Era.
           </div>
-          <div class="mt-2 sm:mt-0 font-mono text-[10px]">
-            Academic Capstone System • Python 3.14 + FastAPI + SQLite
+          <div class="mt-2 sm:mt-0 flex items-center space-x-4">
+            <button id="footer-replay-intro-btn" class="hover:text-[#D8FF3E] transition-colors flex items-center space-x-1 cursor-pointer font-mono text-[10px]" title="Replay Opening Animation">
+              <i data-lucide="play" class="w-3 h-3 text-[#D8FF3E]"></i>
+              <span>Replay Intro</span>
+            </button>
+            <span class="font-mono text-[10px]">
+              Academic Capstone System • Python 3.14 + FastAPI + SQLite
+            </span>
           </div>
         </div>
       </div>
     </footer>
   `;
+
+  document.getElementById("footer-replay-intro-btn")?.addEventListener("click", () => {
+    if (window.replayIntro) window.replayIntro();
+  });
 
   if (window.lucide) window.lucide.createIcons();
 }

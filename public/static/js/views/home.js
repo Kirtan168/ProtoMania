@@ -1,68 +1,87 @@
 /**
  * PROTOMANIA Homepage View
  * Bold, high-energy landing experience for college students and young adults in India.
+ * Features the Live Interactive Budget-Based Diet Recommender as the STAR of the homepage.
  */
 
 import { renderProtoMark } from "../components/logo.js";
+import { api } from "../api.js";
+import { animateValue } from "../utils.js";
 
 export function renderHomeView(container) {
+  let heroBudget = 80;
+  let heroDiet = "vegetarian";
+  let lastSolved = null;
+
   container.innerHTML = `
     <div class="space-y-24">
       <!-- HERO SECTION -->
-      <section class="relative pt-6 pb-12 lg:pt-14 lg:pb-20 overflow-hidden">
+      <section class="relative pt-4 pb-12 lg:pt-10 lg:pb-16 overflow-hidden">
         <!-- Background Ambient Glow -->
-        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-[#D8FF3E]/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[380px] bg-[#D8FF3E]/12 blur-[140px] rounded-full pointer-events-none -z-10 animate-float-slow"></div>
+        <div class="absolute top-40 right-10 w-[450px] h-[350px] bg-[#9C8AFF]/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
             <!-- Hero Left Copy -->
-            <div class="lg:col-span-7 space-y-6">
-              <div class="inline-flex items-center space-x-2 bg-[#1B1E19] border border-[#34382F] px-3 py-1.5 rounded-full text-xs font-mono">
-                <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-pulse"></span>
-                <span class="text-[#D8FF3E] font-bold">BUDGET-FIRST FITNESS AI</span>
-                <span class="text-[#858A80]">| Built for College Life</span>
+            <div id="hero-main-title" class="lg:col-span-6 space-y-6">
+              <!-- Top Tech Pills -->
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="inline-flex items-center space-x-2 bg-[#1B1E19] border border-[#34382F] px-3 py-1.5 rounded-full text-xs font-mono">
+                  <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-pulse"></span>
+                  <span class="text-[#D8FF3E] font-bold">BUDGET-FIRST FITNESS AI</span>
+                  <span class="text-[#858A80]">| Gen Z Era</span>
+                </div>
+
+                <!-- Replay Cinematic Opening Animation Button -->
+                <button id="hero-replay-intro-btn" class="badge-sticker cursor-pointer text-[10px] py-1 px-2.5 hover:scale-105 transition-transform" title="Replay Dumbbell Slam Intro">
+                  <svg class="w-3 h-3 text-[#D8FF3E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 5v14M18 5v14M6 12h12"/></svg>
+                  <span>REPLAY OPENING INTRO</span>
+                </button>
               </div>
 
-              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#F4F5EF] leading-[1.05]">
+              <!-- Main Bold Editorial Headline -->
+              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#F4F5EF] leading-[1.03]">
                 YOUR BODY.<br/>
                 <span class="text-[#D8FF3E] underline decoration-[#D8FF3E]/30 underline-offset-8">YOUR BUDGET.</span><br/>
                 YOUR ERA.
               </h1>
 
-              <p class="text-base sm:text-lg text-[#858A80] max-w-xl leading-relaxed">
-                Your AI-powered fitness companion for affordable protein, personalized workouts, and smarter progress. Built for your goals, your lifestyle, and your student budget.
+              <p class="text-sm sm:text-base text-[#858A80] max-w-xl leading-relaxed">
+                Your AI fitness companion for affordable protein, personalized workouts, and smarter progress. Built for your real living conditions and student pocket money.
               </p>
 
-              <!-- CTAs -->
-              <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
-                <a href="#/onboarding" class="btn-acid px-8 py-3.5 text-center text-sm font-bold flex items-center justify-center space-x-2 shadow-lg">
+              <!-- Main CTAs -->
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 pt-1">
+                <a href="#/onboarding" class="btn-acid px-7 py-3.5 text-center text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 shadow-lg">
                   <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
-                  <span>Build My Fitness Plan</span>
+                  <span>Build My Full 5-Step Plan</span>
                 </a>
-                <a href="#/optimizer" class="btn-ghost px-6 py-3.5 text-center text-sm font-semibold flex items-center justify-center space-x-2">
-                  <i data-lucide="calculator" class="w-4 h-4"></i>
-                  <span>Explore Budget Meals</span>
+                <a href="#/optimizer" class="btn-ghost px-5 py-3.5 text-center text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                  <i data-lucide="calculator" class="w-4 h-4 text-[#D8FF3E]"></i>
+                  <span>Full Protein Optimizer</span>
                 </a>
               </div>
 
-              <!-- Value Points -->
-              <div class="pt-4 grid grid-cols-3 gap-4 border-t border-[#34382F]/60 text-xs">
+              <!-- Quick Value Stats Strip -->
+              <div class="pt-3 grid grid-cols-3 gap-3 border-t border-[#34382F]/60 text-xs">
                 <div>
-                  <div class="font-mono font-bold text-lg text-[#F4F5EF]">₹12<span class="text-xs text-[#858A80]">/day</span></div>
-                  <div class="text-[#858A80]">26g Protein (Soya)</div>
+                  <div class="font-mono font-bold text-base sm:text-lg text-[#F4F5EF]">₹12<span class="text-xs text-[#858A80]">/day</span></div>
+                  <div class="text-[11px] text-[#858A80]">26g Protein (Soya)</div>
                 </div>
                 <div>
-                  <div class="font-mono font-bold text-lg text-[#D8FF3E]">0 Fake Whey</div>
-                  <div class="text-[#858A80]">Whole Indian Staples</div>
+                  <div class="font-mono font-bold text-base sm:text-lg text-[#D8FF3E]">0 Scam Whey</div>
+                  <div class="text-[11px] text-[#858A80]">Real Indian Staples</div>
                 </div>
                 <div>
-                  <div class="font-mono font-bold text-lg text-[#9C8AFF]">Hostel Mode</div>
-                  <div class="text-[#858A80]">Kettle & Mess Friendly</div>
+                  <div class="font-mono font-bold text-base sm:text-lg text-[#9C8AFF]">Hostel Mode</div>
+                  <div class="text-[11px] text-[#858A80]">Kettle & Mess Ready</div>
                 </div>
               </div>
 
-              <!-- Gen Z Floating Holographic Badges -->
-              <div class="flex flex-wrap items-center gap-2 pt-2">
+              <!-- Streetwear Floating Badges -->
+              <div class="flex flex-wrap items-center gap-2 pt-1">
                 <div class="badge-sticker">
                   <i data-lucide="flame" class="w-3 h-3 text-[#D8FF3E]"></i>
                   <span>100% DESI GAINS</span>
@@ -73,66 +92,91 @@ export function renderHomeView(container) {
                 </div>
                 <div class="badge-sticker">
                   <i data-lucide="shield-check" class="w-3 h-3 text-[#D8FF3E]"></i>
-                  <span>₹80/DAY BUDGET LOCKED</span>
+                  <span>BUDGET INVIOLABLE</span>
                 </div>
               </div>
             </div>
 
-            <!-- Hero Right Visuals & Live Preview Card -->
-            <div class="lg:col-span-5 relative hero-tilt">
-              <!-- Real Authentic Gym Photography Frame -->
-              <div class="relative rounded-3xl overflow-hidden border border-[#D8FF3E]/40 shadow-2xl bg-[#1B1E19] glow-lime-sm">
-                <img 
-                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80" 
-                  alt="Young student training with progressive overload in gym" 
-                  class="w-full h-72 sm:h-80 object-cover opacity-85"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#111410] via-[#111410]/50 to-transparent"></div>
-
-                <!-- Floating Live Dashboard Preview Badge -->
-                <div class="absolute top-4 left-4 bg-[#111410]/90 backdrop-blur-md border border-[#D8FF3E]/40 px-3 py-1.5 rounded-xl flex items-center space-x-2 shadow-lg">
-                  <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-ping"></span>
-                  <span class="text-[11px] font-mono font-bold text-[#D8FF3E]">₹52 / 60g PROTEIN COMBO</span>
+            <!-- Hero Right Column: LIVE INSTANT BUDGET DIET RECOMMENDER (STAR OF HOMEPAGE) -->
+            <div id="hero-budget-planner" class="lg:col-span-6 relative">
+              <div class="card-proto p-6 sm:p-7 border-[#D8FF3E]/60 bg-gradient-to-b from-[#1B1E19]/95 via-[#161A14]/95 to-[#111410]/95 backdrop-blur-xl shadow-2xl relative overflow-hidden border-glow-pulse">
+                
+                <!-- Panel Header -->
+                <div class="flex items-center justify-between border-b border-[#34382F] pb-4">
+                  <div class="space-y-0.5">
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-ping"></span>
+                      <span class="text-[10px] font-mono uppercase tracking-widest text-[#D8FF3E] font-bold">ALGORITHMIC DIET ENGINE</span>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-[#F4F5EF] font-heading">
+                      Budget Diet Recommendation
+                    </h3>
+                  </div>
+                  <span class="badge-sticker text-[10px] px-2.5 py-1">
+                    ⚡ LIVE SOLVER
+                  </span>
                 </div>
 
-                <!-- Live Dashboard Card Overlay -->
-                <div class="relative p-5 -mt-20 m-4 rounded-xl bg-[#1B1E19]/95 backdrop-blur-md border border-[#34382F] space-y-4">
-                  <div class="flex items-center justify-between border-b border-[#34382F] pb-3">
-                    <div>
-                      <div class="text-[10px] uppercase font-mono text-[#858A80]">Today's Target</div>
-                      <div class="text-sm font-bold text-[#F4F5EF]">130g Protein • ₹80 Budget</div>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded bg-[#D8FF3E]/10 text-[#D8FF3E] font-mono font-bold">ON TRACK</span>
+                <!-- Interactive Budget Slider -->
+                <div class="space-y-3 pt-4">
+                  <div class="flex items-baseline justify-between">
+                    <span class="text-xs font-mono uppercase text-[#858A80] font-bold">My Daily Food Budget:</span>
+                    <span class="text-2xl sm:text-3xl font-mono font-black text-[#D8FF3E]">₹<span id="hero-budget-val">80</span> <span class="text-xs text-[#858A80]">/ day</span></span>
                   </div>
 
-                  <!-- Macro Progress Bar -->
-                  <div class="space-y-1.5">
-                    <div class="flex justify-between text-xs">
-                      <span class="text-[#858A80]">Protein Progress</span>
-                      <span class="font-bold text-[#D8FF3E]">95g / 130g (73%)</span>
-                    </div>
-                    <div class="w-full h-2 rounded-full bg-[#111410] overflow-hidden border border-[#34382F]">
-                      <div class="h-full bg-[#D8FF3E] rounded-full" style="width: 73%"></div>
-                    </div>
+                  <!-- Glowing Cyber Slider -->
+                  <input type="range" id="hero-budget-slider" min="30" max="200" step="5" value="80" class="slider-cyber w-full cursor-pointer" />
+
+                  <!-- Quick preset chips -->
+                  <div class="flex flex-wrap items-center justify-between gap-1.5 pt-1">
+                    <button type="button" class="hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer" data-val="50">
+                      ₹50 (Hostel)
+                    </button>
+                    <button type="button" class="hero-budget-chip px-2.5 py-1 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[11px] font-mono font-bold text-[#D8FF3E] transition-all cursor-pointer" data-val="80">
+                      ₹80 (Optimal)
+                    </button>
+                    <button type="button" class="hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer" data-val="100">
+                      ₹100 (Balanced)
+                    </button>
+                    <button type="button" class="hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer" data-val="150">
+                      ₹150 (Surplus)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Dietary Preference Filter -->
+                <div class="space-y-1.5 pt-4">
+                  <span class="text-[10px] font-mono uppercase text-[#858A80] font-bold block">Dietary Preference:</span>
+                  <div class="grid grid-cols-4 gap-1.5 text-[11px] font-mono">
+                    ${[
+                      { id: 'all', label: 'ALL' },
+                      { id: 'vegetarian', label: 'VEG' },
+                      { id: 'eggetarian', label: 'EGG' },
+                      { id: 'non_vegetarian', label: 'NON-VEG' }
+                    ].map(d => `
+                      <button type="button" class="hero-diet-chip py-1.5 rounded-lg border transition-all text-center cursor-pointer ${heroDiet === d.id ? 'border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold shadow-[0_0_12px_rgba(216,255,62,0.15)]' : 'border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]'}" data-diet="${d.id}">
+                        ${d.label}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <!-- High-Energy Gaming Solve CTA Button -->
+                <button id="hero-solve-btn" class="btn-acid-gaming w-full py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center justify-center space-x-2 mt-4 cursor-pointer">
+                  <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
+                  <span id="hero-btn-label">GENERATE BUDGET DIET RECOMMENDATION</span>
+                </button>
+
+                <!-- Live Results Display Container -->
+                <div id="hero-results-box" class="mt-4 pt-4 border-t border-[#34382F] space-y-3">
+                  <!-- Loading placeholder / Initial trigger -->
+                  <div id="hero-results-loading" class="hidden flex items-center justify-center py-8 text-[#858A80] space-x-2 font-mono text-xs">
+                    <i data-lucide="loader" class="w-5 h-5 animate-spin text-[#D8FF3E]"></i>
+                    <span class="text-[#D8FF3E]">SOLVING PROTEIN-PER-RUPEE KNAPSACK...</span>
                   </div>
 
-                  <!-- Quick Meal recommendation -->
-                  <div class="flex items-center space-x-3 bg-[#111410] p-2.5 rounded-lg border border-[#34382F]">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Textured_vegetable_protein.jpg" class="w-10 h-10 rounded-md object-cover" alt="Soya chunks meal" />
-                    <div class="flex-1 min-w-0">
-                      <div class="text-xs font-bold text-[#F4F5EF] truncate">Soya Chunks & Dal Mess Booster</div>
-                      <div class="text-[11px] text-[#858A80] font-mono">+26g Protein • Just ₹12</div>
-                    </div>
-                    <a href="#/optimizer" class="text-xs font-bold text-[#D8FF3E] hover:underline">View</a>
-                  </div>
-
-                  <div class="flex items-center justify-between text-[11px] text-[#858A80] pt-1">
-                    <span class="flex items-center space-x-1">
-                      <i data-lucide="flame" class="w-3.5 h-3.5 text-[#D8FF3E]"></i>
-                      <span>4-Day Iron Streak</span>
-                    </span>
-                    <span class="font-mono text-[#D8FF3E]">+150 XP today</span>
-                  </div>
+                  <!-- Actual Returned Diet Combination -->
+                  <div id="hero-results-content" class="space-y-3"></div>
                 </div>
               </div>
             </div>
@@ -480,5 +524,157 @@ export function renderHomeView(container) {
     </div>
   `;
 
+  // Attach Hero Replay Intro Listener
+  document.getElementById("hero-replay-intro-btn")?.addEventListener("click", () => {
+    if (window.replayIntro) window.replayIntro();
+  });
+
+  // Slider & Budget Display
+  const slider = document.getElementById("hero-budget-slider");
+  const budgetValDisplay = document.getElementById("hero-budget-val");
+  const btnLabel = document.getElementById("hero-btn-label");
+
+  if (slider && budgetValDisplay) {
+    slider.addEventListener("input", (e) => {
+      heroBudget = parseFloat(e.target.value);
+      budgetValDisplay.textContent = heroBudget;
+      if (btnLabel) btnLabel.textContent = `GENERATE BUDGET DIET PLAN (₹${heroBudget}/DAY)`;
+    });
+
+    slider.addEventListener("change", () => {
+      computeHeroDiet();
+    });
+  }
+
+  // Quick Preset Budget Chips
+  document.querySelectorAll(".hero-budget-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      heroBudget = parseFloat(chip.getAttribute("data-val"));
+      if (slider) slider.value = heroBudget;
+      if (budgetValDisplay) budgetValDisplay.textContent = heroBudget;
+
+      document.querySelectorAll(".hero-budget-chip").forEach(c => {
+        c.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer";
+      });
+      chip.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[11px] font-mono font-bold text-[#D8FF3E] transition-all cursor-pointer";
+
+      computeHeroDiet();
+    });
+  });
+
+  // Dietary Preference Chips
+  document.querySelectorAll(".hero-diet-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      heroDiet = chip.getAttribute("data-diet");
+      document.querySelectorAll(".hero-diet-chip").forEach(c => {
+        c.className = "hero-diet-chip py-1.5 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF] transition-all text-center cursor-pointer";
+      });
+      chip.className = "hero-diet-chip py-1.5 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold shadow-[0_0_12px_rgba(216,255,62,0.15)] transition-all text-center cursor-pointer";
+
+      computeHeroDiet();
+    });
+  });
+
+  // Solve Button
+  document.getElementById("hero-solve-btn")?.addEventListener("click", () => {
+    computeHeroDiet();
+  });
+
+  // Live Hero Diet Recommender Execution
+  async function computeHeroDiet() {
+    const loadingEl = document.getElementById("hero-results-loading");
+    const contentEl = document.getElementById("hero-results-content");
+    const btnLabelEl = document.getElementById("hero-btn-label");
+    const solveBtnEl = document.getElementById("hero-solve-btn");
+
+    if (loadingEl) loadingEl.classList.remove("hidden");
+    if (contentEl) contentEl.innerHTML = "";
+    if (btnLabelEl) btnLabelEl.textContent = "COMPUTING OPTIMAL STAPLES...";
+    if (solveBtnEl) solveBtnEl.disabled = true;
+
+    try {
+      const solved = await api.solveBudget({
+        budget_inr: heroBudget,
+        dietary_preference: heroDiet === "all" ? "vegetarian" : heroDiet,
+        hostel_only: false,
+        no_cook_only: false
+      });
+      lastSolved = solved;
+      renderHeroSolved(solved);
+    } catch (err) {
+      if (contentEl) {
+        contentEl.innerHTML = `<div class="p-3 text-center text-xs text-red-400">Error computing diet: ${err.message}</div>`;
+      }
+    } finally {
+      if (loadingEl) loadingEl.classList.add("hidden");
+      if (btnLabelEl) btnLabelEl.textContent = `GENERATE BUDGET DIET PLAN (₹${heroBudget}/DAY)`;
+      if (solveBtnEl) solveBtnEl.disabled = false;
+      if (window.lucide) window.lucide.createIcons();
+    }
+  }
+
+  function renderHeroSolved(solved) {
+    const contentEl = document.getElementById("hero-results-content");
+    if (!contentEl) return;
+
+    contentEl.innerHTML = `
+      <!-- Animated Macro & Cost Tally -->
+      <div class="grid grid-cols-3 gap-2 bg-[#111410] p-2.5 rounded-xl border border-[#34382F] text-center font-mono">
+        <div>
+          <div class="text-[9px] uppercase text-[#858A80]">Total Protein</div>
+          <div id="hero-stat-protein" class="text-sm sm:text-base font-extrabold text-[#D8FF3E]">0g</div>
+        </div>
+        <div>
+          <div class="text-[9px] uppercase text-[#858A80]">Total Cost</div>
+          <div id="hero-stat-cost" class="text-sm sm:text-base font-extrabold text-[#F4F5EF]">₹0</div>
+        </div>
+        <div>
+          <div class="text-[9px] uppercase text-[#858A80]">Remaining</div>
+          <div id="hero-stat-remaining" class="text-sm sm:text-base font-extrabold text-[#9C8AFF]">₹0</div>
+        </div>
+      </div>
+
+      <!-- Solved Food Items Cards (Staggered Reveal) -->
+      <div class="space-y-2 pt-1 max-h-56 overflow-y-auto pr-1">
+        ${solved.items.map((item, idx) => `
+          <div class="stagger-${Math.min(idx + 1, 4)} flex items-center justify-between p-2 rounded-lg bg-[#111410] border border-[#34382F] hover:border-[#D8FF3E]/40 transition-colors">
+            <div class="flex items-center space-x-2.5 min-w-0">
+              <img src="${item.food.image_url}" alt="${item.food.name}" class="w-9 h-9 rounded-md object-cover border border-[#34382F] flex-shrink-0" />
+              <div class="min-w-0">
+                <h5 class="text-xs font-bold text-[#F4F5EF] truncate">${item.food.name}</h5>
+                <span class="text-[10px] text-[#858A80] font-mono">${item.servings > 1 ? `${item.servings}x servings` : item.food.serving_size}</span>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0 pl-2">
+              <span class="text-xs font-mono font-bold text-[#D8FF3E] block">+${item.total_protein_g}g P</span>
+              <span class="text-[10px] font-mono text-[#858A80]">₹${item.total_price_inr}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Verdict Tag & Full Optimizer Link -->
+      <div class="pt-2 flex items-center justify-between text-xs">
+        <span class="text-[11px] text-[#858A80] truncate max-w-[200px]">
+          Verdict: <strong class="text-[#D8FF3E] font-mono">${solved.verdict}</strong>
+        </span>
+        <a href="#/optimizer" class="text-[11px] font-bold text-[#D8FF3E] hover:underline flex items-center space-x-1">
+          <span>Open Full Solver</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    `;
+
+    // Trigger smooth count-up numbers
+    animateValue(document.getElementById("hero-stat-protein"), 0, solved.total_protein_g, 550, "+", "g");
+    animateValue(document.getElementById("hero-stat-cost"), 0, solved.total_cost_inr, 550, "₹", "");
+    animateValue(document.getElementById("hero-stat-remaining"), 0, solved.remaining_budget_inr, 550, "₹", "");
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  // Initial computation for ₹80 default budget
+  computeHeroDiet();
+
   if (window.lucide) window.lucide.createIcons();
 }
+

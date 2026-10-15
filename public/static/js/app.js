@@ -4,6 +4,7 @@
 
 import { initNavbar } from "./components/navbar.js";
 import { initFooter } from "./components/footer.js";
+import { initCinematicIntro } from "./components/intro.js";
 import { state } from "./state.js";
 import { api } from "./api.js";
 
@@ -82,6 +83,10 @@ async function initApp() {
       console.warn("Guest session unavailable:", guestErr);
     }
   }
+
+  // Trigger Cinematic Opening Intro (Dumbbell Drop & Gym Doors)
+  window.replayIntro = () => initCinematicIntro(true);
+  initCinematicIntro();
 
   // Routing
   window.addEventListener("hashchange", router);

@@ -7,6 +7,7 @@
 import { api } from "../api.js";
 import { state } from "../state.js";
 import { showToast } from "../components/toast.js";
+import { animateValue } from "../utils.js";
 
 export async function renderOptimizerView(container) {
   let activeBudget = 80;
@@ -80,7 +81,7 @@ export async function renderOptimizerView(container) {
                 <span class="text-xs font-mono uppercase tracking-wider text-[#858A80] font-bold">Daily Available Budget (₹)</span>
                 <span class="text-3xl font-mono font-black text-[#D8FF3E]">₹<span id="slider-budget-val">${activeBudget}</span> <span class="text-xs text-[#858A80]">/ day</span></span>
               </div>
-              <input type="range" id="budget-live-slider" min="30" max="250" step="5" value="${activeBudget}" class="w-full accent-[#D8FF3E] cursor-pointer" />
+              <input type="range" id="budget-live-slider" min="30" max="250" step="5" value="${activeBudget}" class="slider-cyber w-full cursor-pointer" />
               <div class="flex justify-between text-[10px] text-[#858A80] font-mono">
                 <span>₹30 Micro-Budget</span>
                 <span>₹50 Challenge</span>
@@ -94,16 +95,16 @@ export async function renderOptimizerView(container) {
             <div class="lg:w-96 space-y-2">
               <span class="text-[11px] font-mono uppercase text-[#858A80] font-bold block">Quick Actions:</span>
               <div class="flex flex-wrap gap-2">
-                <button class="quick-pill text-[11px] font-mono px-3 py-1.5 rounded-lg border border-[#D8FF3E]/30 bg-[#D8FF3E]/10 text-[#D8FF3E] hover:bg-[#D8FF3E] hover:text-[#111410] font-bold transition-all" data-preset="50_challenge">
+                <button class="quick-pill text-[11px] font-mono px-3 py-1.5 rounded-lg border border-[#D8FF3E]/30 bg-[#D8FF3E]/10 text-[#D8FF3E] hover:bg-[#D8FF3E] hover:text-[#111410] font-bold transition-all cursor-pointer" data-preset="50_challenge">
                   ⚡ ₹50 Protein Challenge
                 </button>
-                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]" data-preset="30_left">
+                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF] cursor-pointer" data-preset="30_left">
                   "I have ₹30 left"
                 </button>
-                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]" data-preset="25g_more">
+                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF] cursor-pointer" data-preset="25g_more">
                   "Need 25g more"
                 </button>
-                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF]" data-preset="no_kitchen">
+                <button class="quick-pill text-[11px] px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF] cursor-pointer" data-preset="no_kitchen">
                   "No Kitchen / Hostel"
                 </button>
               </div>
@@ -118,18 +119,18 @@ export async function renderOptimizerView(container) {
                 <h3 class="text-sm font-bold text-[#F4F5EF] font-mono">OPTIMAL COMBO UNLOCKED FOR ₹${activeBudget}</h3>
               </div>
               <div class="flex items-center space-x-3 text-xs font-mono">
-                <span class="text-[#D8FF3E] font-bold text-sm">+${solved.total_protein_g}g Protein</span>
+                <span id="opt-stat-protein" class="text-[#D8FF3E] font-bold text-sm">+${solved.total_protein_g}g Protein</span>
                 <span class="text-[#858A80]">|</span>
-                <span class="text-[#F4F5EF]">Cost: ₹${solved.total_cost_inr}</span>
+                <span id="opt-stat-cost" class="text-[#F4F5EF]">Cost: ₹${solved.total_cost_inr}</span>
                 <span class="text-[#858A80]">|</span>
-                <span class="text-[#858A80]">Change: ₹${solved.remaining_budget_inr}</span>
+                <span id="opt-stat-change" class="text-[#858A80]">Change: ₹${solved.remaining_budget_inr}</span>
               </div>
             </div>
 
-            <!-- Solved Items Row -->
+            <!-- Solved Items Row (Staggered Animation) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              ${solved.items.map(item => `
-                <div class="bg-[#111410] p-3 rounded-xl border border-[#34382F] flex items-center space-x-3">
+              ${solved.items.map((item, idx) => `
+                <div class="stagger-${Math.min(idx + 1, 4)} bg-[#111410] p-3 rounded-xl border border-[#34382F] hover:border-[#D8FF3E]/40 transition-colors flex items-center space-x-3">
                   <img src="${item.food.image_url}" alt="${item.food.name}" class="w-12 h-12 rounded-lg object-cover border border-[#34382F]" />
                   <div class="flex-1 min-w-0">
                     <h4 class="text-xs font-bold text-[#F4F5EF] truncate">${item.food.name}</h4>
@@ -138,7 +139,7 @@ export async function renderOptimizerView(container) {
                       +${item.total_protein_g}g P • ₹${item.total_price_inr}
                     </div>
                   </div>
-                  <button class="swap-btn p-1.5 rounded-lg border border-[#34382F] text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-colors" data-food-id="${item.food.id}" title="Swap with alternative">
+                  <button class="swap-btn p-1.5 rounded-lg border border-[#34382F] text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-colors cursor-pointer" data-food-id="${item.food.id}" title="Swap with alternative">
                     <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
@@ -250,6 +251,9 @@ export async function renderOptimizerView(container) {
     `;
 
     if (window.lucide) window.lucide.createIcons();
+    animateValue(document.getElementById("opt-stat-protein"), 0, solved.total_protein_g, 500, "+", "g Protein");
+    animateValue(document.getElementById("opt-stat-cost"), 0, solved.total_cost_inr, 500, "Cost: ₹", "");
+    animateValue(document.getElementById("opt-stat-change"), 0, solved.remaining_budget_inr, 500, "Change: ₹", "");
     attachListeners();
   }
 

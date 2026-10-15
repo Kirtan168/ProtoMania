@@ -114,7 +114,7 @@ def generate_daily_meal_plan(
         "price_inr": 15.0,
         "prep_time_min": 0,
         "instructions": "Quick energy 45 mins before training. Peanuts provide sustained fats, banana gives fast carbs.",
-        "image_url": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Roasted_peanuts_in_a_bowl.jpg/960px-Roasted_peanuts_in_a_bowl.jpg",
         "budget_swap": "Roasted Bhuna Chana for lower calories if cutting."
     }
 

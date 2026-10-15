@@ -258,28 +258,45 @@ def init_db():
     );
     """)
 
-    # Seed Foods table if empty
-    cursor.execute("SELECT COUNT(*) FROM foods")
-    count = cursor.fetchone()[0]
-    if count == 0:
-        for f in INDIAN_FOODS_DATASET:
-            cursor.execute("""
-            INSERT INTO foods (
-                id, name, hindi_name, category, dietary_type, serving_size,
-                serving_unit, serving_amount, protein_g, calories, carbs_g,
-                fat_g, price_inr, cost_per_10g_protein, prep_time_min,
-                prep_type, refrigeration_needed, is_hostel_friendly,
-                image_url, description
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                f["id"], f["name"], f["hindi_name"], f["category"], f["dietary_type"],
-                f["serving_size"], f["serving_unit"], f["serving_amount"], f["protein_g"],
-                f["calories"], f["carbs_g"], f["fat_g"], f["price_inr"],
-                f["cost_per_10g_protein"], f["prep_time_min"], f["prep_type"],
-                1 if f["refrigeration_needed"] else 0,
-                1 if f["is_hostel_friendly"] else 0,
-                f["image_url"], f["description"]
-            ))
+    # Seed & sync Foods table with latest verified dataset
+    for f in INDIAN_FOODS_DATASET:
+        cursor.execute("""
+        INSERT INTO foods (
+            id, name, hindi_name, category, dietary_type, serving_size,
+            serving_unit, serving_amount, protein_g, calories, carbs_g,
+            fat_g, price_inr, cost_per_10g_protein, prep_time_min,
+            prep_type, refrigeration_needed, is_hostel_friendly,
+            image_url, description
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+            name = excluded.name,
+            hindi_name = excluded.hindi_name,
+            category = excluded.category,
+            dietary_type = excluded.dietary_type,
+            serving_size = excluded.serving_size,
+            serving_unit = excluded.serving_unit,
+            serving_amount = excluded.serving_amount,
+            protein_g = excluded.protein_g,
+            calories = excluded.calories,
+            carbs_g = excluded.carbs_g,
+            fat_g = excluded.fat_g,
+            price_inr = excluded.price_inr,
+            cost_per_10g_protein = excluded.cost_per_10g_protein,
+            prep_time_min = excluded.prep_time_min,
+            prep_type = excluded.prep_type,
+            refrigeration_needed = excluded.refrigeration_needed,
+            is_hostel_friendly = excluded.is_hostel_friendly,
+            image_url = excluded.image_url,
+            description = excluded.description
+        """, (
+            f["id"], f["name"], f["hindi_name"], f["category"], f["dietary_type"],
+            f["serving_size"], f["serving_unit"], f["serving_amount"], f["protein_g"],
+            f["calories"], f["carbs_g"], f["fat_g"], f["price_inr"],
+            f["cost_per_10g_protein"], f["prep_time_min"], f["prep_type"],
+            1 if f["refrigeration_needed"] else 0,
+            1 if f["is_hostel_friendly"] else 0,
+            f["image_url"], f["description"]
+        ))
 
     # Seed Default Student Demo User for instant evaluators testing
     cursor.execute("SELECT id FROM users WHERE email = 'demo@protomania.app'")

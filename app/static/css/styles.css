@@ -326,43 +326,97 @@ h1, h2, h3, .font-heading {
    CINEMATIC OPENING INTRO (DUMBBELL SLAM & GYM DOORS SPLIT)
    ========================================================= */
 
-@keyframes screenSlamShake {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  15% { transform: translate(-8px, 12px) rotate(-1.5deg); }
-  30% { transform: translate(7px, -9px) rotate(1.2deg); }
-  45% { transform: translate(-5px, 6px) rotate(-0.8deg); }
-  60% { transform: translate(4px, -4px) rotate(0.4deg); }
-  80% { transform: translate(-2px, 2px) rotate(-0.2deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
+.intro-door {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-.intro-screen-shake {
-  animation: screenSlamShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+@keyframes screenSlamShakeHeavy {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  10% { transform: translate(-14px, 16px) scale(1.02) rotate(-2deg); }
+  22% { transform: translate(12px, -13px) scale(1.015) rotate(1.8deg); }
+  35% { transform: translate(-9px, 10px) scale(1.01) rotate(-1.2deg); }
+  50% { transform: translate(7px, -7px) scale(1.005) rotate(0.8deg); }
+  65% { transform: translate(-4px, 4px) rotate(-0.4deg); }
+  80% { transform: translate(2px, -2px) rotate(0.2deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+.intro-screen-shake-heavy {
+  animation: screenSlamShakeHeavy 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes dumbbellRecoil {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-16px) rotate(1.5deg); }
+  50% { transform: translateY(0) rotate(-0.5deg); }
+  70% { transform: translateY(-4px) rotate(0.2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.intro-dumbbell-recoil {
+  animation: dumbbellRecoil 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes shockwaveExpandAnim {
   0% {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-    box-shadow: 0 0 40px rgba(216, 255, 62, 0.8), inset 0 0 20px rgba(216, 255, 62, 0.8);
+    transform: translate(-50%, -50%) scale(0.6);
+    box-shadow: 0 0 60px rgba(216, 255, 62, 1), inset 0 0 30px rgba(216, 255, 62, 0.9);
   }
-  60% {
-    opacity: 0.85;
-    box-shadow: 0 0 70px rgba(216, 255, 62, 0.6), inset 0 0 40px rgba(216, 255, 62, 0.4);
+  40% {
+    opacity: 0.95;
+    box-shadow: 0 0 90px rgba(216, 255, 62, 0.8), inset 0 0 50px rgba(216, 255, 62, 0.6);
   }
   100% {
-    width: 900px;
-    height: 900px;
+    width: 1100px;
+    height: 1100px;
     opacity: 0;
     transform: translate(-50%, -50%) scale(1);
-    box-shadow: 0 0 100px rgba(216, 255, 62, 0);
+    box-shadow: 0 0 120px rgba(216, 255, 62, 0);
   }
 }
 
 .intro-shockwave-active {
-  animation: shockwaveExpandAnim 0.75s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+  animation: shockwaveExpandAnim 0.7s cubic-bezier(0.08, 0.82, 0.17, 1) forwards;
+}
+
+@keyframes shockwaveSecondaryAnim {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.6);
+    box-shadow: 0 0 50px rgba(156, 138, 255, 0.9);
+  }
+  100% {
+    width: 850px;
+    height: 850px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 100px rgba(156, 138, 255, 0);
+  }
+}
+
+.intro-shockwave-secondary-active {
+  animation: shockwaveSecondaryAnim 0.65s cubic-bezier(0.08, 0.82, 0.17, 1) forwards;
+}
+
+@keyframes spotlightPulse {
+  0%, 100% { opacity: 0.25; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+.intro-spotlight {
+  animation: spotlightPulse 2.4s ease-in-out infinite;
+}
+
+/* Subtle Film Grain Noise Texture */
+.bg-film-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
 }
 
 /* Hero Revealed Stagger Sequence */

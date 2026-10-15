@@ -332,6 +332,12 @@ h1, h2, h3, .font-heading {
   transform: translateZ(0);
 }
 
+#intro-dumbbell-wrapper {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
 @keyframes screenSlamShakeHeavy {
   0% { transform: translate(0, 0) scale(1) rotate(0deg); }
   10% { transform: translate(-14px, 16px) scale(1.02) rotate(-2deg); }

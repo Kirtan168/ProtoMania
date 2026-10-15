@@ -1,21 +1,40 @@
 /**
- * PROTOMANIA Cinematic Audio Engine (Web Audio API)
- * High-fidelity procedural audio synthesis for the opening cinematic experience:
- * - Anticipation deep bass rumble & metallic tension
- * - Rising aerodynamic whoosh during dumbbell acceleration
- * - 4-layer physical impact: sub-bass drop, cast-iron metal slam, transient snap, ringing resonance
- * - Hydraulic hiss & heavy mechanical rolling door slide
- * - Warm cinematic final reveal accent
- * Zero external audio dependencies, zero 404 risk, instant zero-latency playback.
+ * PROTOMANIA Cinematic Audio Engine
+ * Hybrid Architecture: Real Studio-Recorded SFX + Web Audio API Dynamics Processor
+ * 
+ * Features:
+ * - Real cast-iron metal impact strike + deep cinematic sub-bass thud (dual-layer physical slam)
+ * - Real aerodynamic falling whoosh transition
+ * - Real industrial pneumatic gym vault door slide
+ * - Real cinematic tension anticipation drone
+ * - Sample-accurate peak onset detection (zero leading silence, zero latency)
+ * - Master Dynamics Compressor (glues metal crack + sub body into a punchy, bone-crushing hit)
+ * - Instant cutoff (<20ms) on skip [Esc]
+ * - Autoplay handling with graceful resume
  */
 
 class CinematicAudioEngine {
   constructor() {
     this.ctx = null;
     this.masterGain = null;
+    this.compressor = null;
     this.isMuted = false;
-    this.activeNodes = [];
-    this.initialized = false;
+    this.activeSources = [];
+    this.buffers = {};
+    this.onsets = {};
+    this.isPreloaded = false;
+
+    // Track loading promises
+    this.audioUrls = {
+      subImpact: '/static/audio/sub_impact.mp3',
+      metalSlam: '/static/audio/metal_slam.mp3',
+      whoosh: '/static/audio/whoosh.mp3',
+      doorSlide: '/static/audio/door_slide.mp3',
+      trailerRiser: '/static/audio/trailer_riser.mp3'
+    };
+
+    // Auto-init on first script load
+    this.preload();
   }
 
   ensureContext() {
@@ -23,10 +42,20 @@ class CinematicAudioEngine {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return null;
       this.ctx = new AudioCtx();
+
+      // Master dynamics compressor to glue transients and sub-bass into a massive hit
+      this.compressor = this.ctx.createDynamicsCompressor();
+      this.compressor.threshold.setValueAtTime(-14, this.ctx.currentTime);
+      this.compressor.knee.setValueAtTime(8, this.ctx.currentTime);
+      this.compressor.ratio.setValueAtTime(6, this.ctx.currentTime);
+      this.compressor.attack.setValueAtTime(0.002, this.ctx.currentTime);
+      this.compressor.release.setValueAtTime(0.25, this.ctx.currentTime);
+
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.9, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.95, this.ctx.currentTime);
+
+      this.compressor.connect(this.masterGain);
       this.masterGain.connect(this.ctx.destination);
-      this.initialized = true;
     }
     return this.ctx;
   }
@@ -53,7 +82,7 @@ class CinematicAudioEngine {
       const now = this.ctx.currentTime;
       this.masterGain.gain.cancelScheduledValues(now);
       this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-      this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 0.9, now + 0.05);
+      this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 0.95, now + 0.04);
     }
   }
 
@@ -61,308 +90,326 @@ class CinematicAudioEngine {
     if (this.ctx && this.masterGain) {
       const now = this.ctx.currentTime;
       this.masterGain.gain.cancelScheduledValues(now);
-      this.masterGain.gain.linearRampToValueAtTime(0, now + 0.04);
+      this.masterGain.gain.linearRampToValueAtTime(0, now + 0.02);
     }
-    this.activeNodes.forEach(node => {
+    this.activeSources.forEach(s => {
       try {
-        if (node.stop) node.stop();
-        if (node.disconnect) node.disconnect();
+        if (s.stop) s.stop();
+        if (s.disconnect) s.disconnect();
       } catch (e) {}
     });
-    this.activeNodes = [];
+    this.activeSources = [];
   }
 
-  // Helper: create white/pink noise buffer
-  createNoiseBuffer(seconds = 2) {
-    if (!this.ctx) return null;
-    const bufferSize = this.ctx.sampleRate * seconds;
-    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+  // Pre-load and decode all audio assets into raw memory buffers
+  async preload() {
+    if (this.isPreloaded) return;
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+
+    const loadEntry = async (key, url) => {
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) return;
+        const arrayBuf = await resp.arrayBuffer();
+        const audioBuf = await ctx.decodeAudioData(arrayBuf);
+        this.buffers[key] = audioBuf;
+
+        // Calculate leading silence offset for sample-accurate instant impact
+        this.onsets[key] = this.calculateOnset(audioBuf, 0.02);
+      } catch (err) {
+        // Fallback gracefully to procedural sound if network fails
+      }
+    };
+
+    const promises = Object.entries(this.audioUrls).map(([key, url]) => loadEntry(key, url));
+    await Promise.allSettled(promises);
+    this.isPreloaded = true;
+  }
+
+  calculateOnset(buffer, threshold = 0.02) {
     const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
+    const limit = Math.min(data.length, Math.floor(buffer.sampleRate * 0.4)); // check first 400ms
+    for (let i = 0; i < limit; i++) {
+      if (Math.abs(data[i]) >= threshold) {
+        return Math.max(0, (i - 40) / buffer.sampleRate); // slight pre-roll for attack
+      }
     }
-    return buffer;
+    return 0;
   }
 
-  // SCENE 1: Anticipation Bass Rumble & Tension Drone (0 - 0.8s)
+  // Helper to play a preloaded decoded buffer
+  playBuffer(key, options = {}) {
+    const ctx = this.ensureContext();
+    if (!ctx || this.isMuted) return null;
+
+    const buffer = this.buffers[key];
+    if (!buffer) return null;
+
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+
+    const gainNode = ctx.createGain();
+    const volume = options.volume !== undefined ? options.volume : 1.0;
+    gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+
+    // Fade out if duration specified
+    if (options.duration) {
+      const stopTime = ctx.currentTime + options.duration;
+      gainNode.gain.setValueAtTime(volume, stopTime - 0.15);
+      gainNode.gain.linearRampToValueAtTime(0, stopTime);
+    }
+
+    source.connect(gainNode);
+    gainNode.connect(this.compressor || this.masterGain);
+
+    const onset = options.ignoreOnset ? 0 : (this.onsets[key] || 0);
+    source.start(ctx.currentTime, onset);
+
+    if (options.duration) {
+      source.stop(ctx.currentTime + options.duration);
+    }
+
+    this.activeSources.push(source);
+    source.onended = () => {
+      const idx = this.activeSources.indexOf(source);
+      if (idx !== -1) this.activeSources.splice(idx, 1);
+    };
+
+    return source;
+  }
+
+  // ========================================================
+  // SCENE 1: Anticipation (0.0s - 0.8s)
+  // Deep cinematic tension riser / low-frequency room drone
+  // ========================================================
   playAnticipation() {
     const ctx = this.ensureContext();
     if (!ctx || this.isMuted) return;
+
+    // Use preloaded trailer riser if available
+    if (this.buffers.trailerRiser) {
+      this.playBuffer('trailerRiser', { volume: 0.75, duration: 0.85 });
+      return;
+    }
+
+    // Procedural Fallback: Low-frequency sub-bass drone
     const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
-    // Sub-bass drone
-    const subOsc = ctx.createOscillator();
-    const subGain = ctx.createGain();
-    const subFilter = ctx.createBiquadFilter();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(38, now);
+    osc.frequency.exponentialRampToValueAtTime(52, now + 0.8);
 
-    subOsc.type = "sine";
-    subOsc.frequency.setValueAtTime(36, now);
-    subOsc.frequency.exponentialRampToValueAtTime(48, now + 0.8);
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(100, now);
 
-    subFilter.type = "lowpass";
-    subFilter.frequency.setValueAtTime(90, now);
+    gain.gain.setValueAtTime(0.01, now);
+    gain.gain.linearRampToValueAtTime(0.55, now + 0.5);
+    gain.gain.linearRampToValueAtTime(0.7, now + 0.8);
 
-    subGain.gain.setValueAtTime(0.001, now);
-    subGain.gain.linearRampToValueAtTime(0.45, now + 0.4);
-    subGain.gain.linearRampToValueAtTime(0.65, now + 0.8);
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.masterGain);
 
-    subOsc.connect(subFilter);
-    subFilter.connect(subGain);
-    subGain.connect(this.masterGain);
-
-    subOsc.start(now);
-    subOsc.stop(now + 0.85);
-    this.activeNodes.push(subOsc, subGain);
-
-    // Subtle metallic gym room resonance
-    const metalTension = ctx.createOscillator();
-    const metalGain = ctx.createGain();
-    metalTension.type = "triangle";
-    metalTension.frequency.setValueAtTime(180, now);
-    metalTension.frequency.linearRampToValueAtTime(240, now + 0.8);
-
-    metalGain.gain.setValueAtTime(0.001, now);
-    metalGain.gain.linearRampToValueAtTime(0.08, now + 0.5);
-    metalGain.gain.linearRampToValueAtTime(0.14, now + 0.8);
-
-    metalTension.connect(metalGain);
-    metalGain.connect(this.masterGain);
-
-    metalTension.start(now);
-    metalTension.stop(now + 0.85);
-    this.activeNodes.push(metalTension, metalGain);
+    osc.start(now);
+    osc.stop(now + 0.85);
+    this.activeSources.push(osc);
   }
 
-  // SCENE 2: Rising Aerodynamic Whoosh (0.8s - 1.6s)
+  // ========================================================
+  // SCENE 2: The Dumbbell Drop (0.8s - 1.6s)
+  // Aerodynamic rising whoosh transition
+  // ========================================================
   playWhoosh() {
     const ctx = this.ensureContext();
     if (!ctx || this.isMuted) return;
+
+    if (this.buffers.whoosh) {
+      this.playBuffer('whoosh', { volume: 0.85, duration: 0.8 });
+      return;
+    }
+
+    // Procedural Fallback: Bandpass noise swell
     const now = ctx.currentTime;
+    const bufferSize = ctx.sampleRate * 0.85;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
-    const noiseBuffer = this.createNoiseBuffer(1.2);
-    if (!noiseBuffer) return;
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
 
-    const noiseSource = ctx.createBufferSource();
-    noiseSource.buffer = noiseBuffer;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.setValueAtTime(2.5, now);
+    bp.frequency.setValueAtTime(150, now);
+    bp.frequency.exponentialRampToValueAtTime(900, now + 0.75);
 
-    const bandpass = ctx.createBiquadFilter();
-    bandpass.type = "bandpass";
-    bandpass.Q.setValueAtTime(3.0, now);
-    bandpass.frequency.setValueAtTime(140, now);
-    bandpass.frequency.exponentialRampToValueAtTime(950, now + 0.78);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, now);
+    gain.gain.exponentialRampToValueAtTime(0.65, now + 0.7);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.82);
 
-    const whooshGain = ctx.createGain();
-    whooshGain.gain.setValueAtTime(0.01, now);
-    whooshGain.gain.exponentialRampToValueAtTime(0.7, now + 0.75);
-    whooshGain.gain.linearRampToValueAtTime(0.001, now + 0.82);
+    noise.connect(bp);
+    bp.connect(gain);
+    gain.connect(this.masterGain);
 
-    noiseSource.connect(bandpass);
-    bandpass.connect(whooshGain);
-    whooshGain.connect(this.masterGain);
-
-    noiseSource.start(now);
-    noiseSource.stop(now + 0.85);
-    this.activeNodes.push(noiseSource, whooshGain);
+    noise.start(now);
+    noise.stop(now + 0.85);
+    this.activeSources.push(noise);
   }
 
-  // SCENE 3: THE IMPACT SLAM (Exact synchronization at 1.6s)
+  // ========================================================
+  // SCENE 3: THE IMPACT SLAM (1.6s)
+  // THE REAL DEAL: Dual-Layer Physical Metal Slam & Cinematic Sub-Punch
+  // 1. Heavy Metal Hammer Strike (Cast-iron plate contact & clang)
+  // 2. Big Cinematic Impact (Deep chest-thumping sub-bass thud)
+  // Synchronized to the exact microsecond through the dynamics compressor!
+  // ========================================================
   playSlam() {
     const ctx = this.ensureContext();
     if (!ctx || this.isMuted) return;
+
+    let hasPlayedReal = false;
+
+    // Layer 1: Real Heavy Metal Hammer/Plate Strike
+    if (this.buffers.metalSlam) {
+      this.playBuffer('metalSlam', { volume: 0.95 });
+      hasPlayedReal = true;
+    }
+
+    // Layer 2: Real Deep Sub-Bass Cinematic Impact
+    if (this.buffers.subImpact) {
+      this.playBuffer('subImpact', { volume: 1.0 });
+      hasPlayedReal = true;
+    }
+
+    if (hasPlayedReal) return;
+
+    // High-Fidelity Procedural Physical Modeling Fallback
     const now = ctx.currentTime;
 
-    // Layer 1: Massive Sub-Bass Drop (Chest Thump)
-    const subDrop = ctx.createOscillator();
+    // 1. Visceral Sub-bass thump (55Hz drop)
+    const subOsc = ctx.createOscillator();
     const subGain = ctx.createGain();
-    subDrop.type = "sine";
-    subDrop.frequency.setValueAtTime(140, now);
-    subDrop.frequency.exponentialRampToValueAtTime(28, now + 0.38);
+    subOsc.type = "sine";
+    subOsc.frequency.setValueAtTime(120, now);
+    subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
 
     subGain.gain.setValueAtTime(1.0, now);
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
 
-    subDrop.connect(subGain);
-    subGain.connect(this.masterGain);
-    subDrop.start(now);
-    subDrop.stop(now + 0.9);
-    this.activeNodes.push(subDrop, subGain);
+    subOsc.connect(subGain);
+    subGain.connect(this.compressor || this.masterGain);
+    subOsc.start(now);
+    subOsc.stop(now + 0.85);
+    this.activeSources.push(subOsc);
 
-    // Layer 2: Heavy Cast-Iron Metal Plate Strike
+    // 2. Heavy Cast-Iron Anvil Clang (Dual inharmonic partials)
     const clang1 = ctx.createOscillator();
     const clang2 = ctx.createOscillator();
     const clangGain = ctx.createGain();
-
     clang1.type = "triangle";
     clang2.type = "sine";
-    clang1.frequency.setValueAtTime(420, now);
-    clang2.frequency.setValueAtTime(740, now);
+    clang1.frequency.setValueAtTime(380, now);
+    clang2.frequency.setValueAtTime(690, now);
 
-    clangGain.gain.setValueAtTime(0.85, now);
-    clangGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+    clangGain.gain.setValueAtTime(0.8, now);
+    clangGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
 
     clang1.connect(clangGain);
     clang2.connect(clangGain);
-    clangGain.connect(this.masterGain);
+    clangGain.connect(this.compressor || this.masterGain);
 
     clang1.start(now);
     clang2.start(now);
-    clang1.stop(now + 0.5);
-    clang2.stop(now + 0.5);
-    this.activeNodes.push(clang1, clang2, clangGain);
-
-    // Layer 3: Acoustic Impact Slap / Concrete Transient Crack
-    const slapBuffer = this.createNoiseBuffer(0.2);
-    if (slapBuffer) {
-      const slapSource = ctx.createBufferSource();
-      slapSource.buffer = slapBuffer;
-
-      const slapFilter = ctx.createBiquadFilter();
-      slapFilter.type = "highpass";
-      slapFilter.frequency.setValueAtTime(1200, now);
-
-      const slapGain = ctx.createGain();
-      slapGain.gain.setValueAtTime(0.9, now);
-      slapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-
-      slapSource.connect(slapFilter);
-      slapFilter.connect(slapGain);
-      slapGain.connect(this.masterGain);
-
-      slapSource.start(now);
-      slapSource.stop(now + 0.15);
-      this.activeNodes.push(slapSource, slapGain);
-    }
-
-    // Layer 4: Metallic Ringing & Resonance (Iron bar vibration decay)
-    const ringOsc = ctx.createOscillator();
-    const ringGain = ctx.createGain();
-    ringOsc.type = "sine";
-    ringOsc.frequency.setValueAtTime(630, now);
-
-    ringGain.gain.setValueAtTime(0.35, now);
-    ringGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-
-    ringOsc.connect(ringGain);
-    ringGain.connect(this.masterGain);
-    ringOsc.start(now);
-    ringOsc.stop(now + 1.25);
-    this.activeNodes.push(ringOsc, ringGain);
+    clang1.stop(now + 0.45);
+    clang2.stop(now + 0.45);
+    this.activeSources.push(clang1, clang2);
   }
 
-  // SCENE 4: Hydraulic Pneumatic Door Release & Mechanical Door Slide (1.9s - 2.8s)
+  // ========================================================
+  // SCENE 4: Heavy Gym Doors Open (1.9s - 2.8s)
+  // Real industrial sliding metal doors & pneumatic air release
+  // ========================================================
   playDoorOpen() {
     const ctx = this.ensureContext();
     if (!ctx || this.isMuted) return;
+
+    if (this.buffers.doorSlide) {
+      this.playBuffer('doorSlide', { volume: 0.85, duration: 1.1 });
+      return;
+    }
+
+    // Procedural Fallback: Pneumatic hiss + sliding rumble
     const now = ctx.currentTime;
+    const bufferSize = ctx.sampleRate * 0.9;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
-    // Pneumatic Pressure Release (Air Hiss)
-    const hissBuffer = this.createNoiseBuffer(0.6);
-    if (hissBuffer) {
-      const hissSource = ctx.createBufferSource();
-      hissSource.buffer = hissBuffer;
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
 
-      const hissFilter = ctx.createBiquadFilter();
-      hissFilter.type = "bandpass";
-      hissFilter.frequency.setValueAtTime(2200, now);
-      hissFilter.Q.setValueAtTime(2.0, now);
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(320, now);
 
-      const hissGain = ctx.createGain();
-      hissGain.gain.setValueAtTime(0.4, now);
-      hissGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, now);
+    gain.gain.linearRampToValueAtTime(0.4, now + 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
-      hissSource.connect(hissFilter);
-      hissFilter.connect(hissGain);
-      hissGain.connect(this.masterGain);
+    noise.connect(lp);
+    lp.connect(gain);
+    gain.connect(this.masterGain);
 
-      hissSource.start(now);
-      hissSource.stop(now + 0.5);
-      this.activeNodes.push(hissSource, hissGain);
-    }
-
-    // Heavy Industrial Door Rollers on Steel Tracks
-    const slideNoise = this.createNoiseBuffer(1.1);
-    if (slideNoise) {
-      const slideSource = ctx.createBufferSource();
-      slideSource.buffer = slideNoise;
-
-      const slideFilter = ctx.createBiquadFilter();
-      slideFilter.type = "lowpass";
-      slideFilter.frequency.setValueAtTime(320, now);
-
-      const slideGain = ctx.createGain();
-      slideGain.gain.setValueAtTime(0.001, now);
-      slideGain.gain.linearRampToValueAtTime(0.38, now + 0.25);
-      slideGain.gain.linearRampToValueAtTime(0.32, now + 0.65);
-      slideGain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
-
-      slideSource.connect(slideFilter);
-      slideFilter.connect(slideGain);
-      slideGain.connect(this.masterGain);
-
-      slideSource.start(now);
-      slideSource.stop(now + 1.0);
-      this.activeNodes.push(slideSource, slideGain);
-    }
-
-    // Mechanical Low Motor Rumble
-    const motorOsc = ctx.createOscillator();
-    const motorGain = ctx.createGain();
-    motorOsc.type = "sawtooth";
-    motorOsc.frequency.setValueAtTime(54, now);
-
-    const motorFilter = ctx.createBiquadFilter();
-    motorFilter.type = "lowpass";
-    motorFilter.frequency.setValueAtTime(120, now);
-
-    motorGain.gain.setValueAtTime(0.01, now);
-    motorGain.gain.linearRampToValueAtTime(0.18, now + 0.3);
-    motorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
-
-    motorOsc.connect(motorFilter);
-    motorFilter.connect(motorGain);
-    motorGain.connect(this.masterGain);
-
-    motorOsc.start(now);
-    motorOsc.stop(now + 0.95);
-    this.activeNodes.push(motorOsc, motorGain);
+    noise.start(now);
+    noise.stop(now + 0.95);
+    this.activeSources.push(noise);
   }
 
-  // SCENE 5: Final Reveal Cinematic Accent (2.8s - 3.5s)
+  // ========================================================
+  // SCENE 5: Final Reveal Accent (2.8s - 3.4s)
+  // Warm sub boom & crystalline 528Hz Solfeggio shimmer
+  // ========================================================
   playRevealAccent() {
     const ctx = this.ensureContext();
     if (!ctx || this.isMuted) return;
     const now = ctx.currentTime;
 
-    // Warm deep boom
-    const boomOsc = ctx.createOscillator();
+    const boom = ctx.createOscillator();
     const boomGain = ctx.createGain();
-    boomOsc.type = "sine";
-    boomOsc.frequency.setValueAtTime(65, now);
-    boomOsc.frequency.exponentialRampToValueAtTime(38, now + 0.7);
+    boom.type = "sine";
+    boom.frequency.setValueAtTime(62, now);
+    boom.frequency.exponentialRampToValueAtTime(36, now + 0.6);
 
-    boomGain.gain.setValueAtTime(0.65, now);
-    boomGain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+    boomGain.gain.setValueAtTime(0.5, now);
+    boomGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
 
-    boomOsc.connect(boomGain);
+    boom.connect(boomGain);
     boomGain.connect(this.masterGain);
-    boomOsc.start(now);
-    boomOsc.stop(now + 0.8);
-    this.activeNodes.push(boomOsc, boomGain);
+    boom.start(now);
+    boom.stop(now + 0.7);
 
-    // High crystalline harmonic chime (Proto mark shimmer)
-    const chime1 = ctx.createOscillator();
+    // Shimmer chime
+    const chime = ctx.createOscillator();
     const chimeGain = ctx.createGain();
-    chime1.type = "sine";
-    chime1.frequency.setValueAtTime(528, now); // 528Hz Solfeggio clarity frequency
+    chime.type = "sine";
+    chime.frequency.setValueAtTime(528, now);
 
-    chimeGain.gain.setValueAtTime(0.2, now);
-    chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+    chimeGain.gain.setValueAtTime(0.18, now);
+    chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
 
-    chime1.connect(chimeGain);
+    chime.connect(chimeGain);
     chimeGain.connect(this.masterGain);
-    chime1.start(now);
-    chime1.stop(now + 0.95);
-    this.activeNodes.push(chime1, chimeGain);
+    chime.start(now);
+    chime.stop(now + 0.9);
+
+    this.activeSources.push(boom, chime);
   }
 }
 

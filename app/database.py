@@ -7,6 +7,7 @@ from app.config import settings
 from app.data.foods_data import INDIAN_FOODS_DATASET
 
 def get_db():
+    settings.DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(settings.DATABASE_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     try:
@@ -15,6 +16,7 @@ def get_db():
         conn.close()
 
 def get_connection():
+    settings.DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(settings.DATABASE_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn

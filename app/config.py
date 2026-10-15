@@ -1,4 +1,5 @@
 import os
+import tempfile
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,8 +14,11 @@ class Settings:
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
-    # Database
-    DATABASE_PATH: Path = BASE_DIR / "protomania.db"
+    # Database: On Vercel / serverless environments, root is read-only; use writable temp directory
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        DATABASE_PATH: Path = Path(tempfile.gettempdir()) / "protomania.db"
+    else:
+        DATABASE_PATH: Path = BASE_DIR / "protomania.db"
     
     # AI Provider (Google Gemini if available in env, or graceful fallback)
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", os.getenv("GOOGLE_API_KEY", ""))

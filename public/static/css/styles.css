@@ -1,0 +1,323 @@
+:root {
+  --proto-black: #111410;
+  --dark-surface: #1B1E19;
+  --dark-surface-elevated: #242921;
+  --border-grey: #34382F;
+  --steel-grey: #858A80;
+  --cloud-white: #F4F5EF;
+  --acid-lime: #D8FF3E;
+  --acid-lime-hover: #c4ec2a;
+  --electric-violet: #9C8AFF;
+  --bg-primary: #111410;
+  --bg-surface: #1B1E19;
+  --text-primary: #F4F5EF;
+  --text-secondary: #858A80;
+  --border-color: #34382F;
+}
+
+[data-theme="light"] {
+  --proto-black: #F4F5EF;
+  --dark-surface: #FFFFFF;
+  --dark-surface-elevated: #F8F9F5;
+  --border-grey: #D5DAD0;
+  --steel-grey: #5A6055;
+  --cloud-white: #111410;
+  --acid-lime: #2E7D12;
+  --acid-lime-hover: #25660E;
+  --electric-violet: #7B61FF;
+  --bg-primary: #F7F8F4;
+  --bg-surface: #FFFFFF;
+  --text-primary: #111410;
+  --text-secondary: #5A6055;
+  --border-color: #D5DAD0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Background Cyber Grid Pattern */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(216, 255, 62, 0.04) 1px, transparent 1px),
+                    radial-gradient(rgba(52, 56, 47, 0.3) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+/* Typography Enhancements */
+h1, h2, h3, .font-heading {
+  font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--acid-lime);
+}
+
+/* Acid Lime Glows & Accents */
+.glow-lime {
+  box-shadow: 0 0 30px rgba(216, 255, 62, 0.3);
+}
+
+.glow-lime-sm {
+  box-shadow: 0 0 14px rgba(216, 255, 62, 0.22);
+}
+
+.glow-violet {
+  box-shadow: 0 0 25px rgba(156, 138, 255, 0.25);
+}
+
+/* Card Proto with refined hover lift & border sheen */
+.card-proto {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-proto:hover {
+  border-color: rgba(216, 255, 62, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(216, 255, 62, 0.08);
+}
+
+.btn-acid {
+  background-color: #D8FF3E;
+  color: #111410;
+  font-weight: 800;
+  border-radius: 0.85rem;
+  letter-spacing: -0.01em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-acid:hover {
+  background-color: #c4ec2a;
+  box-shadow: 0 0 25px rgba(216, 255, 62, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--acid-lime);
+  color: var(--acid-lime);
+  background-color: rgba(216, 255, 62, 0.06);
+}
+
+/* Progress Ring Animation */
+.progress-ring-circle {
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Image Badge */
+.img-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  backdrop-filter: blur(10px);
+  background: rgba(17, 20, 16, 0.85);
+  border: 1px solid rgba(216, 255, 62, 0.4);
+}
+
+/* Wrapped Card Aesthetic */
+.wrapped-gradient {
+  background: linear-gradient(135deg, #111410 0%, #1c2415 50%, #141a11 100%);
+  border: 2px solid #D8FF3E;
+  box-shadow: 0 0 45px rgba(216, 255, 62, 0.25);
+}
+
+/* Keyframe Animations */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.02); }
+}
+
+.pulse-glow {
+  animation: pulse-subtle 3s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(12px);
+  background: rgba(17, 20, 16, 0.88);
+}
+
+/* Cyber Scanlines Background */
+.bg-cyber-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(216, 255, 62, 0.03) 3px,
+    rgba(216, 255, 62, 0.03) 4px
+  );
+}
+
+/* Card Proto Sheen Sweep on Hover */
+.card-proto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(216, 255, 62, 0.08), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-proto:hover::before {
+  left: 180%;
+}
+
+/* Infinite Neon Slogan Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Gen Z Floating Sticker Badges */
+.badge-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(216, 255, 62, 0.45);
+  background: rgba(17, 20, 16, 0.9);
+  color: #D8FF3E;
+  box-shadow: 0 0 16px rgba(216, 255, 62, 0.18);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.badge-sticker:hover {
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 0 28px rgba(216, 255, 62, 0.4);
+  border-color: #D8FF3E;
+}
+
+.badge-sticker-violet {
+  border-color: rgba(156, 138, 255, 0.5);
+  color: #9C8AFF;
+  box-shadow: 0 0 16px rgba(156, 138, 255, 0.2);
+}
+
+.badge-sticker-violet:hover {
+  box-shadow: 0 0 28px rgba(156, 138, 255, 0.45);
+  border-color: #9C8AFF;
+}
+
+/* Pulsing Neon Glow Borders */
+@keyframes borderPulse {
+  0%, 100% {
+    border-color: rgba(216, 255, 62, 0.6);
+    box-shadow: 0 0 20px rgba(216, 255, 62, 0.2);
+  }
+  50% {
+    border-color: rgba(216, 255, 62, 0.2);
+    box-shadow: 0 0 8px rgba(216, 255, 62, 0.05);
+  }
+}
+
+.border-glow-pulse {
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+/* Shimmer Text */
+.text-shimmer {
+  background: linear-gradient(90deg, #F4F5EF 0%, #D8FF3E 50%, #F4F5EF 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShine 4s linear infinite;
+}
+
+@keyframes textShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Hero Badge Tilt */
+.hero-tilt {
+  transform: perspective(1000px) rotateY(-4deg) rotateX(2deg);
+  transition: transform 0.4s ease;
+}
+
+.hero-tilt:hover {
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+}

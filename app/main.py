@@ -59,26 +59,29 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+def get_index_html() -> str:
+    candidates = [
+        TEMPLATES_DIR / "index.html",
+        Path(__file__).resolve().parent / "templates" / "index.html",
+        Path.cwd() / "app" / "templates" / "index.html",
+        Path("/var/task/app/templates/index.html"),
+    ]
+    for p in candidates:
+        if p.exists():
+            return p.read_text(encoding="utf-8")
+    return "<h1>PROTOMANIA</h1>"
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_home():
-    index_file = TEMPLATES_DIR / "index.html"
-    if index_file.exists():
-        return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>PROTOMANIA</h1>")
+    return HTMLResponse(content=get_index_html())
 
 @app.get("/developers", response_class=HTMLResponse)
 async def serve_developers():
-    index_file = TEMPLATES_DIR / "index.html"
-    if index_file.exists():
-        return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>PROTOMANIA Developer Hub</h1>")
+    return HTMLResponse(content=get_index_html())
 
 # Catch-all client-side router fallback so direct URLs like /dashboard, /optimizer, /meals, /workouts, /wrapped, /developers work seamlessly
 @app.get("/{full_path:path}", response_class=HTMLResponse)
 async def catch_all(full_path: str):
     if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("static"):
         return HTMLResponse(status_code=404, content="Not found")
-    index_file = TEMPLATES_DIR / "index.html"
-    if index_file.exists():
-        return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>PROTOMANIA</h1>")
+    return HTMLResponse(content=get_index_html())

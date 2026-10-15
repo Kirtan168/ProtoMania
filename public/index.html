@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROTOMANIA — Your Body. Your Budget. Your Era.</title>
+  <meta name="description" content="AI-Powered Fitness, Nutrition & Budget Optimization Platform for Students in India. Maximize protein intake on your actual student budget.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 90,26 90,74 50,95 10,74 10,26' fill='%23111410' stroke='%23D8FF3E' stroke-width='8'/%3E%3Cpolygon points='53,18 34,48 49,48 43,80 66,44 51,44' fill='%23D8FF3E'/%3E%3C/svg%3E">
+
+  <!-- Fonts: Syne (Bold Display) + Plus Jakarta Sans + Space Grotesk (Tech Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            proto: {
+              black: '#111410',
+              surface: '#1B1E19',
+              elevated: '#242921',
+              border: '#34382F',
+              steel: '#858A80',
+              white: '#F4F5EF',
+              lime: '#D8FF3E',
+              limeHover: '#c4ec2a',
+              violet: '#9C8AFF'
+            }
+          },
+          fontFamily: {
+            display: ['Syne', 'Plus Jakarta Sans', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-[#111410] text-[#F4F5EF] antialiased selection:bg-[#D8FF3E] selection:text-[#111410] bg-grid-pattern relative min-h-screen overflow-x-hidden">
+
+  <!-- Background Gym Imagery & Atmospheric Silhouettes (Subtle Gen Z Aesthetics) -->
+  <div class="fixed inset-0 pointer-events-none -z-20 overflow-hidden">
+    <!-- Top-Right Gym Atmospheric Backdrop with radial fade -->
+    <div class="absolute -top-10 -right-20 w-[650px] h-[650px] opacity-[0.07] mix-blend-screen bg-cover bg-center rounded-full blur-[1px]" 
+         style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=80'); mask-image: radial-gradient(circle, black 40%, transparent 70%); -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);">
+    </div>
+    <!-- Bottom-Left Gym Athlete Silhouette Backdrop -->
+    <div class="absolute bottom-10 -left-20 w-[600px] h-[600px] opacity-[0.06] mix-blend-screen bg-cover bg-center rounded-full blur-[1px]" 
+         style="background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1000&q=80'); mask-image: radial-gradient(circle, black 40%, transparent 70%); -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);">
+    </div>
+    <!-- Scanline Subtle Grid Overlay -->
+    <div class="absolute inset-0 bg-cyber-scanlines opacity-[0.15]"></div>
+  </div>
+
+  <!-- Ambient Animated Multi-Color Glows -->
+  <div class="fixed top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-[#D8FF3E]/12 blur-[150px] rounded-full pointer-events-none -z-10 animate-float-slow"></div>
+  <div class="fixed bottom-[-100px] right-[-100px] w-[550px] h-[450px] bg-[#9C8AFF]/12 blur-[160px] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
+  <div class="fixed top-1/2 left-[-150px] w-[450px] h-[450px] bg-[#10b981]/8 blur-[160px] rounded-full pointer-events-none -z-10"></div>
+
+  <!-- Top Navbar Mount -->
+  <div id="navbar-root"></div>
+
+  <!-- Main View Container -->
+  <main id="app" class="min-h-[85vh] pt-16 pb-20 md:pb-8 transition-opacity duration-300"></main>
+
+  <!-- Bottom / Mobile Quick Navigation -->
+  <div id="mobile-nav-root" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1B1E19]/95 backdrop-blur-md border-t border-[#34382F]"></div>
+
+  <!-- Global Footer Mount -->
+  <div id="footer-root"></div>
+
+  <!-- Modal Container -->
+  <div id="modal-root"></div>
+
+  <!-- Toast Notification Mount -->
+  <div id="toast-root" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+  <!-- Application Modules -->
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

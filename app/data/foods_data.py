@@ -222,7 +222,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Roasted_peanuts_in_a_bowl.jpg/960px-Roasted_peanuts_in_a_bowl.jpg",
         "description": "Calorie-dense powerhouse for skinny students struggling to hit surplus calories. 26% protein by weight, healthy monounsaturated fats, zero cooking."
     },
     {
@@ -244,7 +244,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "mess_or_stove",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Dal_Tadka.jpg/960px-Dal_Tadka.jpg",
         "description": "Standard college mess staple. Light on stomach, easy to digest, complete amino acid profile when paired with roti or rice."
     },
     {
@@ -266,7 +266,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "mess_or_stove",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Rajma_Chawal.jpg/960px-Rajma_Chawal.jpg",
         "description": "The quintessential North Indian student comfort meal. Packed with soluble fiber, potassium, iron, and slow-burning complex carbs."
     },
     {
@@ -288,7 +288,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "mess_or_stove",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Chana_masala.jpg/960px-Chana_masala.jpg",
         "description": "High in folate, magnesium, and plant protein. Great pairing with rotis or brown rice."
     },
     {
@@ -398,7 +398,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Peanut_butter_glass.jpg/960px-Peanut_butter_glass.jpg",
         "description": "Zero refrigeration shelf-stable fat & protein booster. Spread over brown bread, chapati, or stir into warm morning oats."
     },
     {
@@ -464,7 +464,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "mess_or_stove",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Cooked_rice.jpg",
         "description": "Easily digestible glycogen replenisher, zero stomach irritation, ideal post-training carb source with dal or chicken."
     },
     {
@@ -508,7 +508,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Bananas.jpg/960px-Bananas.jpg",
         "description": "Rich in potassium, fructose, and simple carbs. The universal Indian student pre-workout 30 minutes before heavy squats or bench."
     },
     {
@@ -530,7 +530,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Pumpkin_seeds.jpg/960px-Pumpkin_seeds.jpg",
         "description": "Mineral powerhouse loaded with Zinc (boosts natural testosterone), Magnesium (muscle recovery and sleep), and Omega-3 plant fats."
     }
 ]

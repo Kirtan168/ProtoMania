@@ -10,23 +10,132 @@ import { showToast } from "../components/toast.js";
 export async function renderDeveloperHubView(container) {
   let activeTab = "overview"; // 'overview', 'apis', 'schema', 'flows', 'security', 'diagnostics'
 
+  // 2-SECOND INTERLOCKING GEARS TRANSITION
   container.innerHTML = `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 animate-fade-in">
-      <div class="flex items-center justify-center py-20 text-[#858A80]">
-        <i data-lucide="loader" class="w-6 h-6 animate-spin text-[#D8FF3E]"></i>
-        <span class="ml-2 font-mono text-xs">Querying system architecture, database schema, and live runtime metrics...</span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex items-center justify-center min-h-[70vh]">
+      <div id="dev-gear-transition" class="w-full max-w-xl card-proto p-8 sm:p-12 border-[#D8FF3E]/40 bg-[#141812] flex flex-col items-center justify-center space-y-6 relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]">
+        <!-- Technical Hex Grid Background -->
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#D8FF3E_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+
+        <!-- Top Status Telemetry -->
+        <div class="relative z-10 flex items-center space-x-2 text-xs font-mono text-[#D8FF3E] bg-[#1B1E19] px-4 py-1.5 rounded-full border border-[#D8FF3E]/30 shadow-[0_0_15px_rgba(216,255,62,0.15)]">
+          <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-ping"></span>
+          <span class="font-bold tracking-widest">DEVELOPER HUB INITIALIZING</span>
+          <span class="text-[#858A80]">SYS.ENG // 2.0</span>
+        </div>
+
+        <!-- INTERLOCKING 3D GEARS STAGE -->
+        <div class="relative z-10 w-[300px] h-[220px] flex items-center justify-center my-2">
+          <svg class="w-full h-full filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.95)]" viewBox="0 0 340 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="gearGlowLime" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="gearGlowViolet" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Outer HUD Caliper Guide Rings -->
+            <circle cx="160" cy="150" r="85" fill="none" stroke="#34382F" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.5" />
+            <circle cx="262" cy="150" r="62" fill="none" stroke="#34382F" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.5" />
+            <circle cx="160" cy="58" r="48" fill="none" stroke="#34382F" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5" />
+
+            <!-- Gear 1: Large Acid Lime Drive Gear (Clockwise) -->
+            <g class="dev-gear-cw" style="transform-origin: 160px 150px;">
+              <path d="M 212.0,150.0 L 227.4,158.9 L 225.7,167.6 L 208.0,169.9 L 205.0,176.0 L 213.9,191.4 L 208.1,198.1 L 191.7,191.3 L 186.0,195.0 L 186.0,212.8 L 177.6,215.7 L 166.8,201.6 L 160.0,202.0 L 151.1,217.4 L 142.4,215.7 L 140.1,198.0 L 134.0,195.0 L 118.6,203.9 L 111.9,198.1 L 118.7,181.7 L 115.0,176.0 L 97.2,176.0 L 94.3,167.6 L 108.4,156.8 L 108.0,150.0 L 92.6,141.1 L 94.3,132.4 L 112.0,130.1 L 115.0,124.0 L 106.1,108.6 L 111.9,101.9 L 128.3,108.7 L 134.0,105.0 L 134.0,87.2 L 142.4,84.3 L 153.2,98.4 L 160.0,98.0 L 168.9,82.6 L 177.6,84.3 L 179.9,102.0 L 186.0,105.0 L 201.4,96.1 L 208.1,101.9 L 201.3,118.3 L 205.0,124.0 L 222.8,124.0 L 225.7,132.4 L 211.6,143.2 Z" fill="#181E15" stroke="#D8FF3E" stroke-width="2.4" filter="url(#gearGlowLime)" />
+              <circle cx="160" cy="150" r="30" fill="#111410" stroke="#34382F" stroke-width="2" />
+              <circle cx="160" cy="150" r="14" fill="#D8FF3E" />
+              <line x1="160" y1="124" x2="160" y2="176" stroke="#111410" stroke-width="2.5" />
+              <line x1="134" y1="150" x2="186" y2="150" stroke="#111410" stroke-width="2.5" />
+            </g>
+
+            <!-- Gear 2: Medium Steel Interlocking Gear (Counter-Clockwise) -->
+            <g class="dev-gear-ccw" style="transform-origin: 262px 150px;">
+              <path d="M 298.0,150.0 L 309.1,159.4 L 306.3,168.4 L 291.9,170.0 L 287.5,175.5 L 288.7,189.9 L 280.4,194.3 L 269.0,185.3 L 262.0,186.0 L 252.6,197.1 L 243.6,194.3 L 242.0,179.9 L 236.5,175.5 L 222.1,176.7 L 217.7,168.4 L 226.7,157.0 L 226.0,150.0 L 214.9,140.6 L 217.7,131.6 L 232.1,130.0 L 236.5,124.5 L 235.3,110.1 L 243.6,105.7 L 255.0,114.7 L 262.0,114.0 L 271.4,102.9 L 280.4,105.7 L 282.0,120.1 L 287.5,124.5 L 301.9,123.3 L 306.3,131.6 L 297.3,143.0 Z" fill="#171A16" stroke="#858A80" stroke-width="2.2" />
+              <circle cx="262" cy="150" r="20" fill="#111410" stroke="#34382F" stroke-width="1.8" />
+              <circle cx="262" cy="150" r="8" fill="#858A80" />
+              <line x1="262" y1="133" x2="262" y2="167" stroke="#111410" stroke-width="2" />
+              <line x1="245" y1="150" x2="279" y2="150" stroke="#111410" stroke-width="2" />
+            </g>
+
+            <!-- Gear 3: Planetary Violet High-Speed Gear (Counter-Clockwise Fast) -->
+            <g class="dev-gear-ccw-fast" style="transform-origin: 160px 58px;">
+              <path d="M 188.0,58.0 L 196.7,67.8 L 192.9,77.0 L 179.8,77.8 L 174.0,82.2 L 169.8,94.7 L 160.0,96.0 L 152.8,85.0 L 146.0,82.2 L 133.1,84.9 L 127.1,77.0 L 133.0,65.2 L 132.0,58.0 L 123.3,48.2 L 127.1,39.0 L 140.2,38.2 L 146.0,33.8 L 150.2,21.3 L 160.0,20.0 L 167.2,31.0 L 174.0,33.8 L 186.9,31.1 L 192.9,39.0 L 187.0,50.8 Z" fill="#181520" stroke="#9C8AFF" stroke-width="2.2" filter="url(#gearGlowViolet)" />
+              <circle cx="160" cy="58" r="14" fill="#111410" stroke="#34382F" stroke-width="1.6" />
+              <circle cx="160" cy="58" r="6" fill="#9C8AFF" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Live Telemetry Ticker & 2s Progress -->
+        <div class="relative z-10 flex flex-col items-center space-y-3 w-full max-w-md">
+          <div id="dev-gear-status-text" class="text-xs font-mono text-[#D8FF3E] tracking-wider text-center h-4 transition-all duration-200">
+            INITIALIZING SYSTEM ARCHITECTURE...
+          </div>
+          
+          <!-- Animated 2-Second Progress Bar -->
+          <div class="w-full bg-[#1B1E19] h-2 rounded-full overflow-hidden border border-[#34382F]/80 p-0.5">
+            <div id="dev-gear-progress-bar" class="h-full bg-gradient-to-r from-[#D8FF3E] via-[#c4ec2a] to-[#9C8AFF] rounded-full transition-all ease-linear" style="width: 0%; box-shadow: 0 0 14px rgba(216,255,62,0.6);"></div>
+          </div>
+
+          <div class="flex items-center justify-between w-full text-[10px] font-mono text-[#858A80]">
+            <span>ARCHITECTURE // 24 APIs</span>
+            <span id="dev-gear-timer-pct">0%</span>
+          </div>
+        </div>
       </div>
     </div>
   `;
-  if (window.lucide) window.lucide.createIcons();
+
+  // Start smooth 2s progress bar animation
+  requestAnimationFrame(() => {
+    const pBar = document.getElementById('dev-gear-progress-bar');
+    if (pBar) {
+      pBar.style.transition = 'width 2000ms cubic-bezier(0.2, 0.8, 0.4, 1)';
+      pBar.style.width = '100%';
+    }
+  });
+
+  const pText = document.getElementById('dev-gear-status-text');
+  const pPct = document.getElementById('dev-gear-timer-pct');
+
+  const step1 = setTimeout(() => {
+    if (pText) pText.textContent = "SYNCHRONIZING 24+ REST API ENDPOINTS...";
+    if (pPct) pPct.textContent = "45%";
+  }, 650);
+
+  const step2 = setTimeout(() => {
+    if (pText) pText.textContent = "VERIFYING DATABASE SCHEMAS & LATENCY...";
+    if (pPct) pPct.textContent = "80%";
+  }, 1300);
+
+  const step3 = setTimeout(() => {
+    if (pText) pText.textContent = "ACCESS GRANTED // OPENING DEVELOPER HUB";
+    if (pPct) pPct.textContent = "100%";
+  }, 1900);
 
   try {
     const [overview, apisData, schemaData, healthData] = await Promise.all([
       api.getDevOverview(),
       api.getDevApis(),
       api.getDevSchema(),
-      api.getDevHealth()
+      api.getDevHealth(),
+      new Promise(resolve => setTimeout(resolve, 2000)) // Exact 2.0s gear transition
     ]);
+
+    clearTimeout(step1);
+    clearTimeout(step2);
+    clearTimeout(step3);
+
+    // Opening Page Transition (Gears exit smoothly)
+    const transCard = document.getElementById('dev-gear-transition');
+    if (transCard) {
+      transCard.classList.add('dev-transition-exit');
+      await new Promise(resolve => setTimeout(resolve, 350));
+    }
 
     renderPortal(overview, apisData, schemaData, healthData);
   } catch (err) {

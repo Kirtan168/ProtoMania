@@ -512,3 +512,55 @@ input[type=range].slider-cyber::-moz-range-thumb {
   box-shadow: 0 0 16px rgba(216, 255, 62, 0.8);
 }
 
+/* =========================================================
+   DEVELOPER HUB GEAR TRANSITION (2 SECONDS INDUSTRIAL REVEAL)
+   ========================================================= */
+
+@keyframes devGearRotateCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes devGearRotateCCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes devPulseGlow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); filter: drop-shadow(0 0 18px #D8FF3E); }
+}
+
+.dev-gear-cw {
+  animation: devGearRotateCW 3.6s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dev-gear-ccw {
+  animation: devGearRotateCCW 2.4s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dev-gear-ccw-fast {
+  animation: devGearRotateCCW 1.8s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dev-pulse-glow {
+  animation: devPulseGlow 1.6s ease-in-out infinite;
+}
+
+@keyframes devCurtainOpen {
+  0% { opacity: 1; transform: scale(1); filter: blur(0px); }
+  60% { opacity: 0.85; transform: scale(1.02); filter: blur(2px); }
+  100% { opacity: 0; transform: scale(1.06); filter: blur(6px); visibility: hidden; }
+}
+
+.dev-transition-exit {
+  animation: devCurtainOpen 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+

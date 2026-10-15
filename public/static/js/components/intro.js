@@ -121,12 +121,6 @@ export function initCinematicIntro(forceReplay = false) {
       <span class="text-[10px] font-mono text-[#858A80] tracking-wider mt-2">CALIBRATING MAXIMUM PROTEIN PROTOCOLS...</span>
     </div>
 
-    <!-- AUTOPLAY UNLOCK PROMPT -->
-    <button id="intro-tap-prompt" class="hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-40 bg-[#1B1E19]/95 border border-[#D8FF3E]/70 text-[#D8FF3E] px-5 py-2.5 rounded-full font-mono text-xs flex items-center space-x-2.5 shadow-[0_0_30px_rgba(216,255,62,0.4)] cursor-pointer hover:bg-[#D8FF3E] hover:text-[#111410] transition-all animate-bounce">
-      <span>🔊</span>
-      <span class="font-bold tracking-wider">TAP FOR IMMERSIVE SOUND</span>
-    </button>
-
     <!-- IMPACT ARENA & 3D STAGE -->
     <div id="intro-arena" class="relative z-30 flex flex-col items-center justify-center pointer-events-none">
       
@@ -334,7 +328,6 @@ export function initCinematicIntro(forceReplay = false) {
   const muteBtn = document.getElementById('intro-mute-btn');
   const muteIcon = document.getElementById('intro-mute-icon');
   const muteText = document.getElementById('intro-mute-text');
-  const tapPrompt = document.getElementById('intro-tap-prompt');
   const skipBtn = document.getElementById('intro-skip-btn');
 
   muteBtn?.addEventListener('click', (e) => {
@@ -346,13 +339,8 @@ export function initCinematicIntro(forceReplay = false) {
     if (muteText) muteText.textContent = newMuted ? 'MUTED' : 'SOUND ON';
   });
 
-  if (introAudio.isAutoplayBlocked()) {
-    tapPrompt?.classList.remove('hidden');
-  }
-
   const unlockAudioGesture = async () => {
     await introAudio.resume();
-    tapPrompt?.classList.add('hidden');
     window.removeEventListener('click', unlockAudioGesture);
     window.removeEventListener('touchstart', unlockAudioGesture);
   };
@@ -378,7 +366,6 @@ export function initCinematicIntro(forceReplay = false) {
     const arena = document.getElementById('intro-arena');
     const badge = document.getElementById('intro-anticipation-badge');
 
-    if (tapPrompt) tapPrompt.remove();
     if (badge) badge.style.opacity = '0';
     if (skipBtn) skipBtn.style.opacity = '0';
     if (muteBtn) muteBtn.style.opacity = '0';

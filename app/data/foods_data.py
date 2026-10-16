@@ -90,7 +90,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
         "description": "Zero preparation required! Keep a jar by your study desk. High in dietary fiber, low glycemic index, prevents mid-lecture hunger crashes."
     },
     {
@@ -200,7 +200,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": True,
         "is_hostel_friendly": False,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Fried_Pieces_of_Tofu.JPG/800px-Fried_Pieces_of_Tofu.JPG",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fried%20Pieces%20of%20Tofu.JPG?width=600",
         "description": "Leaner, lower-fat vegan alternative to dairy paneer. High in calcium, low carb, very affordable in grocery stores."
     },
     {
@@ -310,7 +310,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Mung_bean_sprouts%2C_close-up.jpg/960px-Mung_bean_sprouts%2C_close-up.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mung%20beans%20%28Vigna%20radiata%29.jpg?width=600",
         "description": "Sprouting increases bio-availability of enzymes, Vitamin C, and makes plant protein easily absorbable. Can be sprouted in any plastic container in hostel."
     },
     {
@@ -376,7 +376,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": True,
         "is_hostel_friendly": False,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Bata_machher_jhol_DSCN2820.jpg/960px-Bata_machher_jhol_DSCN2820.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fish%20fry%20%2890626%29.jpg?width=600",
         "description": "Rich in natural Omega-3 EPA/DHA fatty acids for joint health and cognitive function, plus complete lean animal protein."
     },
     {
@@ -552,7 +552,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "kettle_or_stove",
         "refrigeration_needed": True,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
         "description": "Street-style spicy Indian scrambled eggs cooked with chopped onions, tomatoes, turmeric and green chillies."
     },
     {
@@ -574,7 +574,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": True,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
         "description": "Campus tapri style fluffy omelette folded with fresh onions, green chillies, and freshly cracked black pepper."
     },
     {
@@ -596,7 +596,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": True,
         "is_hostel_friendly": False,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paneer_Bhurji.jpg/960px-Paneer_Bhurji.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Homemade%20Paneer%20Bhurji.jpg?width=600",
         "description": "High-casein vegetarian muscle builder. Crumbled fresh dairy paneer sautéed with tomatoes, cumin, and pav bhaji masala."
     },
     {
@@ -618,7 +618,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Besan_Cheela.jpg/960px-Besan_Cheela.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gram%20flour%20Chilla%20%28Besan%20ka%20Cheela%29.JPG?width=600",
         "description": "High-fiber, high-protein savory pancake made from roasted chickpea flour (besan), ajwain, onions, and coriander."
     },
     {
@@ -640,7 +640,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moong_dal_chilla.jpg/960px-Moong_dal_chilla.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonglet%20chilla%20with%20curd%20and%20hot%20tea.jpg?width=600",
         "description": "Lean, clean, complete plant protein chilla made from soaked ground moong dal. Crisp texture with near-zero fat."
     },
     {
@@ -662,7 +662,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "mess_or_stove",
         "refrigeration_needed": True,
         "is_hostel_friendly": False,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Indian_Chicken_Curry.jpg/960px-Indian_Chicken_Curry.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/South%20Indian%20Chicken%20curry.jpg?width=600",
         "description": "Tender chicken simmered in spiced onion-tomato gravy with whole garam masalas. High leucine content for peak muscle growth."
     },
     {
@@ -684,7 +684,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "stove_preferred",
         "refrigeration_needed": True,
         "is_hostel_friendly": False,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Fish_fry_indian.jpg/960px-Fish_fry_indian.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fish%20fry%20%2890626%29.jpg?width=600",
         "description": "Shallow pan-seared fish coated in turmeric, red chilli and lemon. Super high protein bioavailability and rich in Omega-3 DHA/EPA."
     },
     {
@@ -706,7 +706,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "kettle_or_stove",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
         "description": "Minced soya granules sautéed with onions, green chillies, cumin and chaat masala. Delivers 31g pure protein for just ₹14."
     },
     {
@@ -728,7 +728,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": False,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kala_chana_chaat.jpg/960px-Kala_chana_chaat.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Punjabi%20Chana%20Chaat.JPG?width=600",
         "description": "Traditional wrestler power snack. Boiled black chickpeas tossed with lemon, black salt, onions, and cucumber."
     },
     {
@@ -750,7 +750,7 @@ INDIAN_FOODS_DATASET = [
         "prep_type": "no_cook",
         "refrigeration_needed": True,
         "is_hostel_friendly": True,
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Dahi_Tadka.jpg/960px-Dahi_Tadka.jpg",
+        "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Curd%20India.jpg?width=600",
         "description": "Thick cooling curd tempered with mustard seeds, hing, dry red chillies, and curry leaves. Great gut health and protein accompaniment."
     }
 ]

@@ -131,7 +131,7 @@ export async function renderOptimizerView(container) {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               ${solved.items.map((item, idx) => `
                 <div class="stagger-${Math.min(idx + 1, 4)} bg-[#111410] p-3 rounded-xl border border-[#34382F] hover:border-[#D8FF3E]/40 transition-colors flex items-center space-x-3">
-                  <img src="${item.food.image_url}" alt="${item.food.name}" class="w-12 h-12 rounded-lg object-cover border border-[#34382F]" />
+                  <img src="${item.food.image_url}" alt="${item.food.name}" class="w-12 h-12 rounded-lg object-cover border border-[#34382F]" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'" />
                   <div class="flex-1 min-w-0">
                     <h4 class="text-xs font-bold text-[#F4F5EF] truncate">${item.food.name}</h4>
                     <div class="text-[11px] text-[#858A80] font-mono">${item.servings > 1 ? `${item.servings}x servings` : item.food.serving_size}</div>
@@ -193,7 +193,7 @@ export async function renderOptimizerView(container) {
               <div>
                 <!-- Authentic Food Photography -->
                 <div class="relative h-44 overflow-hidden bg-[#111410]">
-                  <img src="${f.image_url}" alt="${f.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src="${f.image_url}" alt="${f.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'" />
                   <div class="img-badge px-2 py-0.5 rounded text-[10px] font-mono font-bold ${f.cost_per_10g_protein <= 10 ? 'text-[#D8FF3E] border-[#D8FF3E]/40' : 'text-[#F4F5EF]'}">
                     ₹${f.cost_per_10g_protein} / 10g Protein
                   </div>

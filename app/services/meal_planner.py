@@ -55,7 +55,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 22.0 if tier_key != "tier_60" else 18.0,
                 "prep_time_min": 10,
                 "instructions": "Make 2 crisp moong dal chillas seasoned with ginger, cumin and green chillies. Serve with cool dahi.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moong_dal_chilla.jpg/960px-Moong_dal_chilla.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonglet%20chilla%20with%20curd%20and%20hot%20tea.jpg?width=600",
                 "budget_swap": "Soak loose whole moong overnight to get ₹8/portion cost."
             }
             lunch = {
@@ -81,7 +81,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 9.0 if tier_key != "tier_60" else 8.0,
                 "prep_time_min": 0,
                 "instructions": "Crunchy roasted chana directly from your desk jar 45 mins before training.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Zero cooking needed. Prevents expensive canteen junk food."
             }
             dinner = {
@@ -94,7 +94,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 25.0 if tier_key != "tier_60" else 18.0,
                 "prep_time_min": 10,
                 "instructions": "Sauté minced soya granules with onions, tomatoes, turmeric and chaat masala. Enjoy with 3 fresh rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Unbeatable budget muscle fuel: ₹14 gives over 30g protein."
             }
         elif day_idx == 1:  # Tuesday: Besan Chilla & Rajma Chawal
@@ -109,7 +109,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 15.0,
                 "prep_time_min": 8,
                 "instructions": "Whisk 60g gram flour with water, carom seeds (ajwain), chopped onions and chillies. Pan roast both sides crisp.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Besan_Cheela.jpg/960px-Besan_Cheela.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gram%20flour%20Chilla%20%28Besan%20ka%20Cheela%29.JPG?width=600",
                 "budget_swap": "Besan is naturally shelf-stable and requires no refrigeration."
             }
             lunch = {
@@ -122,7 +122,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 21.0,
                 "prep_time_min": 15,
                 "instructions": "Rich North Indian kidney bean curry paired with steamed rice for complete branched amino acids.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Rajma_Chawal.jpg/960px-Rajma_Chawal.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rajma%20Chawal%20by%20Rama%20Bhave.jpg?width=600",
                 "budget_swap": "Ask the college mess cook for extra thick rajma gravy."
             }
             snack = {
@@ -148,7 +148,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 26.0,
                 "prep_time_min": 8,
                 "instructions": "Whisk fresh curd with mustard seed and curry leaf tadka. Eat with yellow dal and warm chapatis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Dahi_Tadka.jpg/960px-Dahi_Tadka.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Curd%20India.jpg?width=600",
                 "budget_swap": "Slow casein protein protects against muscle breakdown overnight."
             }
         elif day_idx == 2:  # Wednesday: Paneer Bhurji / Soya Feast
@@ -163,7 +163,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 15.0,
                 "prep_time_min": 2,
                 "instructions": "Mix 50g roasted chana sattu with cold water, black salt and half a lemon in a shaker bottle.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Desi student protein shake: 0 min cook time for ₹15."
             }
             lunch = {
@@ -189,7 +189,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 12.0,
                 "prep_time_min": 3,
                 "instructions": "Boiled black chickpeas tossed with chopped onions, green chillies, lemon and chaat masala.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kala_chana_chaat.jpg/960px-Kala_chana_chaat.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Punjabi%20Chana%20Chaat.JPG?width=600",
                 "budget_swap": "Traditional wrestler power snack. High in magnesium and iron."
             }
             dinner = {
@@ -202,7 +202,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 38.0 if target_budget >= 90.0 else 20.0,
                 "prep_time_min": 10,
                 "instructions": "Crumble fresh paneer into sautéed onions, tomatoes, turmeric, and cumin. Serve with warm rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paneer_Bhurji.jpg/960px-Paneer_Bhurji.jpg" if target_budget >= 90.0 else "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Homemade%20Paneer%20Bhurji.jpg?width=600" if target_budget >= 90.0 else "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Buy paneer blocks from local sweet dairy to save 30% over retail."
             }
         elif day_idx == 3:  # Thursday: Oatmeal Muscle Fuel
@@ -243,7 +243,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 9.0,
                 "prep_time_min": 0,
                 "instructions": "Study desk crunch that keeps blood sugar steady before gym.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Buy 1kg roasted chana packet for ₹140."
             }
             dinner = {
@@ -256,7 +256,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 34.0 if target_budget >= 90.0 else 18.0,
                 "prep_time_min": 8,
                 "instructions": "Pan-sear golden tofu cubes in 1 tsp oil with black pepper, salt and chaat masala. Eat with rotis and dal.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Fried_Pieces_of_Tofu.JPG/800px-Fried_Pieces_of_Tofu.JPG" if target_budget >= 90.0 else "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fried%20Pieces%20of%20Tofu.JPG?width=600" if target_budget >= 90.0 else "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Tofu gives clean 15g protein with 0 cholesterol and zero lactose."
             }
         elif day_idx == 4:  # Friday: Moong Chilla & Sprout Power
@@ -271,7 +271,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 22.0,
                 "prep_time_min": 10,
                 "instructions": "Crisp pan-roasted moong dal chillas accompanied with thick curd.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moong_dal_chilla.jpg/960px-Moong_dal_chilla.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonglet%20chilla%20with%20curd%20and%20hot%20tea.jpg?width=600",
                 "budget_swap": "Moong dal is easiest on student digestion."
             }
             lunch = {
@@ -284,7 +284,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 23.0,
                 "prep_time_min": 8,
                 "instructions": "Toss raw sprouted moong with lemon and salt; enjoy alongside warm soya rice.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Mung_bean_sprouts%2C_close-up.jpg/960px-Mung_bean_sprouts%2C_close-up.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mung%20beans%20%28Vigna%20radiata%29.jpg?width=600",
                 "budget_swap": "Sprout whole green moong in a plastic tiffin box."
             }
             snack = {
@@ -325,7 +325,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 14.0,
                 "prep_time_min": 8,
                 "instructions": "Savory gram flour pancakes loaded with chopped onions and coriander.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Besan_Cheela.jpg/960px-Besan_Cheela.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gram%20flour%20Chilla%20%28Besan%20ka%20Cheela%29.JPG?width=600",
                 "budget_swap": "High fiber keeps you full through weekend study sessions."
             }
             lunch = {
@@ -364,7 +364,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 38.0 if target_budget >= 90.0 else 18.0,
                 "prep_time_min": 10,
                 "instructions": "Scrambled paneer sautéed with onions, tomatoes and pav bhaji spices.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paneer_Bhurji.jpg/960px-Paneer_Bhurji.jpg" if target_budget >= 90.0 else "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Homemade%20Paneer%20Bhurji.jpg?width=600" if target_budget >= 90.0 else "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Top-tier student muscle repair before Sunday rest."
             }
         else:  # Sunday: Paneer & Sattu Sunday Special
@@ -379,7 +379,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 18.0,
                 "prep_time_min": 2,
                 "instructions": "Double banana and cold sattu shake for high-calorie Sunday recovery.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Wholesale sattu provides 25g protein for ₹12."
             }
             lunch = {
@@ -392,7 +392,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 26.0,
                 "prep_time_min": 15,
                 "instructions": "The legendary Sunday student staple: hot rajma over steamed rice with fresh curd.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Rajma_Chawal.jpg/960px-Rajma_Chawal.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rajma%20Chawal%20by%20Rama%20Bhave.jpg?width=600",
                 "budget_swap": "Ask the mess staff for refill."
             }
             snack = {
@@ -405,7 +405,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 12.0,
                 "prep_time_min": 3,
                 "instructions": "Boiled black chana with chopped onions, tomato, lemon and chaat masala.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kala_chana_chaat.jpg/960px-Kala_chana_chaat.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Punjabi%20Chana%20Chaat.JPG?width=600",
                 "budget_swap": "Zero oil, high potassium and dietary fiber."
             }
             dinner = {
@@ -418,7 +418,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 38.0 if target_budget >= 90.0 else 18.0,
                 "prep_time_min": 10,
                 "instructions": "Sunday night dinner ensuring a deep anabolic protein surplus.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paneer_Bhurji.jpg/960px-Paneer_Bhurji.jpg" if target_budget >= 90.0 else "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Homemade%20Paneer%20Bhurji.jpg?width=600" if target_budget >= 90.0 else "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Paneer block from local dairy is 30% cheaper."
             }
 
@@ -436,7 +436,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Scramble 3 whole eggs with chopped onions, green chillies, turmeric and tomatoes. Serve with 2 warm rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Egg crate purchase brings egg cost to ₹6 each."
             }
             lunch = {
@@ -462,7 +462,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 9.0,
                 "prep_time_min": 0,
                 "instructions": "Quick clean crunch 45 mins before evening workout.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Zero cook time. Ideal for hostel room desk."
             }
             dinner = {
@@ -490,7 +490,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 24.0,
                 "prep_time_min": 5,
                 "instructions": "Fluffy 2-egg pan omelette with chopped onions, green chillies and pepper. Eat with 2 toast or rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
                 "budget_swap": "Ready in 5 minutes on hostel single hotplate."
             }
             lunch = {
@@ -503,7 +503,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 26.0,
                 "prep_time_min": 12,
                 "instructions": "North Indian comfort kidney beans with rice and probiotic dahi.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Rajma_Chawal.jpg/960px-Rajma_Chawal.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rajma%20Chawal%20by%20Rama%20Bhave.jpg?width=600",
                 "budget_swap": "Mess rajma is free/included; add your own dahi."
             }
             snack = {
@@ -529,7 +529,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 22.0,
                 "prep_time_min": 8,
                 "instructions": "Quick spicy scrambled eggs cooked with cumin, onions and tomatoes.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Add green peas or chopped capsicum for volume."
             }
         elif day_idx == 2:  # Wednesday: Moong Chilla & Boiled Eggs
@@ -544,7 +544,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 22.0,
                 "prep_time_min": 8,
                 "instructions": "Crisp moong dal chilla paired with 2 kettle-boiled eggs dusted with chaat masala.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moong_dal_chilla.jpg/960px-Moong_dal_chilla.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonglet%20chilla%20with%20curd%20and%20hot%20tea.jpg?width=600",
                 "budget_swap": "Dual protein source: plant legume + complete animal amino acids."
             }
             lunch = {
@@ -570,7 +570,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 11.0,
                 "prep_time_min": 2,
                 "instructions": "Zero-cook sattu shake for sustained pre-workout stamina.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Buy loose chana sattu from wholesale grocery."
             }
             dinner = {
@@ -598,7 +598,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 20.0,
                 "prep_time_min": 8,
                 "instructions": "Gram flour chilla with carom seeds and cool curd.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Besan_Cheela.jpg/960px-Besan_Cheela.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gram%20flour%20Chilla%20%28Besan%20ka%20Cheela%29.JPG?width=600",
                 "budget_swap": "Besan is rich in magnesium and zinc."
             }
             lunch = {
@@ -624,7 +624,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 12.0,
                 "prep_time_min": 3,
                 "instructions": "Wrestler power snack tossed with lemon, black salt and onions.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kala_chana_chaat.jpg/960px-Kala_chana_chaat.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Punjabi%20Chana%20Chaat.JPG?width=600",
                 "budget_swap": "High iron and complex carbs."
             }
             dinner = {
@@ -637,7 +637,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Spicy Indian scrambled eggs with fresh rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Add 20g soya granules for extra +10g protein."
             }
         elif day_idx == 4:  # Friday: Masala Omelette & Moong Dal
@@ -652,7 +652,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 23.0,
                 "prep_time_min": 5,
                 "instructions": "Hot pan omelette with onions, tomatoes, and chillies paired with 1 fresh banana.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
                 "budget_swap": "Wholesale eggs save ₹2 per egg."
             }
             lunch = {
@@ -691,7 +691,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 34.0,
                 "prep_time_min": 8,
                 "instructions": "Hearty Friday dinner pairing egg protein with slow casein curd.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Local dairy curd is ₹35/500g."
             }
         elif day_idx == 5:  # Saturday: Boiled Egg Stack & Soya Pulao
@@ -732,7 +732,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 13.0,
                 "prep_time_min": 0,
                 "instructions": "Fast carb + complex fiber power fuel before gym.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Desk snack ready at a moment's notice."
             }
             dinner = {
@@ -745,7 +745,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "3 eggs scrambled with onions, tomatoes and green chillies.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Quickest hot meal to cook in a student room."
             }
         else:  # Sunday: Double Omelette & Dhaba Feast
@@ -760,7 +760,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 30.0,
                 "prep_time_min": 6,
                 "instructions": "Rich 3-egg omelette folded with chopped onions, green chillies and coriander.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
                 "budget_swap": "Sunday luxury breakfast under ₹30."
             }
             lunch = {
@@ -773,7 +773,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 26.0,
                 "prep_time_min": 12,
                 "instructions": "Thick Sunday mess rajma with rice and cool dahi.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Rajma_Chawal.jpg/960px-Rajma_Chawal.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rajma%20Chawal%20by%20Rama%20Bhave.jpg?width=600",
                 "budget_swap": "Refill dal in the mess."
             }
             snack = {
@@ -786,7 +786,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 11.0,
                 "prep_time_min": 2,
                 "instructions": "Cold sattu shake with black salt and lemon.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Zero stove cooking required."
             }
             dinner = {
@@ -817,7 +817,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Scramble 3 whole eggs with chopped onions, green chillies and turmeric. Eat with 2 rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Egg crates cost ₹6/egg in wholesale."
             }
             lunch = {
@@ -830,7 +830,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 55.0 if target_budget >= 100.0 else 35.0,
                 "prep_time_min": 20,
                 "instructions": "Tender chicken pieces simmered in spiced onion-tomato gravy with steamed rice.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Indian_Chicken_Curry.jpg/960px-Indian_Chicken_Curry.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/South%20Indian%20Chicken%20curry.jpg?width=600",
                 "budget_swap": "Buy fresh chicken from local meat mandi at ₹180-₹220/kg."
             }
             snack = {
@@ -843,7 +843,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 9.0,
                 "prep_time_min": 0,
                 "instructions": "Crunchy roasted chana directly from your desk jar 45 mins before training.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Zero cook time. Prevents expensive canteen spending."
             }
             dinner = {
@@ -856,7 +856,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 20.0,
                 "prep_time_min": 10,
                 "instructions": "Economical muscle repair: sautéed minced soya granules with cumin and spices.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Balances total daily food cost while hitting 100g+ protein."
             }
         elif day_idx == 1:  # Tuesday: Masala Omelette & Tawa Fish
@@ -871,7 +871,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 24.0,
                 "prep_time_min": 5,
                 "instructions": "Fluffy pan omelette folded with onions, chillies and pepper. Eat with 2 toast or rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
                 "budget_swap": "5-minute fast breakfast."
             }
             lunch = {
@@ -910,7 +910,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 51.0 if target_budget >= 100.0 else 20.0,
                 "prep_time_min": 12,
                 "instructions": "Pan-seared fish fillet coated in turmeric, red chilli and lemon. High Omega-3s and lean protein.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Fish_fry_indian.jpg/960px-Fish_fry_indian.jpg" if target_budget >= 100.0 else "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fish%20fry%20%2890626%29.jpg?width=600" if target_budget >= 100.0 else "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
                 "budget_swap": "Rohu/Tilapia is cheap and nutrient dense."
             }
         elif day_idx == 2:  # Wednesday: Chicken Breast & Rice Bowl
@@ -925,7 +925,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 22.0,
                 "prep_time_min": 8,
                 "instructions": "Crisp moong dal chilla paired with 2 kettle-boiled eggs dusted with chaat masala.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moong_dal_chilla.jpg/960px-Moong_dal_chilla.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonglet%20chilla%20with%20curd%20and%20hot%20tea.jpg?width=600",
                 "budget_swap": "Moong dal + eggs deliver full amino spectrum."
             }
             lunch = {
@@ -951,7 +951,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 11.0,
                 "prep_time_min": 2,
                 "instructions": "Zero-cook sattu shake for sustained pre-workout stamina.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Best pre-workout drink for under ₹12."
             }
             dinner = {
@@ -964,7 +964,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Spicy Indian scrambled eggs with fresh rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Cook in 1 tsp oil."
             }
         elif day_idx == 3:  # Thursday: Rohu Fish Curry
@@ -992,7 +992,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 53.0 if target_budget >= 100.0 else 35.0,
                 "prep_time_min": 18,
                 "instructions": "Freshwater Rohu fish in mustard-tomato curry gravy over hot steamed rice.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Bata_machher_jhol_DSCN2820.jpg/960px-Bata_machher_jhol_DSCN2820.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fish%20fry%20%2890626%29.jpg?width=600",
                 "budget_swap": "Fresh fish gives pure Omega-3 EPA/DHA."
             }
             snack = {
@@ -1005,7 +1005,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 12.0,
                 "prep_time_min": 3,
                 "instructions": "Desi power snack tossed with lemon, black salt and onions.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kala_chana_chaat.jpg/960px-Kala_chana_chaat.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Punjabi%20Chana%20Chaat.JPG?width=600",
                 "budget_swap": "Zero cooking needed if boiled."
             }
             dinner = {
@@ -1018,7 +1018,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 20.0,
                 "prep_time_min": 10,
                 "instructions": "Minced soya granules sautéed with cumin, green chillies and garam masala.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "31g protein for ₹14."
             }
         elif day_idx == 4:  # Friday: Besan Chilla & Chicken Feast
@@ -1033,7 +1033,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 19.0,
                 "prep_time_min": 8,
                 "instructions": "Savory gram flour pancakes loaded with chopped onions and coriander.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Besan_Cheela.jpg/960px-Besan_Cheela.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gram%20flour%20Chilla%20%28Besan%20ka%20Cheela%29.JPG?width=600",
                 "budget_swap": "High fiber keeps you full through morning."
             }
             lunch = {
@@ -1046,7 +1046,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 56.0 if target_budget >= 100.0 else 38.0,
                 "prep_time_min": 20,
                 "instructions": "Slow cooked chicken in rich onion-tomato curry served with hot rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Indian_Chicken_Curry.jpg/960px-Indian_Chicken_Curry.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/South%20Indian%20Chicken%20curry.jpg?width=600",
                 "budget_swap": "Campus mess Friday special chicken or dhaba meal."
             }
             snack = {
@@ -1072,7 +1072,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 34.0,
                 "prep_time_min": 8,
                 "instructions": "Hearty Friday dinner pairing egg protein with slow casein curd.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Local dairy curd is ₹35/500g."
             }
         elif day_idx == 5:  # Saturday: Tawa Fish Fry Weekend
@@ -1087,7 +1087,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 24.0,
                 "prep_time_min": 5,
                 "instructions": "Hot pan omelette with onions, chillies and pepper.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Masala_Omelette.jpg/960px-Masala_Omelette.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Masala%20omelette%20with%20bread%20toasties.jpg?width=600",
                 "budget_swap": "Wholesale eggs save ₹2 per egg."
             }
             lunch = {
@@ -1100,7 +1100,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 58.0 if target_budget >= 100.0 else 28.0,
                 "prep_time_min": 15,
                 "instructions": "Pan-seared fish coated in spicy lemon marinade with rice and dal.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Fish_fry_indian.jpg/960px-Fish_fry_indian.jpg" if target_budget >= 100.0 else "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fish%20fry%20%2890626%29.jpg?width=600" if target_budget >= 100.0 else "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80",
                 "budget_swap": "Saturday market fish is freshest and cheapest."
             }
             snack = {
@@ -1113,7 +1113,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 13.0,
                 "prep_time_min": 0,
                 "instructions": "Pre-workout energy booster with complex carbs and plant protein.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Desk snack ready in 0 seconds."
             }
             dinner = {
@@ -1126,7 +1126,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Spicy Indian scrambled eggs with fresh rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "Add green chillies and coriander."
             }
         else:  # Sunday: Chicken Biryani Feast
@@ -1141,7 +1141,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 28.0,
                 "prep_time_min": 7,
                 "instructions": "Sunday morning 3-egg bhurji with toasted bread or warm rotis.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Spicy%20egg%20bhurji%20%40%20the%20eggfactory.jpg?width=600",
                 "budget_swap": "High protein recovery breakfast."
             }
             lunch = {
@@ -1154,7 +1154,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 62.0 if target_budget >= 100.0 else 42.0,
                 "prep_time_min": 25,
                 "instructions": "Traditional Sunday student chicken curry feast with extra gravy over rice.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Indian_Chicken_Curry.jpg/960px-Indian_Chicken_Curry.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/South%20Indian%20Chicken%20curry.jpg?width=600",
                 "budget_swap": "Every campus mess offers Sunday chicken meal."
             }
             snack = {
@@ -1167,7 +1167,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 11.0,
                 "prep_time_min": 2,
                 "instructions": "Cold sattu shake with black salt and lemon.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Torraos-Las_Mayas-2011.JPG/960px-Torraos-Las_Mayas-2011.JPG",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Roasted%20Chana.JPG?width=600",
                 "budget_swap": "Zero cook drink."
             }
             dinner = {
@@ -1180,7 +1180,7 @@ def get_day_recipes(tier_key: str, diet_pref: str, mode: str, day_idx: int) -> D
                 "price_inr": 56.0 if target_budget >= 100.0 else 20.0,
                 "prep_time_min": 15,
                 "instructions": "Sunday night dinner ensuring a deep anabolic protein surplus.",
-                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Indian_Chicken_Curry.jpg/960px-Indian_Chicken_Curry.jpg" if target_budget >= 100.0 else "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Soya_bhurji.jpg/960px-Soya_bhurji.jpg",
+                "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/South%20Indian%20Chicken%20curry.jpg?width=600" if target_budget >= 100.0 else "https://commons.wikimedia.org/wiki/Special:FilePath/Soya%20Granules%20Bhurji.jpg?width=600",
                 "budget_swap": "Wrap chicken pieces in rotis for easy eating."
             }
 

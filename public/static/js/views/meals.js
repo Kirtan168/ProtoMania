@@ -1,6 +1,7 @@
 /**
- * PROTOMANIA Personalized Meal Planner View
+ * PROTOMANIA Personalized 7-Day Day-Wise Meal Planner View
  * Multi-tier budget schedules (₹60, ₹80, ₹100, ₹120, ₹150+),
+ * 7-Day day-wise variety (Monday to Sunday with distinct recipes),
  * multi-mode realities (Hostel, Mess Survival, Zero-Cook, Exam-Week, Veg Muscle),
  * and dynamic weekly bulk grocery haul generator.
  */
@@ -15,27 +16,51 @@ export async function renderMealsView(container) {
   let activeMode = "hostel";
   let activeBudget = parseFloat(userProfile.daily_budget_inr) || 80.0;
   let activeDiet = userProfile.dietary_preference || "vegetarian";
+  let activeDayIndex = 0; // 0 = Monday ... 6 = Sunday
+  let currentPlan = null;
 
   async function loadAndRender() {
     container.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 animate-fade-in">
         <div class="flex items-center justify-center py-20 text-[#858A80]">
           <i data-lucide="loader" class="w-6 h-6 animate-spin text-[#D8FF3E]"></i>
-          <span class="ml-2 font-mono text-xs">Assembling ₹${activeBudget}/day meal schedule in ${activeMode.replace('_', ' ')} mode...</span>
+          <span class="ml-2 font-mono text-xs">Assembling 7-day ₹${activeBudget}/day meal schedule in ${activeMode.replace('_', ' ')} mode...</span>
         </div>
       </div>
     `;
     if (window.lucide) window.lucide.createIcons();
 
     try {
-      const plan = await api.getMealPlan(activeMode, activeBudget, activeDiet);
-      renderUI(plan);
+      currentPlan = await api.getMealPlan(activeMode, activeBudget, activeDiet);
+      renderUI(currentPlan);
     } catch (e) {
       container.innerHTML = `<div class="p-8 text-center text-red-400">Failed to load meal plan: ${e.message}</div>`;
     }
   }
 
   function renderUI(plan) {
+    if (!plan) return;
+
+    // Normalize 7-day schedule array
+    const days = (plan.days && plan.days.length > 0) ? plan.days : [{
+      day_number: 1,
+      day_name: "Today",
+      day_short: "Today",
+      theme: plan.tier_title || "Daily Nutrition Plan",
+      meals: plan.meals || [],
+      total_protein_g: plan.total_protein_g || 0,
+      total_calories: plan.total_calories || 0,
+      total_price_inr: plan.total_price_inr || 0,
+      budget_remaining_inr: plan.budget_remaining_inr || 0
+    }];
+
+    // Clamp activeDayIndex within range
+    if (activeDayIndex >= days.length) {
+      activeDayIndex = 0;
+    }
+
+    const currentDay = days[activeDayIndex];
+
     container.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
         <!-- Header -->
@@ -43,11 +68,11 @@ export async function renderMealsView(container) {
           <div class="space-y-2">
             <div class="inline-flex items-center space-x-2 text-xs font-mono text-[#D8FF3E]">
               <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-pulse"></span>
-              <span>SMART BUDGET MEAL TIMELINE</span>
+              <span>7-DAY HIGH-PROTEIN DIET SCHEDULE</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-[#F4F5EF]">Student Meal Planner</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-[#F4F5EF]">Student Diet & Meal Planner</h1>
             <p class="text-xs sm:text-sm text-[#858A80] max-w-xl">
-              Engineered recipes strictly scaled to your exact daily pocket money and living reality.
+              Authentic Indian student recipes engineered day-by-day to fit your exact ₹${activeBudget}/day budget and hostel conditions.
             </p>
           </div>
 
@@ -58,11 +83,11 @@ export async function renderMealsView(container) {
           </button>
         </div>
 
-        <!-- 1. Dedicated Budget Tier Selector Bar (Crucial Core Feature) -->
+        <!-- 1. Dedicated Budget Tier Selector Bar -->
         <div class="card-proto p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1B1E19] border-[#34382F]">
           <div class="flex items-center space-x-2">
             <i data-lucide="wallet" class="w-4 h-4 text-[#D8FF3E]"></i>
-            <span class="text-xs font-mono uppercase text-[#F4F5EF] font-bold">Select Daily Budget:</span>
+            <span class="text-xs font-mono uppercase text-[#F4F5EF] font-bold">Daily Budget Tier:</span>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             ${[
@@ -84,7 +109,7 @@ export async function renderMealsView(container) {
           </div>
         </div>
 
-        <!-- 2. Dual Controls Bar: Student Reality Mode & Dietary Preference -->
+        <!-- 2. Dual Controls Bar: Living Reality Mode & Dietary Preference -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <!-- Student Reality Mode -->
           <div class="lg:col-span-8 card-proto p-3.5 px-4 flex flex-wrap items-center justify-between gap-3 bg-[#1B1E19]">
@@ -121,45 +146,91 @@ export async function renderMealsView(container) {
           </div>
         </div>
 
-        <!-- 3. Dynamic Tier Banner Display -->
+        <!-- 3. Interactive 7-Day Day-Wise Navigation Selector -->
+        <div class="card-proto p-4 bg-[#1B1E19] border-[#34382F] space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#34382F] pb-2.5">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="calendar" class="w-4 h-4 text-[#D8FF3E]"></i>
+              <span class="text-xs font-mono uppercase text-[#F4F5EF] font-bold">Select Day of Week:</span>
+              <span class="text-[11px] text-[#858A80] font-mono hidden sm:inline">(Tap to view recipes & macros)</span>
+            </div>
+            <div class="text-xs font-mono text-[#D8FF3E] font-semibold">
+              Weekly Total: ₹${plan.total_weekly_cost_inr || (plan.average_daily_cost_inr * 7)} • Avg ${plan.average_daily_protein_g || currentDay.total_protein_g}g Protein/day
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            ${days.map((d, idx) => {
+              const isActive = activeDayIndex === idx;
+              return `
+                <button 
+                  class="day-pill-btn p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${isActive ? 'border-[#D8FF3E] bg-[#D8FF3E] text-[#111410] shadow-[0_0_15px_rgba(216,255,62,0.35)] scale-[1.02]' : 'border-[#34382F] bg-[#111410] text-[#858A80] hover:text-[#F4F5EF] hover:border-[#858A80]'}" 
+                  data-day-idx="${idx}">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono font-black uppercase ${isActive ? 'text-[#111410]' : 'text-[#F4F5EF]'}">${d.day_short}</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${isActive ? 'bg-[#111410] text-[#D8FF3E] font-bold' : 'bg-[#1B1E19] text-[#858A80]'}">Day 0${idx + 1}</span>
+                  </div>
+                  <div class="mt-1.5 font-mono">
+                    <div class="text-xs font-extrabold ${isActive ? 'text-[#111410]' : 'text-[#D8FF3E]'}">${d.total_protein_g}g Prot</div>
+                    <div class="text-[10px] ${isActive ? 'text-[#111410]/80' : 'text-[#858A80]'}">₹${d.total_price_inr}</div>
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- 4. Dynamic Tier & Day Focus Banner Display -->
         <div class="p-4 rounded-xl bg-gradient-to-r from-[#D8FF3E]/10 via-[#1B1E19] to-[#1B1E19] border border-[#D8FF3E]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
           <div class="space-y-1">
             <div class="flex items-center space-x-2">
               <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-pulse"></span>
-              <span class="text-xs font-mono font-bold text-[#D8FF3E] uppercase">${plan.tier_title}</span>
-              <span class="text-[10px] text-[#858A80] font-mono">(${plan.mode_title})</span>
+              <span class="text-xs font-mono font-bold text-[#D8FF3E] uppercase">${currentDay.day_name} Focus:</span>
+              <span class="text-xs font-bold text-[#F4F5EF]">${currentDay.theme}</span>
             </div>
-            <p class="text-xs text-[#F4F5EF] leading-relaxed">${plan.tier_tagline}</p>
+            <p class="text-xs text-[#858A80] leading-relaxed">
+              <strong class="text-[#F4F5EF]">${plan.tier_title}</strong> — ${plan.tier_tagline}
+            </p>
           </div>
           <div class="text-right font-mono text-xs text-[#858A80] flex-shrink-0">
-            <div>Planned Cost: <strong class="text-[#D8FF3E] font-bold text-sm">₹${plan.total_price_inr}</strong></div>
-            <div class="text-[11px]">Budget Limit: ₹${plan.daily_budget_inr}/day</div>
+            <div>${currentDay.day_name} Cost: <strong class="text-[#D8FF3E] font-bold text-sm">₹${currentDay.total_price_inr}</strong></div>
+            <div class="text-[11px]">Daily Budget: ₹${activeBudget} (Leftover: ₹${currentDay.budget_remaining_inr})</div>
           </div>
         </div>
 
-        <!-- Macro & Budget Tally Bar -->
+        <!-- 5. Macro & Budget Tally Bar -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
           <div class="card-proto p-4 space-y-1 border-l-2 border-[#D8FF3E]">
-            <span class="text-[10px] text-[#858A80] uppercase">Planned Protein</span>
-            <div id="meal-stat-protein" class="text-xl font-bold text-[#D8FF3E]">${plan.total_protein_g}g</div>
+            <span class="text-[10px] text-[#858A80] uppercase">${currentDay.day_short} Protein</span>
+            <div id="meal-stat-protein" class="text-xl font-bold text-[#D8FF3E]">${currentDay.total_protein_g}g</div>
           </div>
           <div class="card-proto p-4 space-y-1">
-            <span class="text-[10px] text-[#858A80] uppercase">Total Calories</span>
-            <div id="meal-stat-calories" class="text-xl font-bold text-[#F4F5EF]">${plan.total_calories} kcal</div>
+            <span class="text-[10px] text-[#858A80] uppercase">${currentDay.day_short} Calories</span>
+            <div id="meal-stat-calories" class="text-xl font-bold text-[#F4F5EF]">${currentDay.total_calories} kcal</div>
           </div>
           <div class="card-proto p-4 space-y-1">
-            <span class="text-[10px] text-[#858A80] uppercase">Total Cost</span>
-            <div id="meal-stat-cost" class="text-xl font-bold text-[#F4F5EF]">₹${plan.total_price_inr}</div>
+            <span class="text-[10px] text-[#858A80] uppercase">${currentDay.day_short} Cost</span>
+            <div id="meal-stat-cost" class="text-xl font-bold text-[#F4F5EF]">₹${currentDay.total_price_inr}</div>
           </div>
-          <div class="card-proto p-4 space-y-1 border-r-2 ${plan.budget_remaining_inr >= 0 ? 'border-[#D8FF3E]' : 'border-red-400'}">
-            <span class="text-[10px] text-[#858A80] uppercase">Budget Leftover</span>
-            <div id="meal-stat-remaining" class="text-xl font-bold ${plan.budget_remaining_inr >= 0 ? 'text-[#D8FF3E]' : 'text-red-400'}">₹${plan.budget_remaining_inr}</div>
+          <div class="card-proto p-4 space-y-1 border-r-2 ${currentDay.budget_remaining_inr >= 0 ? 'border-[#D8FF3E]' : 'border-red-400'}">
+            <span class="text-[10px] text-[#858A80] uppercase">Pocket Leftover</span>
+            <div id="meal-stat-remaining" class="text-xl font-bold ${currentDay.budget_remaining_inr >= 0 ? 'text-[#D8FF3E]' : 'text-red-400'}">₹${currentDay.budget_remaining_inr}</div>
           </div>
         </div>
 
-        <!-- Meal Cards Timeline -->
+        <!-- 6. Meal Cards Timeline for Current Day -->
         <div class="space-y-6">
-          ${plan.meals.map((m, idx) => `
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-[#F4F5EF] flex items-center space-x-2">
+              <span>${currentDay.day_name}'s Meal Timeline</span>
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-[#1B1E19] text-[#D8FF3E] border border-[#34382F]">
+                ${currentDay.meals.length} Meals Planned
+              </span>
+            </h2>
+            <span class="text-xs font-mono text-[#858A80]">Strict Student Budget Scaled</span>
+          </div>
+
+          ${currentDay.meals.map((m, idx) => `
             <div class="stagger-${Math.min(idx + 1, 4)} card-proto p-6 border-[#34382F] hover:border-[#D8FF3E]/30 transition-all space-y-5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#34382F] pb-4">
                 <div class="flex items-center space-x-3">
@@ -186,9 +257,12 @@ export async function renderMealsView(container) {
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <!-- Photography -->
-                <div class="md:col-span-4 h-48 rounded-xl overflow-hidden bg-[#111410] border border-[#34382F]">
-                  <img src="${m.image_url}" alt="${m.title}" class="w-full h-full object-cover" />
+                <!-- Authentic Photography -->
+                <div class="md:col-span-4 h-48 rounded-xl overflow-hidden bg-[#111410] border border-[#34382F] relative group">
+                  <img src="${m.image_url}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'" />
+                  <div class="absolute bottom-2 left-2 bg-[#111410]/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-mono text-[#D8FF3E] border border-[#34382F]">
+                    ${m.prep_time_min === 0 ? 'Zero-Cook' : `${m.prep_time_min}m prep`}
+                  </div>
                 </div>
 
                 <!-- Prep Details & Hacks -->
@@ -220,14 +294,22 @@ export async function renderMealsView(container) {
     `;
 
     if (window.lucide) window.lucide.createIcons();
-    animateValue(document.getElementById("meal-stat-protein"), 0, plan.total_protein_g, 400, "", "g");
-    animateValue(document.getElementById("meal-stat-calories"), 0, plan.total_calories, 400, "", " kcal");
-    animateValue(document.getElementById("meal-stat-cost"), 0, plan.total_price_inr, 400, "₹", "");
-    animateValue(document.getElementById("meal-stat-remaining"), 0, plan.budget_remaining_inr, 400, "₹", "");
+    animateValue(document.getElementById("meal-stat-protein"), 0, currentDay.total_protein_g, 300, "", "g");
+    animateValue(document.getElementById("meal-stat-calories"), 0, currentDay.total_calories, 300, "", " kcal");
+    animateValue(document.getElementById("meal-stat-cost"), 0, currentDay.total_price_inr, 300, "₹", "");
+    animateValue(document.getElementById("meal-stat-remaining"), 0, currentDay.budget_remaining_inr, 300, "₹", "");
     attachListeners();
   }
 
   function attachListeners() {
+    // 7-Day Day Selector Buttons
+    document.querySelectorAll(".day-pill-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeDayIndex = parseInt(btn.getAttribute("data-day-idx"));
+        renderUI(currentPlan);
+      });
+    });
+
     // Budget Tier switcher
     document.querySelectorAll(".budget-tier-btn").forEach(btn => {
       btn.addEventListener("click", () => {

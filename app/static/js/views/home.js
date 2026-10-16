@@ -49,7 +49,7 @@ export function renderHomeView(container) {
               </h1>
 
               <p class="text-sm sm:text-base text-[#858A80] max-w-xl leading-relaxed">
-                Your AI fitness companion for affordable protein, personalized workouts, and smarter progress. Built for your real living conditions and student pocket money.
+                Your AI nutrition companion for affordable protein, day-wise meal plans, and smarter progress. Built for your real living conditions and student pocket money.
               </p>
 
               <!-- Main CTAs -->
@@ -260,9 +260,9 @@ export function renderHomeView(container) {
             <div class="w-10 h-10 rounded-lg bg-[#9C8AFF]/10 text-[#9C8AFF] flex items-center justify-center font-bold text-lg">
               <i data-lucide="hourglass" class="w-5 h-5"></i>
             </div>
-            <h4 class="font-bold text-base text-[#F4F5EF]">Exam Week Time Crunch</h4>
+            <h4 class="font-bold text-base text-[#F4F5EF]">Exam Week Zero-Cook Nutrition</h4>
             <p class="text-xs text-[#858A80] leading-relaxed">
-              2-hour gym sessions fail during lab submissions and sem exams. Our dynamic Time Crunch engine converts heavy workouts into sharp 25-minute supersets that maintain muscle.
+              Complex cooking fails during lab submissions and sem exams. Our Zero-Cook engine crafts 2-minute kettle and tapri meal plans (Sattu shakes, boiled egg chaat, peanut bowls) that hit your protein goal without losing study time.
             </p>
           </div>
         </div>

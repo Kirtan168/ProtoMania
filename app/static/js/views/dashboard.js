@@ -150,9 +150,9 @@ export async function renderDashboardView(container) {
               <i data-lucide="plus-circle" class="w-4 h-4"></i>
               <span>Log Meal</span>
             </a>
-            <a href="#/workouts" class="btn-ghost text-xs px-4 py-2.5 font-semibold flex items-center space-x-1.5 hover:border-[#D8FF3E] transition-all">
-              <i data-lucide="dumbbell" class="w-4 h-4 text-[#D8FF3E]"></i>
-              <span>Start Workout</span>
+            <a href="#/meals" class="btn-ghost text-xs px-4 py-2.5 font-semibold flex items-center space-x-1.5 hover:border-[#D8FF3E] transition-all">
+              <i data-lucide="calendar" class="w-4 h-4 text-[#D8FF3E]"></i>
+              <span>7-Day Diet Plan</span>
             </a>
             <a href="#/optimizer" class="btn-ghost text-xs px-3.5 py-2.5 font-semibold flex items-center space-x-1.5">
               <i data-lucide="calculator" class="w-4 h-4"></i>
@@ -305,45 +305,45 @@ export async function renderDashboardView(container) {
 
           <!-- Right Col (5 cols): Today's Workout & Streak/XP Widget -->
           <div class="lg:col-span-5 space-y-6">
-            <!-- Today's Workout Preview Card with Photography -->
+            <!-- 7-Day Diet Plan & Smart Blueprint Card -->
             <div class="card-proto overflow-hidden border-[#D8FF3E]/40 group">
               <div class="relative h-44 overflow-hidden bg-[#111410]">
                 <img 
-                  src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=700&q=80" 
-                  alt="Training session" 
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Anda_bhurji_pav.jpg/960px-Anda_bhurji_pav.jpg" 
+                  alt="Student Diet Plan" 
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80" 
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-[#1B1E19] via-[#1B1E19]/40 to-transparent"></div>
                 
                 <div class="absolute top-3 left-3 bg-[#111410]/90 border border-[#D8FF3E]/40 px-2.5 py-1 rounded-lg text-[10px] font-mono text-[#D8FF3E] font-bold">
-                  TODAY'S TRAINING
+                  DAY-WISE DIET BLUEPRINT
                 </div>
 
                 <div class="absolute top-3 right-3 bg-[#111410]/90 border border-[#34382F] px-2.5 py-1 rounded-lg text-[10px] font-mono text-[#F4F5EF] font-bold">
-                  45 MINS TARGET
+                  7-DAY ROTATION
                 </div>
 
                 <div class="absolute bottom-3 left-3 right-3">
-                  <h3 class="text-xl font-black text-[#F4F5EF]">Upper Body Push Focus</h3>
-                  <p class="text-xs text-[#858A80]">Bench Press • Incline Dumbbells • Lateral Raises</p>
+                  <h3 class="text-xl font-black text-[#F4F5EF]">Student 7-Day Meal Architecture</h3>
+                  <p class="text-xs text-[#858A80]">Egg & Paneer Bhurji • Moong & Besan Chillas • Curries & Shakes</p>
                 </div>
               </div>
 
               <div class="p-5 space-y-4">
                 <div class="bg-[#111410] p-3 rounded-xl border border-[#34382F] space-y-2 text-xs font-mono">
                   <div class="flex justify-between">
-                    <span class="text-[#858A80]">Muscle Focus:</span>
-                    <span class="text-[#F4F5EF] font-semibold">Chest, Delts, Triceps</span>
+                    <span class="text-[#858A80]">Dietary Focus:</span>
+                    <span class="text-[#F4F5EF] font-semibold">${profile?.dietary_preference ? profile.dietary_preference.toUpperCase() : 'VEGETARIAN'}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-[#858A80]">Rest Intervals:</span>
-                    <span class="text-[#D8FF3E] font-bold">60 - 75 Seconds</span>
+                    <span class="text-[#858A80]">Daily Target Limit:</span>
+                    <span class="text-[#D8FF3E] font-bold">₹${budgetLimit} / Day</span>
                   </div>
                 </div>
 
-                <a href="#/workouts" class="btn-acid w-full py-3 text-center text-xs font-bold flex items-center justify-center space-x-2 shadow-lg hover:scale-[1.02] transition-transform">
-                  <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                  <span>Start Workout Session</span>
+                <a href="#/meals" class="btn-acid w-full py-3 text-center text-xs font-bold flex items-center justify-center space-x-2 shadow-lg hover:scale-[1.02] transition-transform">
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                  <span>Explore 7-Day Day-Wise Diet Plan</span>
                 </a>
               </div>
             </div>

@@ -82,20 +82,32 @@ def solve_budget_protein_combination(
 
     max_servings = {
         "soya_chunks": 2.0,      # Max 100g dry soya (52g protein)
+        "soya_bhurji": 2.0,      # Max 120g soya keema
         "whole_eggs": 3.0,       # Max 6 eggs (38g protein)
         "egg_whites": 2.0,       # Max 8 whites
+        "egg_bhurji": 2.0,       # Max 2 portions egg bhurji
+        "masala_omelette": 2.0,  # Max 2 omelettes
         "amul_toned_milk": 2.0,  # Max 1 litre (32g protein)
         "sattu_drink": 2.0,      # Max 100g sattu
         "roasted_chana": 2.0,    # Max 120g chana
+        "kala_chana_chaat": 2.0, # Max 2 bowls black chana
         "roasted_peanuts": 2.0,  # Max 80g peanuts (healthy fats)
         "fresh_paneer": 2.0,     # Max 150g paneer
+        "paneer_bhurji": 2.0,    # Max 200g paneer bhurji
+        "besan_chilla": 2.0,     # Max 4 chillas
+        "moong_chilla": 2.0,     # Max 4 moong chillas
         "fresh_curd": 2.0,       # Max 400g curd
+        "dahi_tadka": 2.0,       # Max 2 bowls dahi tadka
         "wheat_roti": 2.0,       # Max 4 rotis
         "moong_dal": 2.0,        # Max 2 bowls
         "steamed_rice": 2.0,
         "rolled_oats": 2.0,
         "peanut_butter": 2.0,
         "chicken_breast": 2.0,
+        "chicken_curry_homestyle": 2.0,
+        "rohu_fish_curry": 2.0,
+        "fish_fry_tawa": 2.0,
+        "tofu_soya_paneer": 2.0,
     }
 
     allocated = {}

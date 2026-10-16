@@ -14,7 +14,6 @@ import { renderOnboardingView } from "./views/onboarding.js";
 import { renderDashboardView } from "./views/dashboard.js";
 import { renderOptimizerView } from "./views/optimizer.js";
 import { renderMealsView } from "./views/meals.js";
-import { renderWorkoutsView } from "./views/workouts.js";
 import { renderWrappedView } from "./views/wrapped.js";
 import { renderBrokeBuildingView } from "./views/broke_building.js";
 import { renderAssistantView } from "./views/assistant.js";
@@ -28,7 +27,7 @@ const routes = {
   "/dashboard": renderDashboardView,
   "/optimizer": renderOptimizerView,
   "/meals": renderMealsView,
-  "/workouts": renderWorkoutsView,
+  "/workouts": renderMealsView,
   "/wrapped": renderWrappedView,
   "/broke-building": renderBrokeBuildingView,
   "/assistant": renderAssistantView,

@@ -34,8 +34,7 @@ export function initFooter() {
             <ul class="space-y-2 text-xs">
               <li><a href="#/dashboard" class="hover:text-[#D8FF3E] transition-colors">Daily Command Center</a></li>
               <li><a href="#/optimizer" class="hover:text-[#D8FF3E] transition-colors">Budget Protein Optimizer</a></li>
-              <li><a href="#/meals" class="hover:text-[#D8FF3E] transition-colors">Student Meal Planner</a></li>
-              <li><a href="#/workouts" class="hover:text-[#D8FF3E] transition-colors">AI Workout Generator</a></li>
+              <li><a href="#/meals" class="hover:text-[#D8FF3E] transition-colors">7-Day Day-Wise Diet Plan</a></li>
               <li><a href="#/onboarding" class="hover:text-[#D8FF3E] transition-colors">Build Personalized Plan</a></li>
             </ul>
           </div>

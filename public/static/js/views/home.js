@@ -533,15 +533,33 @@ export function renderHomeView(container) {
   const slider = document.getElementById("hero-budget-slider");
   const budgetValDisplay = document.getElementById("hero-budget-val");
   const btnLabel = document.getElementById("hero-btn-label");
+  let heroDebounceTimer = null;
 
   if (slider && budgetValDisplay) {
     slider.addEventListener("input", (e) => {
       heroBudget = parseFloat(e.target.value);
       budgetValDisplay.textContent = heroBudget;
       if (btnLabel) btnLabel.textContent = `GENERATE BUDGET DIET PLAN (₹${heroBudget}/DAY)`;
+
+      // Real-time chip sync
+      document.querySelectorAll(".hero-budget-chip").forEach(c => {
+        const val = parseFloat(c.getAttribute("data-val"));
+        if (val === heroBudget) {
+          c.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[11px] font-mono font-bold text-[#D8FF3E] transition-all cursor-pointer";
+        } else {
+          c.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer";
+        }
+      });
+
+      // Real-time debounced recalculation (80ms for instant feedback)
+      clearTimeout(heroDebounceTimer);
+      heroDebounceTimer = setTimeout(() => {
+        computeHeroDiet();
+      }, 80);
     });
 
     slider.addEventListener("change", () => {
+      clearTimeout(heroDebounceTimer);
       computeHeroDiet();
     });
   }
@@ -552,12 +570,14 @@ export function renderHomeView(container) {
       heroBudget = parseFloat(chip.getAttribute("data-val"));
       if (slider) slider.value = heroBudget;
       if (budgetValDisplay) budgetValDisplay.textContent = heroBudget;
+      if (btnLabel) btnLabel.textContent = `GENERATE BUDGET DIET PLAN (₹${heroBudget}/DAY)`;
 
       document.querySelectorAll(".hero-budget-chip").forEach(c => {
         c.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#34382F] bg-[#111410] text-[11px] font-mono text-[#858A80] hover:text-[#D8FF3E] hover:border-[#D8FF3E] transition-all cursor-pointer";
       });
       chip.className = "hero-budget-chip px-2.5 py-1 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[11px] font-mono font-bold text-[#D8FF3E] transition-all cursor-pointer";
 
+      clearTimeout(heroDebounceTimer);
       computeHeroDiet();
     });
   });
@@ -571,12 +591,14 @@ export function renderHomeView(container) {
       });
       chip.className = "hero-diet-chip py-1.5 rounded-lg border border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold shadow-[0_0_12px_rgba(216,255,62,0.15)] transition-all text-center cursor-pointer";
 
+      clearTimeout(heroDebounceTimer);
       computeHeroDiet();
     });
   });
 
   // Solve Button
   document.getElementById("hero-solve-btn")?.addEventListener("click", () => {
+    clearTimeout(heroDebounceTimer);
     computeHeroDiet();
   });
 
@@ -587,10 +609,9 @@ export function renderHomeView(container) {
     const btnLabelEl = document.getElementById("hero-btn-label");
     const solveBtnEl = document.getElementById("hero-solve-btn");
 
-    if (loadingEl) loadingEl.classList.remove("hidden");
-    if (contentEl) contentEl.innerHTML = "";
-    if (btnLabelEl) btnLabelEl.textContent = "COMPUTING OPTIMAL STAPLES...";
-    if (solveBtnEl) solveBtnEl.disabled = true;
+    if (!lastSolved && loadingEl) loadingEl.classList.remove("hidden");
+    if (!lastSolved && contentEl) contentEl.innerHTML = "";
+    if (btnLabelEl) btnLabelEl.textContent = `COMPUTING OPTIMAL DIET (₹${heroBudget})...`;
 
     try {
       const solved = await api.solveBudget({
@@ -599,8 +620,9 @@ export function renderHomeView(container) {
         hostel_only: false,
         no_cook_only: false
       });
+      const prevSolved = lastSolved;
       lastSolved = solved;
-      renderHeroSolved(solved);
+      renderHeroSolved(solved, prevSolved);
     } catch (err) {
       if (contentEl) {
         contentEl.innerHTML = `<div class="p-3 text-center text-xs text-red-400">Error computing diet: ${err.message}</div>`;
@@ -613,7 +635,7 @@ export function renderHomeView(container) {
     }
   }
 
-  function renderHeroSolved(solved) {
+  function renderHeroSolved(solved, prevSolved = null) {
     const contentEl = document.getElementById("hero-results-content");
     if (!contentEl) return;
 
@@ -622,15 +644,15 @@ export function renderHomeView(container) {
       <div class="grid grid-cols-3 gap-2 bg-[#111410] p-2.5 rounded-xl border border-[#34382F] text-center font-mono">
         <div>
           <div class="text-[9px] uppercase text-[#858A80]">Total Protein</div>
-          <div id="hero-stat-protein" class="text-sm sm:text-base font-extrabold text-[#D8FF3E]">0g</div>
+          <div id="hero-stat-protein" class="text-sm sm:text-base font-extrabold text-[#D8FF3E]">+${solved.total_protein_g}g</div>
         </div>
         <div>
           <div class="text-[9px] uppercase text-[#858A80]">Total Cost</div>
-          <div id="hero-stat-cost" class="text-sm sm:text-base font-extrabold text-[#F4F5EF]">₹0</div>
+          <div id="hero-stat-cost" class="text-sm sm:text-base font-extrabold text-[#F4F5EF]">₹${solved.total_cost_inr}</div>
         </div>
         <div>
           <div class="text-[9px] uppercase text-[#858A80]">Remaining</div>
-          <div id="hero-stat-remaining" class="text-sm sm:text-base font-extrabold text-[#9C8AFF]">₹0</div>
+          <div id="hero-stat-remaining" class="text-sm sm:text-base font-extrabold text-[#9C8AFF]">₹${solved.remaining_budget_inr}</div>
         </div>
       </div>
 
@@ -665,10 +687,13 @@ export function renderHomeView(container) {
       </div>
     `;
 
-    // Trigger smooth count-up numbers
-    animateValue(document.getElementById("hero-stat-protein"), 0, solved.total_protein_g, 550, "+", "g");
-    animateValue(document.getElementById("hero-stat-cost"), 0, solved.total_cost_inr, 550, "₹", "");
-    animateValue(document.getElementById("hero-stat-remaining"), 0, solved.remaining_budget_inr, 550, "₹", "");
+    // Trigger smooth count-up numbers from previous state
+    const prevP = prevSolved ? prevSolved.total_protein_g : 0;
+    const prevC = prevSolved ? prevSolved.total_cost_inr : 0;
+    const prevR = prevSolved ? prevSolved.remaining_budget_inr : 0;
+    animateValue(document.getElementById("hero-stat-protein"), prevP, solved.total_protein_g, 350, "+", "g");
+    animateValue(document.getElementById("hero-stat-cost"), prevC, solved.total_cost_inr, 350, "₹", "");
+    animateValue(document.getElementById("hero-stat-remaining"), prevR, solved.remaining_budget_inr, 350, "₹", "");
     if (window.lucide) window.lucide.createIcons();
   }
 

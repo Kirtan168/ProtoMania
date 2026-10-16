@@ -80,51 +80,93 @@ def solve_budget_protein_combination(
         reverse=True
     )
 
-    allocated_items = []
+    max_servings = {
+        "soya_chunks": 2.0,      # Max 100g dry soya (52g protein)
+        "whole_eggs": 3.0,       # Max 6 eggs (38g protein)
+        "egg_whites": 2.0,       # Max 8 whites
+        "amul_toned_milk": 2.0,  # Max 1 litre (32g protein)
+        "sattu_drink": 2.0,      # Max 100g sattu
+        "roasted_chana": 2.0,    # Max 120g chana
+        "roasted_peanuts": 2.0,  # Max 80g peanuts (healthy fats)
+        "fresh_paneer": 2.0,     # Max 150g paneer
+        "fresh_curd": 2.0,       # Max 400g curd
+        "wheat_roti": 2.0,       # Max 4 rotis
+        "moong_dal": 2.0,        # Max 2 bowls
+        "steamed_rice": 2.0,
+        "rolled_oats": 2.0,
+        "peanut_butter": 2.0,
+        "chicken_breast": 2.0,
+    }
+
+    allocated = {}
     current_cost = 0.0
     current_protein = 0.0
     current_calories = 0.0
 
-    # Pick top complementary food items to form a practical student meal combo
+    # Phase 1: Diverse base selection across top protein-per-rupee foods
     for food in sorted_foods:
-        if current_cost + food["price_inr"] <= budget_inr:
-            allocated_items.append({
+        fid = food["id"]
+        cost = food["price_inr"]
+        if current_cost + cost <= budget_inr:
+            allocated[fid] = {
                 "food": food,
                 "servings": 1.0,
                 "total_protein_g": food["protein_g"],
                 "total_calories": food["calories"],
-                "total_price_inr": food["price_inr"]
-            })
-            current_cost += food["price_inr"]
+                "total_price_inr": cost
+            }
+            current_cost += cost
             current_protein += food["protein_g"]
             current_calories += food["calories"]
 
-            if target_protein_g and current_protein >= target_protein_g:
-                break
-            if len(allocated_items) >= 4:
+            if len(allocated) >= 5:
                 break
 
-    # If remaining budget can scale up the most cost-effective staple (e.g. extra serving of soya chunks or milk)
+    # Phase 2: Fill remaining budget by scaling up existing items or adding high-value staples
     remaining_budget = budget_inr - current_cost
-    if remaining_budget >= 10.0 and allocated_items:
-        best_item = allocated_items[0]
-        extra_unit_cost = best_item["food"]["price_inr"]
-        if remaining_budget >= extra_unit_cost:
-            best_item["servings"] += 1.0
-            best_item["total_protein_g"] += best_item["food"]["protein_g"]
-            best_item["total_calories"] += best_item["food"]["calories"]
-            best_item["total_price_inr"] += extra_unit_cost
-            current_cost += extra_unit_cost
-            current_protein += best_item["food"]["protein_g"]
-            current_calories += best_item["food"]["calories"]
-            remaining_budget -= extra_unit_cost
+    improved = True
+    while improved and remaining_budget >= 5.0:
+        improved = False
+        for food in sorted_foods:
+            fid = food["id"]
+            cost = food["price_inr"]
+            limit = max_servings.get(fid, 2.0)
 
+            if fid in allocated:
+                if allocated[fid]["servings"] < limit and remaining_budget >= cost:
+                    allocated[fid]["servings"] += 1.0
+                    allocated[fid]["total_protein_g"] = round(allocated[fid]["total_protein_g"] + food["protein_g"], 1)
+                    allocated[fid]["total_calories"] = round(allocated[fid]["total_calories"] + food["calories"], 0)
+                    allocated[fid]["total_price_inr"] = round(allocated[fid]["total_price_inr"] + cost, 1)
+                    current_cost += cost
+                    current_protein += food["protein_g"]
+                    current_calories += food["calories"]
+                    remaining_budget -= cost
+                    improved = True
+                    break
+            else:
+                if remaining_budget >= cost and len(allocated) < 7:
+                    allocated[fid] = {
+                        "food": food,
+                        "servings": 1.0,
+                        "total_protein_g": food["protein_g"],
+                        "total_calories": food["calories"],
+                        "total_price_inr": cost
+                    }
+                    current_cost += cost
+                    current_protein += food["protein_g"]
+                    current_calories += food["calories"]
+                    remaining_budget -= cost
+                    improved = True
+                    break
+
+    allocated_items = list(allocated.values())
     protein_per_rupee = round(current_protein / max(1.0, current_cost), 2)
 
     # Dynamic student tip based on results
     if current_protein >= 60:
         verdict = f"High Yield: Reached {round(current_protein, 1)}g Protein for ₹{round(current_cost, 0)}!"
-        tip = "Outstanding student efficiency! You are getting over 1g of pure protein for every ₹1 spent."
+        tip = "Outstanding student efficiency! You are getting exceptional protein for every rupee spent."
     elif current_protein >= 35:
         verdict = f"Solid Student Combo: {round(current_protein, 1)}g Protein within ₹{round(current_cost, 0)}."
         tip = "Solid baseline. Pair with regular hostel mess dal-roti to easily clear 80g+ daily protein."

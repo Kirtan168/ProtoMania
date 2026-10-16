@@ -261,11 +261,18 @@ export async function renderOptimizerView(container) {
     // Slider
     const slider = document.getElementById("budget-live-slider");
     const display = document.getElementById("slider-budget-val");
+    let optDebounceTimer = null;
     if (slider && display) {
       slider.addEventListener("input", (e) => {
         display.textContent = e.target.value;
+        activeBudget = parseFloat(e.target.value);
+        clearTimeout(optDebounceTimer);
+        optDebounceTimer = setTimeout(() => {
+          loadDataAndRender();
+        }, 120);
       });
       slider.addEventListener("change", (e) => {
+        clearTimeout(optDebounceTimer);
         activeBudget = parseFloat(e.target.value);
         loadDataAndRender();
       });

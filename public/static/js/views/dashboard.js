@@ -59,11 +59,11 @@ export async function renderDashboardView(container) {
         total_price_inr: 0
       })),
       api.getXpMissions().catch(() => ({
-        streak_days: 4,
-        total_xp: 450,
-        next_level_xp: 900,
-        level: 2,
-        level_title: "Level 2: Proto Vanguard"
+        streak_days: 1,
+        total_xp: 150,
+        next_level_xp: 500,
+        level: 1,
+        level_title: "Level 1: Iron Cadet"
       }))
     ]);
 
@@ -72,7 +72,13 @@ export async function renderDashboardView(container) {
     state.set("xpData", xpData);
     state.set("profile", profile);
 
-    const user = state.get("user") || { full_name: "Aryan Sharma", username: "protomaster" };
+    const rawUser = state.get("user") || {};
+    const storedCustomName = localStorage.getItem("protomania_custom_name");
+    let currentFullName = storedCustomName || rawUser.full_name || "Athlete";
+    if (currentFullName.toLowerCase().includes("aryan")) {
+      currentFullName = storedCustomName || "Athlete";
+    }
+    const firstName = currentFullName.split(' ')[0] || "Athlete";
     const goalTitle = (profile?.goal || "muscle_building").replace(/_/g, " ").toUpperCase();
     const budgetLimit = profile?.daily_budget_inr || summary?.budget?.limit_inr || 80;
 
@@ -89,6 +95,10 @@ export async function renderDashboardView(container) {
     const budgetOffset = budgetCirc - (budgetCirc * budgetPct) / 100;
     const budgetRemaining = Math.max(0, budgetLimit - budgetSpent);
 
+    const consumedCalories = summary?.calories?.consumed_kcal || 0;
+    const targetCalories = summary?.calories?.target_kcal || targets?.target_calories || 2400;
+    const calPct = Math.min(100, Math.round((consumedCalories / Math.max(1, targetCalories)) * 100));
+
     container.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 animate-fade-in">
         <!-- Top Command Bar: Greeting, Goal Era & Quick Actions -->
@@ -101,18 +111,24 @@ export async function renderDashboardView(container) {
               <span>DAILY COMMAND CENTER</span>
               <span class="text-[#858A80]">| ${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-[#F4F5EF] tracking-tight">
-              Welcome Back, ${user.full_name ? user.full_name.split(' ')[0] : 'Lifter'} ⚡
-            </h1>
+            <div class="flex items-center gap-3">
+              <h1 class="text-3xl sm:text-4xl font-extrabold text-[#F4F5EF] tracking-tight">
+                Welcome, <span id="dash-greeting-name">${firstName}</span> ⚡
+              </h1>
+              <button id="edit-dash-name-btn" title="Change your name" class="text-xs px-2.5 py-1 rounded bg-[#111410] border border-[#34382F] hover:border-[#D8FF3E] text-[#858A80] hover:text-[#D8FF3E] transition-colors flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Edit</span>
+              </button>
+            </div>
             <!-- Gen Z Holographic Status Pills -->
             <div class="flex flex-wrap items-center gap-2 pt-1">
               <span class="badge-sticker text-[11px] py-1 px-3">
                 <i data-lucide="flame" class="w-3.5 h-3.5 text-[#D8FF3E]"></i>
-                <span>${xpData?.streak_days || 4}-DAY STREAK</span>
+                <span>${xpData?.streak_days || 1}-DAY STREAK</span>
               </span>
               <span class="badge-sticker badge-sticker-violet text-[11px] py-1 px-3">
                 <i data-lucide="zap" class="w-3.5 h-3.5 text-[#9C8AFF]"></i>
-                <span>${xpData?.level_title || 'Proto Vanguard'}</span>
+                <span>${xpData?.level_title || 'Level 1: Iron Cadet'}</span>
               </span>
               <span class="badge-sticker text-[11px] py-1 px-3">
                 <i data-lucide="wallet" class="w-3.5 h-3.5 text-[#D8FF3E]"></i>
@@ -204,10 +220,14 @@ export async function renderDashboardView(container) {
 
             <!-- Stacked Macro Bar -->
             <div class="space-y-2">
-              <div class="w-full h-3 rounded-full bg-[#111410] border border-[#34382F] overflow-hidden flex">
-                <div class="h-full bg-[#D8FF3E]" style="width: 35%" title="Protein"></div>
-                <div class="h-full bg-[#F4F5EF]" style="width: 45%" title="Carbs"></div>
-                <div class="h-full bg-[#9C8AFF]" style="width: 20%" title="Fats"></div>
+              <div class="w-full h-3 rounded-full bg-[#111410] border border-[#34382F] overflow-hidden flex items-center">
+                ${consumedCalories === 0 ? `
+                  <div class="w-full text-center text-[9px] font-mono text-[#858A80]">0 kcal logged today (0%)</div>
+                ` : `
+                  <div class="h-full bg-[#D8FF3E]" style="width: ${Math.round(calPct * 0.35)}%" title="Protein"></div>
+                  <div class="h-full bg-[#F4F5EF]" style="width: ${Math.round(calPct * 0.45)}%" title="Carbs"></div>
+                  <div class="h-full bg-[#9C8AFF]" style="width: ${Math.max(0, calPct - Math.round(calPct * 0.35) - Math.round(calPct * 0.45))}%" title="Fats"></div>
+                `}
               </div>
               <div class="flex justify-between text-[10px] font-mono">
                 <span class="flex items-center space-x-1"><span class="w-2 h-2 rounded-full bg-[#D8FF3E]"></span><span>Protein: ${targets?.target_protein_g || 130}g</span></span>
@@ -231,10 +251,16 @@ export async function renderDashboardView(container) {
                 <i data-lucide="utensils" class="w-5 h-5 text-[#D8FF3E]"></i>
                 <h3 class="text-xl font-bold text-[#F4F5EF]">Today's Scheduled Meals</h3>
               </div>
-              <a href="#/meals" class="text-xs font-bold text-[#D8FF3E] hover:underline flex items-center space-x-1">
-                <span>View Full Plan</span>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-              </a>
+              <div class="flex items-center space-x-3">
+                <button id="reset-today-logs-btn" class="text-xs text-[#858A80] hover:text-[#FF6B6B] border border-[#34382F] hover:border-[#FF6B6B]/40 px-2.5 py-1 rounded transition-colors flex items-center space-x-1 cursor-pointer" title="Reset today's consumed protein to 0g">
+                  <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                  <span>Reset Today (0g)</span>
+                </button>
+                <a href="#/meals" class="text-xs font-bold text-[#D8FF3E] hover:underline flex items-center space-x-1">
+                  <span>View Full Plan</span>
+                  <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
             </div>
 
             <div class="space-y-3">
@@ -324,7 +350,7 @@ export async function renderDashboardView(container) {
                   <i data-lucide="zap" class="w-5 h-5 text-[#D8FF3E]"></i>
                   <h4 class="font-bold text-sm text-[#F4F5EF]">Iron Consistency</h4>
                 </div>
-                <span class="text-xs font-mono text-[#D8FF3E] font-bold">${xpData?.streak_days || 4}-Day Streak 🔥</span>
+                <span class="text-xs font-mono text-[#D8FF3E] font-bold">${xpData?.streak_days || 1}-Day Streak 🔥</span>
               </div>
 
               <!-- GitHub-style streak blocks -->
@@ -333,8 +359,8 @@ export async function renderDashboardView(container) {
                 <div class="grid grid-cols-7 gap-1.5">
                   ${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => `
                     <div class="flex flex-col items-center space-y-1">
-                      <div class="w-full h-8 rounded-md ${i < (xpData?.streak_days || 4) ? 'bg-[#D8FF3E] text-[#111410] shadow-[0_0_10px_rgba(216,255,62,0.3)]' : 'bg-[#111410] border border-[#34382F] text-[#858A80]'} flex items-center justify-center text-[10px] font-mono font-bold">
-                        ${i < (xpData?.streak_days || 4) ? '✓' : ''}
+                      <div class="w-full h-8 rounded-md ${i < (xpData?.streak_days || 1) ? 'bg-[#D8FF3E] text-[#111410] shadow-[0_0_10px_rgba(216,255,62,0.3)]' : 'bg-[#111410] border border-[#34382F] text-[#858A80]'} flex items-center justify-center text-[10px] font-mono font-bold">
+                        ${i < (xpData?.streak_days || 1) ? '✓' : ''}
                       </div>
                       <span class="text-[9px] text-[#858A80] font-mono">${day}</span>
                     </div>
@@ -344,7 +370,7 @@ export async function renderDashboardView(container) {
 
               <div class="pt-2 border-t border-[#34382F] flex justify-between items-center text-xs">
                 <span class="text-[#858A80]">Level Progress:</span>
-                <span class="font-mono text-[#D8FF3E] font-bold">${xpData?.total_xp || 450} / ${xpData?.next_level_xp || 900} XP</span>
+                <span class="font-mono text-[#D8FF3E] font-bold">${xpData?.total_xp || 150} / ${xpData?.next_level_xp || 500} XP</span>
               </div>
             </div>
           </div>
@@ -353,6 +379,39 @@ export async function renderDashboardView(container) {
     `;
 
     if (window.lucide) window.lucide.createIcons();
+
+    // Edit Name Button Listener
+    document.getElementById("edit-dash-name-btn")?.addEventListener("click", async () => {
+      const current = localStorage.getItem("protomania_custom_name") || currentFullName;
+      const newName = prompt("Enter your Name / Lifting Alias:", current === "Athlete" ? "" : current);
+      if (newName !== null && newName.trim() !== "") {
+        const trimmed = newName.trim();
+        localStorage.setItem("protomania_custom_name", trimmed);
+        const u = state.get("user") || {};
+        u.full_name = trimmed;
+        state.set("user", u);
+        try {
+          await api.updateProfile({ full_name: trimmed });
+        } catch (e) {
+          console.warn("Could not sync profile to backend:", e);
+        }
+        showToast(`Welcome, ${trimmed}!`, "success");
+        renderDashboardView(container);
+      }
+    });
+
+    // Reset Today Meals Listener
+    document.getElementById("reset-today-logs-btn")?.addEventListener("click", async () => {
+      if (confirm("Reset today's logged meals to 0g protein and ₹0 budget?")) {
+        try {
+          await api.resetTodayMeals();
+          showToast("Today's meal logs reset to 0g / ₹0!", "success");
+          renderDashboardView(container);
+        } catch (e) {
+          showToast(`Reset failed: ${e.message}`, "error");
+        }
+      }
+    });
 
     // Mark as eaten listeners
     document.querySelectorAll(".mark-eaten-btn").forEach(btn => {

@@ -91,6 +91,18 @@ def get_today_summary(
         "logged_meals_count": log_row["logged_count"]
     }
 
+@router.delete("/today")
+def reset_today_meals(
+    user: dict = Depends(get_current_user_optional),
+    db: sqlite3.Connection = Depends(get_db)
+):
+    user_id = user["id"] if user else 1
+    today_str = date.today().isoformat()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM meal_logs WHERE user_id = ? AND log_date = ?", (user_id, today_str))
+    db.commit()
+    return {"message": "Today's meal logs have been reset to 0"}
+
 @router.post("/log")
 def log_meal_eaten(
     req: MealLogRequest,

@@ -304,7 +304,7 @@ def init_db():
     if not demo_user:
         cursor.execute("""
         INSERT INTO users (email, username, password_hash, full_name, avatar_url)
-        VALUES ('demo@protomania.app', 'protomaster', ?, 'Aryan Sharma (Student)', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80')
+        VALUES ('demo@protomania.app', 'protomaster', ?, 'Student Athlete', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80')
         """, (hash_password("student123"),))
         user_id = cursor.lastrowid
 
@@ -340,10 +340,10 @@ def init_db():
         )
         """, (user_id,))
 
-        # Initial XP
+        # Initial XP (Day 1 fresh start)
         cursor.execute("""
         INSERT INTO user_xp (user_id, total_xp, level, current_streak_days, last_active_date)
-        VALUES (?, 450, 2, 4, ?)
+        VALUES (?, 150, 1, 1, ?)
         """, (user_id, date.today().isoformat()))
 
         # XP Transactions
@@ -351,33 +351,6 @@ def init_db():
         INSERT INTO xp_transactions (user_id, action, xp_amount, description)
         VALUES (?, 'PROFILE_SETUP', 150, 'Completed Onboarding & Budget Setup')
         """, (user_id,))
-        cursor.execute("""
-        INSERT INTO xp_transactions (user_id, action, xp_amount, description)
-        VALUES (?, 'WORKOUT_COMPLETED', 100, 'Completed Push Day A Workout')
-        """, (user_id,))
-        cursor.execute("""
-        INSERT INTO xp_transactions (user_id, action, xp_amount, description)
-        VALUES (?, 'MEAL_LOGGED', 50, 'Logged ₹50 Soya & Chana Meal')
-        """, (user_id,))
-        cursor.execute("""
-        INSERT INTO xp_transactions (user_id, action, xp_amount, description)
-        VALUES (?, 'STREAK_BONUS', 150, 'Reached 4-Day Iron Consistency Streak')
-        """, (user_id,))
-
-        # Today's sample meal logs
-        today_str = date.today().isoformat()
-        cursor.execute("""
-        INSERT INTO meal_logs (user_id, log_date, meal_name, protein_g, calories, price_inr, meal_type)
-        VALUES (?, ?, 'Morning Oats & Milk Bowl', 13.0, 310, 22.0, 'breakfast')
-        """, (user_id, today_str))
-        cursor.execute("""
-        INSERT INTO meal_logs (user_id, log_date, meal_name, protein_g, calories, price_inr, meal_type)
-        VALUES (?, ?, 'Mess Dal & Soya Chunks Booster', 35.5, 332, 12.0, 'lunch')
-        """, (user_id, today_str))
-        cursor.execute("""
-        INSERT INTO meal_logs (user_id, log_date, meal_name, protein_g, calories, price_inr, meal_type)
-        VALUES (?, ?, 'Desk Snack: Roasted Bhuna Chana', 11.5, 218, 12.0, 'snack')
-        """, (user_id, today_str))
 
         # Seed sample Squad
         cursor.execute("""

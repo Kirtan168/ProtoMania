@@ -10,8 +10,16 @@ import { showToast } from "../components/toast.js";
 export function renderOnboardingView(container) {
   let currentStep = 1;
 
+  // Initial user name from storage or state (ignoring dummy seed names)
+  const storedUser = state.get("user") || {};
+  const savedCustomName = localStorage.getItem("protomania_custom_name") || 
+    (storedUser.full_name && !storedUser.full_name.includes("Aryan") && !storedUser.full_name.includes("Student") ? storedUser.full_name : "");
+
   // Onboarding Form State
   const formData = {
+    // Identity
+    full_name: savedCustomName,
+
     // Step 1: Body Profile
     age: 20,
     height_cm: 174,
@@ -101,7 +109,7 @@ export function renderOnboardingView(container) {
 
   function getStepTitle(step) {
     switch (step) {
-      case 1: return "Body Profile";
+      case 1: return "Profile & Identity";
       case 2: return "Fitness Goals & Training";
       case 3: return "Dietary Preferences";
       case 4: return "Student Budget (Signature)";
@@ -115,8 +123,25 @@ export function renderOnboardingView(container) {
       return `
         <div class="space-y-5">
           <div>
-            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 1: Your Body Profile</h2>
-            <p class="text-xs text-[#858A80] mt-1">Used to accurately compute your baseline metabolic rate (Mifflin-St Jeor formula).</p>
+            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 1: Your Profile & Identity</h2>
+            <p class="text-xs text-[#858A80] mt-1">Tell us your name and baseline physical metrics for accurate Mifflin-St Jeor metabolic calculations.</p>
+          </div>
+
+          <!-- User Name Field (Prominent & Personalized) -->
+          <div class="bg-[#141812] border border-[#D8FF3E]/40 p-4 rounded-xl shadow-[0_0_20px_rgba(216,255,62,0.08)]">
+            <label class="block text-xs font-mono font-bold text-[#D8FF3E] uppercase tracking-wider mb-1.5 flex items-center space-x-1.5">
+              <i data-lucide="user" class="w-3.5 h-3.5 text-[#D8FF3E]"></i>
+              <span>Your Name / Lifting Alias</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-full-name" 
+              value="${data.full_name || ''}" 
+              placeholder="Enter your name (e.g. Alex, Rahul, Priya, Marcus...)" 
+              class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3.5 py-2.5 text-[#F4F5EF] font-bold text-sm focus:border-[#D8FF3E] focus:ring-1 focus:ring-[#D8FF3E] focus:outline-none transition-all placeholder:text-[#858A80]/60 placeholder:font-normal" 
+              required 
+            />
+            <p class="text-[10px] text-[#858A80] font-mono mt-1.5">This personalizes your daily command center, meal schedule, and student profile.</p>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -202,21 +227,22 @@ export function renderOnboardingView(container) {
               </div>
 
               <div>
-                <label class="block text-[#858A80] font-bold mb-1.5">Training Days per Week</label>
+                <label class="block text-[#858A80] font-bold mb-1.5">Days Per Week You Can Train</label>
                 <select id="input-days" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none">
-                  <option value="3" ${data.days_per_week === 3 ? 'selected' : ''}>3 Days (Full Body Split)</option>
-                  <option value="4" ${data.days_per_week === 4 ? 'selected' : ''}>4 Days (Upper / Lower Split)</option>
-                  <option value="5" ${data.days_per_week === 5 ? 'selected' : ''}>5 Days (Push Pull Legs Split)</option>
-                  <option value="6" ${data.days_per_week === 6 ? 'selected' : ''}>6 Days (High Frequency PPL)</option>
+                  <option value="3" ${data.days_per_week === 3 ? 'selected' : ''}>3 Days (Full Body / Push-Pull-Legs)</option>
+                  <option value="4" ${data.days_per_week === 4 ? 'selected' : ''}>4 Days (Upper / Lower Split — Recommended)</option>
+                  <option value="5" ${data.days_per_week === 5 ? 'selected' : ''}>5 Days (Bro Split / PPL + Arms)</option>
+                  <option value="6" ${data.days_per_week === 6 ? 'selected' : ''}>6 Days (PPL x 2 Intense)</option>
                 </select>
               </div>
 
               <div>
                 <label class="block text-[#858A80] font-bold mb-1.5">Workout Duration Target</label>
                 <select id="input-duration" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none">
-                  <option value="30" ${data.workout_duration === 30 ? 'selected' : ''}>30 Mins (Time Crunch Mode)</option>
-                  <option value="45" ${data.workout_duration === 45 ? 'selected' : ''}>45 Mins (Standard Student Optimal)</option>
-                  <option value="60" ${data.workout_duration === 60 ? 'selected' : ''}>60 Mins (Full Session)</option>
+                  <option value="30" ${data.workout_duration === 30 ? 'selected' : ''}>30 Mins (Quick Campus Rush)</option>
+                  <option value="45" ${data.workout_duration === 45 ? 'selected' : ''}>45 Mins (Sweet Spot)</option>
+                  <option value="60" ${data.workout_duration === 60 ? 'selected' : ''}>60 Mins (Deep Session)</option>
+                  <option value="75" ${data.workout_duration === 75 ? 'selected' : ''}>75+ Mins (Powerlifting Focus)</option>
                 </select>
               </div>
             </div>
@@ -227,17 +253,23 @@ export function renderOnboardingView(container) {
       return `
         <div class="space-y-5">
           <div>
-            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 3: Dietary Preferences & Hostel Kitchen</h2>
-            <p class="text-xs text-[#858A80] mt-1">We respect all cultural food boundaries and never recommend incompatible foods.</p>
+            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 3: Dietary Rules & Cooking Access</h2>
+            <p class="text-xs text-[#858A80] mt-1">Realistic student nutrition matching your actual hostel setup.</p>
           </div>
 
           <div class="space-y-4 text-xs">
             <div>
               <label class="block text-[#858A80] font-bold mb-1.5">Dietary Category</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                ${['vegetarian', 'eggetarian', 'non_vegetarian', 'vegan'].map(d => `
-                  <button type="button" class="diet-pill p-3 rounded-lg border text-center transition-all ${data.dietary_preference === d ? 'border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold' : 'border-[#34382F] bg-[#111410] text-[#858A80]'}" data-diet="${d}">
-                    ${d.replace('_', ' ').toUpperCase()}
+                ${[
+                  { id: 'vegetarian', label: 'Vegetarian', icon: '🌱' },
+                  { id: 'eggetarian', label: 'Eggetarian', icon: '🥚' },
+                  { id: 'non_vegetarian', label: 'Non-Veg', icon: '🍗' },
+                  { id: 'vegan', label: 'Vegan', icon: '🥑' }
+                ].map(d => `
+                  <button type="button" class="diet-pill p-3 rounded-lg border text-left transition-all ${data.dietary_preference === d.id ? 'border-[#D8FF3E] bg-[#D8FF3E]/10 text-[#D8FF3E] font-bold' : 'border-[#34382F] bg-[#111410] text-[#858A80]'}" data-diet="${d.id}">
+                    <div class="text-base mb-1">${d.icon}</div>
+                    <div class="font-bold">${d.label}</div>
                   </button>
                 `).join('')}
               </div>
@@ -245,58 +277,54 @@ export function renderOnboardingView(container) {
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
-                <label class="block text-[#858A80] font-bold mb-1.5">Kitchen / Cooking Access</label>
+                <label class="block text-[#858A80] font-bold mb-1.5">Cooking / Food Preparation Setup</label>
                 <select id="input-cooking" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none">
-                  <option value="kettle_or_mess" ${data.cooking_access === 'kettle_or_mess' ? 'selected' : ''}>Electric Kettle + College Mess</option>
-                  <option value="hostel_mess" ${data.cooking_access === 'hostel_mess' ? 'selected' : ''}>Hostel Mess Only (Zero Kitchen)</option>
-                  <option value="no_cook" ${data.cooking_access === 'no_cook' ? 'selected' : ''}>Zero-Cook / Ready to Eat Only</option>
-                  <option value="shared_kitchen" ${data.cooking_access === 'shared_kitchen' ? 'selected' : ''}>Shared Flat / PG Kitchen (Gas Stove)</option>
-                  <option value="full_kitchen" ${data.cooking_access === 'full_kitchen' ? 'selected' : ''}>Full Home Kitchen with Refrigerator</option>
+                  <option value="hostel_mess" ${data.cooking_access === 'hostel_mess' ? 'selected' : ''}>Hostel Mess Only (Zero Cooking Allowed)</option>
+                  <option value="kettle_or_mess" ${data.cooking_access === 'kettle_or_mess' ? 'selected' : ''}>Electric Kettle + Hostel Mess (Student Classic)</option>
+                  <option value="shared_kitchen" ${data.cooking_access === 'shared_kitchen' ? 'selected' : ''}>Shared Flat / PG Induction Plate</option>
+                  <option value="full_kitchen" ${data.cooking_access === 'full_kitchen' ? 'selected' : ''}>Full Kitchen (Gas Stove, Fridge)</option>
+                  <option value="no_cook" ${data.cooking_access === 'no_cook' ? 'selected' : ''}>Ready-to-eat / Local Dhabas Only</option>
                 </select>
               </div>
 
               <div>
-                <label class="block text-[#858A80] font-bold mb-1.5">Allergies or Intolerances</label>
-                <input type="text" id="input-allergies" value="${data.allergies}" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none" placeholder="e.g. lactose, gluten, peanuts, or none" />
+                <label class="block text-[#858A80] font-bold mb-1.5">Known Allergies / Intolerances</label>
+                <select id="input-allergies" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none">
+                  <option value="none" ${data.allergies === 'none' ? 'selected' : ''}>None (Iron Stomach)</option>
+                  <option value="lactose" ${data.allergies === 'lactose' ? 'selected' : ''}>Lactose Intolerant (No Milk/Curd)</option>
+                  <option value="peanuts" ${data.allergies === 'peanuts' ? 'selected' : ''}>Peanut Allergy</option>
+                  <option value="soy" ${data.allergies === 'soy' ? 'selected' : ''}>Soy Allergy</option>
+                  <option value="gluten" ${data.allergies === 'gluten' ? 'selected' : ''}>Gluten Sensitive</option>
+                </select>
               </div>
-            </div>
 
-            <div>
-              <label class="block text-[#858A80] font-bold mb-1.5">Foods You Dislike (Excluded from recommendations)</label>
-              <input type="text" id="input-dislikes" value="${data.dislikes}" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none" placeholder="e.g. mushrooms, brinjal, raw tofu" />
+              <div class="sm:col-span-2">
+                <label class="block text-[#858A80] font-bold mb-1.5">Disliked Ingredients (Comma Separated)</label>
+                <input type="text" id="input-dislikes" value="${data.dislikes}" class="w-full bg-[#111410] border border-[#34382F] rounded-lg px-3 py-2 text-[#F4F5EF] focus:border-[#D8FF3E] focus:outline-none" placeholder="e.g. mushrooms, brinjal, karela" />
+              </div>
             </div>
           </div>
         </div>
       `;
     } else if (step === 4) {
       return `
-        <div class="space-y-6">
+        <div class="space-y-5">
           <div>
-            <div class="inline-flex items-center space-x-2 text-[10px] font-mono text-[#D8FF3E] font-bold mb-1">
-              <span>⚡ SIGNATURE FEATURE</span>
-            </div>
-            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 4: Student Food Budget (₹)</h2>
-            <p class="text-xs text-[#858A80] mt-1">
-              PROTOMANIA's golden rule: We never silently exceed your budget. If a target is tight, we prioritize the cheapest protein per gram.
-            </p>
+            <h2 class="text-xl font-bold text-[#F4F5EF]">Step 4: Student Budget Architecture</h2>
+            <p class="text-xs text-[#858A80] mt-1">Our linear programming optimizer maximizes every gram of protein per Rupee.</p>
           </div>
 
-          <!-- Quick Budget Buttons -->
-          <div class="space-y-2">
-            <label class="block text-xs text-[#858A80] font-bold">Quick Select Daily Budget (INR ₹)</label>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-              ${[50, 80, 100, 150, 200].map(b => `
-                <button type="button" class="budget-btn py-2.5 rounded-lg border text-xs font-mono font-bold transition-all ${data.daily_budget_inr === b ? 'border-[#D8FF3E] bg-[#D8FF3E] text-[#111410]' : 'border-[#34382F] bg-[#111410] text-[#F4F5EF]'}" data-budget="${b}">
-                  ₹${b}
-                </button>
-              `).join('')}
-              <button type="button" id="budget-custom-pill" class="py-2.5 rounded-lg border border-[#34382F] bg-[#111410] text-xs font-mono text-[#858A80] hover:text-[#D8FF3E]">
-                Custom
+          <!-- Quick Presets -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-2">
+            <span class="text-xs text-[#858A80] font-mono mr-1">PRESETS:</span>
+            ${[30, 50, 80, 120, 150].map(amt => `
+              <button type="button" class="budget-btn px-3 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all ${data.daily_budget_inr === amt ? 'bg-[#D8FF3E] text-[#111410] border-[#D8FF3E]' : 'bg-[#111410] text-[#858A80] border-[#34382F] hover:border-[#D8FF3E]'}" data-budget="${amt}">
+                ₹${amt}/day
               </button>
-            </div>
+            `).join('')}
           </div>
 
-          <!-- Interactive Slider -->
+          <!-- Slider -->
           <div class="bg-[#111410] p-4 rounded-xl border border-[#34382F] space-y-3">
             <div class="flex justify-between items-center">
               <span class="text-xs text-[#858A80] font-bold">Adjust Daily Amount:</span>
@@ -381,10 +409,11 @@ export function renderOnboardingView(container) {
               <span>Summary Readiness</span>
             </div>
             <p class="text-[#858A80] leading-relaxed">
+              Welcome <strong class="text-[#D8FF3E]">${data.full_name || 'Athlete'}</strong>! 
               Targeting <strong class="text-[#F4F5EF]">${data.goal.replace('_', ' ')}</strong> on a 
               <strong class="text-[#D8FF3E]">₹${data.daily_budget_inr}/day</strong> budget with 
               <strong class="text-[#F4F5EF]">${data.dietary_preference}</strong> dietary rules.
-              Clicking below will execute the Mifflin-St Jeor metabolic engine and initialize your custom meal and workout plans.
+              Clicking below will calculate your exact targets, initialize Day 1 of your journey at 0g consumed, and launch your command center.
             </p>
           </div>
         </div>
@@ -394,6 +423,7 @@ export function renderOnboardingView(container) {
 
   function collectStepData() {
     if (currentStep === 1) {
+      formData.full_name = document.getElementById("input-full-name")?.value.trim() || formData.full_name;
       formData.age = parseInt(document.getElementById("input-age")?.value || formData.age);
       formData.height_cm = parseFloat(document.getElementById("input-height")?.value || formData.height_cm);
       formData.weight_kg = parseFloat(document.getElementById("input-weight")?.value || formData.weight_kg);
@@ -489,9 +519,35 @@ export function renderOnboardingView(container) {
 
         try {
           const targets = await api.saveProfile(formData);
+
+          // Update user identity in state and storage
+          const userChosenName = formData.full_name || "Athlete";
+          localStorage.setItem("protomania_custom_name", userChosenName);
+          
+          const currentUser = state.get("user") || {};
+          currentUser.full_name = userChosenName;
+          state.set("user", currentUser);
+
+          // Reset dashboard daily summary state to Day 1 fresh zero start
+          state.set("todaySummary", {
+            date: new Date().toISOString().split('T')[0],
+            protein: { consumed_g: 0, target_g: targets.target_protein_g, percent: 0 },
+            calories: { consumed_kcal: 0, target_kcal: targets.target_calories, percent: 0 },
+            budget: { spent_inr: 0, limit_inr: formData.daily_budget_inr, remaining_inr: formData.daily_budget_inr, percent: 0 },
+            logged_meals_count: 0
+          });
+
+          state.set("xpData", {
+            streak_days: 1,
+            total_xp: 150,
+            next_level_xp: 300,
+            level: 1,
+            level_title: "Level 1: Iron Cadet"
+          });
+
           state.set("profile", formData);
           state.set("targets", targets);
-          showToast("Personalized Plan Generated! +150 XP", "success");
+          showToast(`Welcome, ${userChosenName}! Your Day 1 plan is live! +150 XP`, "success");
           window.location.hash = "#/dashboard";
         } catch (err) {
           showToast(`Error saving plan: ${err.message}`, "error");

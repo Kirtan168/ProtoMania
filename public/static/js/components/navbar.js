@@ -58,8 +58,8 @@ export function initNavbar() {
             ${user ? `
               <div class="flex items-center space-x-2.5 bg-[#1B1E19] border border-[#34382F] py-1 px-2.5 rounded-full">
                 <img src="${user.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 rounded-full object-cover border border-[#D8FF3E]" alt="${user.username}" />
-                <span class="text-xs font-bold text-[#F4F5EF] hidden sm:inline">${user.username}</span>
-                <span class="text-[10px] bg-[#D8FF3E]/20 text-[#D8FF3E] px-1.5 py-0.5 rounded font-mono font-bold">LVL ${state.get("xpData")?.level || 2}</span>
+                <span class="text-xs font-bold text-[#F4F5EF] hidden sm:inline">${localStorage.getItem("protomania_custom_name") ? localStorage.getItem("protomania_custom_name").split(' ')[0] : (user.username || 'Lifter')}</span>
+                <span class="text-[10px] bg-[#D8FF3E]/20 text-[#D8FF3E] px-1.5 py-0.5 rounded font-mono font-bold">LVL ${state.get("xpData")?.level || 1}</span>
               </div>
             ` : `
               <button id="guest-login-btn" class="text-xs font-bold px-3 py-2 rounded-lg bg-[#1B1E19] text-[#F4F5EF] border border-[#34382F] hover:border-[#D8FF3E] transition-all">

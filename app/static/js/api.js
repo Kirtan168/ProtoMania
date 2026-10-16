@@ -85,6 +85,10 @@ class ApiClient {
     return this.request("/api/auth/me");
   }
 
+  updateProfile(data) {
+    return this.request("/api/auth/profile", { method: "PUT", body: JSON.stringify(data) });
+  }
+
   // --- Onboarding ---
   saveProfile(profileData) {
     return this.request("/api/onboarding/profile", { method: "POST", body: JSON.stringify(profileData) });
@@ -133,6 +137,10 @@ class ApiClient {
 
   getTodaySummary() {
     return this.request("/api/meals/today-summary");
+  }
+
+  resetTodayMeals() {
+    return this.request("/api/meals/today", { method: "DELETE" });
   }
 
   logMeal(mealData) {

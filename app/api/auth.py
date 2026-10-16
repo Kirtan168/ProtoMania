@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from typing import Optional
 from app.config import settings
 from app.database import get_db, hash_password, verify_password
-from app.models.user import RegisterRequest, LoginRequest, UserResponse, TokenResponse
+from app.models.user import RegisterRequest, LoginRequest, UserResponse, TokenResponse, UpdateUserRequest
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -124,3 +124,31 @@ def get_me(user: dict = Depends(get_current_user_optional)):
         avatar_url=user.get("avatar_url"),
         created_at=user.get("created_at")
     )
+
+@router.put("/profile", response_model=UserResponse)
+def update_user_profile(
+    req: UpdateUserRequest,
+    user: dict = Depends(get_current_user_optional),
+    db: sqlite3.Connection = Depends(get_db)
+):
+    user_id = user["id"] if user else 1
+    cursor = db.cursor()
+    if req.full_name and req.full_name.strip():
+        cursor.execute("UPDATE users SET full_name = ? WHERE id = ?", (req.full_name.strip(), user_id))
+    if req.username and req.username.strip():
+        cursor.execute("UPDATE users SET username = ? WHERE id = ?", (req.username.strip(), user_id))
+    db.commit()
+    cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+    row = cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_dict = dict(row)
+    return UserResponse(
+        id=user_dict["id"],
+        email=user_dict["email"],
+        username=user_dict["username"],
+        full_name=user_dict["full_name"],
+        avatar_url=user_dict.get("avatar_url"),
+        created_at=user_dict.get("created_at")
+    )
+

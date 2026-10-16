@@ -1,5 +1,6 @@
 import sqlite3
 import json
+from datetime import date
 from fastapi import APIRouter, HTTPException, Depends
 from app.database import get_db
 from app.api.auth import get_current_user_optional
@@ -16,6 +17,10 @@ def save_profile_and_calculate_plan(
 ):
     user_id = user["id"] if user else 1
     cursor = db.cursor()
+
+    # Update user's full_name if provided
+    if req.full_name and req.full_name.strip():
+        cursor.execute("UPDATE users SET full_name = ? WHERE id = ?", (req.full_name.strip(), user_id))
 
     # Calculate deterministic targets
     targets = calculate_nutrition_targets(
@@ -93,8 +98,22 @@ def save_profile_and_calculate_plan(
         targets["limitations_notes"]
     ))
 
-    # Award onboarding XP
-    cursor.execute("UPDATE user_xp SET total_xp = total_xp + 150 WHERE user_id = ?", (user_id,))
+    # 1. Clear any prior demo meal logs for this user so Day 1 starts clean at 0g
+    cursor.execute("DELETE FROM meal_logs WHERE user_id = ?", (user_id,))
+
+    # 2. Reset streak and XP to Day 1 of fresh journey
+    cursor.execute("""
+    INSERT INTO user_xp (user_id, total_xp, level, current_streak_days, last_active_date)
+    VALUES (?, 150, 1, 1, ?)
+    ON CONFLICT(user_id) DO UPDATE SET
+        total_xp = 150,
+        level = 1,
+        current_streak_days = 1,
+        last_active_date = excluded.last_active_date
+    """, (user_id, date.today().isoformat()))
+
+    # 3. Clean old transactions and record ONBOARDING_SAVED
+    cursor.execute("DELETE FROM xp_transactions WHERE user_id = ?", (user_id,))
     cursor.execute("""
     INSERT INTO xp_transactions (user_id, action, xp_amount, description)
     VALUES (?, 'ONBOARDING_SAVED', 150, 'Completed Personalized Fitness & Budget Plan')

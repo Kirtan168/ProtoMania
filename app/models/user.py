@@ -25,7 +25,12 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     user: UserResponse
 
+class UpdateUserRequest(BaseModel):
+    full_name: Optional[str] = None
+    username: Optional[str] = None
+
 class ProfileRequest(BaseModel):
+    full_name: Optional[str] = None
     age: int = Field(..., ge=14, le=80)
     height_cm: float = Field(..., ge=100.0, le=250.0)
     weight_kg: float = Field(..., ge=30.0, le=250.0)

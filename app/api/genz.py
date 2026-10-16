@@ -47,9 +47,9 @@ def get_fitness_wrapped(
 
     cursor.execute("SELECT total_xp, level, current_streak_days FROM user_xp WHERE user_id = ?", (user_id,))
     xp_row = cursor.fetchone()
-    streak = xp_row["current_streak_days"] if xp_row else 4
-    level = xp_row["level"] if xp_row else 2
-    xp = xp_row["total_xp"] if xp_row else 450
+    streak = xp_row["current_streak_days"] if xp_row else 1
+    level = xp_row["level"] if xp_row else 1
+    xp = xp_row["total_xp"] if xp_row else 150
 
     total_protein = round(m_row["total_protein"], 1) or 480.0
     total_spent = round(m_row["total_spent"], 1) or 320.0
@@ -172,9 +172,9 @@ def get_user_xp_and_missions(
 
     cursor.execute("SELECT total_xp, level, current_streak_days FROM user_xp WHERE user_id = ?", (user_id,))
     row = cursor.fetchone()
-    total_xp = row["total_xp"] if row else 450
-    level = row["level"] if row else 2
-    streak = row["current_streak_days"] if row else 4
+    total_xp = row["total_xp"] if row else 150
+    level = row["level"] if row else 1
+    streak = row["current_streak_days"] if row else 1
 
     next_level_xp = (level + 1) * 300
     level_progress_percent = min(100, int((total_xp / next_level_xp) * 100))
@@ -187,23 +187,25 @@ def get_user_xp_and_missions(
     txs = [dict(r) for r in cursor.fetchall()]
 
     badges = [
-        {"id": "soya_king", "title": "Soya King", "desc": "Logged 5 meals with Soya Chunks", "unlocked": True, "icon": "👑"},
-        {"id": "hostel_survivor", "title": "Hostel Survivor", "desc": "Hit protein target with zero kitchen access", "unlocked": True, "icon": "🏨"},
-        {"id": "fifty_club", "title": "₹50 Club", "desc": "Solved a full day protein under ₹50", "unlocked": True, "icon": "💸"},
+        {"id": "soya_king", "title": "Soya King", "desc": "Logged 5 meals with Soya Chunks", "unlocked": False, "icon": "👑"},
+        {"id": "hostel_survivor", "title": "Hostel Survivor", "desc": "Hit protein target with zero kitchen access", "unlocked": False, "icon": "🏨"},
+        {"id": "fifty_club", "title": "₹50 Club", "desc": "Solved a full day protein under ₹50", "unlocked": False, "icon": "💸"},
         {"id": "iron_streak", "title": "7-Day Iron Streak", "desc": "Trained 7 consecutive scheduled sessions", "unlocked": streak >= 7, "icon": "⚡"},
-        {"id": "mess_hacker", "title": "Mess Hacker", "desc": "Turned a carb mess meal into 35g+ protein", "unlocked": True, "icon": "🍛"}
+        {"id": "mess_hacker", "title": "Mess Hacker", "desc": "Turned a carb mess meal into 35g+ protein", "unlocked": False, "icon": "🍛"}
     ]
 
     weekly_missions = [
-        {"title": "Log 4 Gym Workouts", "progress": "3/4", "completed": False, "reward_xp": 100},
-        {"title": "Hit ₹80 Daily Budget 5 Days", "progress": "4/5", "completed": False, "reward_xp": 150},
-        {"title": "Cook or Prep Soya Chunks", "progress": "1/1", "completed": True, "reward_xp": 50}
+        {"title": "Log 4 Gym Workouts", "progress": "0/4", "completed": False, "reward_xp": 100},
+        {"title": "Hit ₹80 Daily Budget 5 Days", "progress": "0/5", "completed": False, "reward_xp": 150},
+        {"title": "Cook or Prep Soya Chunks", "progress": "0/1", "completed": False, "reward_xp": 50}
     ]
+
+    level_title = "Level 1: Iron Cadet" if level == 1 else (f"Level {level}: Proto Vanguard" if level == 2 else f"Level {level}: Discipline Demon")
 
     return {
         "total_xp": total_xp,
         "level": level,
-        "level_title": f"Level {level}: Proto Vanguard",
+        "level_title": level_title,
         "streak_days": streak,
         "level_progress_percent": level_progress_percent,
         "next_level_xp": next_level_xp,
@@ -228,7 +230,7 @@ def list_squads(
 
     # Leaderboard for the top squad (privacy first: only shows level and XP, zero weight/measurements)
     leaderboard = [
-        {"rank": 1, "username": "aryan_lifts", "full_name": "Aryan Sharma", "level": 3, "streak": 5, "weekly_xp": 650},
+        {"rank": 1, "username": "vikram_lifts", "full_name": "Vikram Rao", "level": 3, "streak": 5, "weekly_xp": 650},
         {"rank": 2, "username": "rohan_sharma", "full_name": "Rohan Verma", "level": 2, "streak": 4, "weekly_xp": 480},
         {"rank": 3, "username": "dev_patel", "full_name": "Dev Patel", "level": 2, "streak": 3, "weekly_xp": 390},
         {"rank": 4, "username": "sneha_fit", "full_name": "Sneha Roy", "level": 2, "streak": 3, "weekly_xp": 350}

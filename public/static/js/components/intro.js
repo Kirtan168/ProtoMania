@@ -380,20 +380,20 @@ export function initCinematicIntro(forceReplay = false) {
       }, 120);
     } else {
       if (doorL && doorR) {
-        doorL.style.transition = 'transform 0.75s cubic-bezier(0.76, 0, 0.24, 1)';
-        doorR.style.transition = 'transform 0.75s cubic-bezier(0.76, 0, 0.24, 1)';
+        doorL.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
+        doorR.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
         doorL.style.transform = 'translate3d(-105%, 0, 0)';
         doorR.style.transform = 'translate3d(105%, 0, 0)';
       }
 
       setTimeout(() => {
-        introEl.style.transition = 'opacity 0.25s ease';
+        introEl.style.transition = 'opacity 0.3s ease';
         introEl.style.opacity = '0';
         setTimeout(() => {
           introEl.remove();
           revealHeroDirectly();
-        }, 250);
-      }, 500);
+        }, 300);
+      }, 100);
     }
   }
 
@@ -480,48 +480,49 @@ export function initCinematicIntro(forceReplay = false) {
     }
   }, 770));
 
-  // STEP 3: Gym Doors Split Open (Silent & Smooth at t = 1100ms)
+  // STEP 3: Heavy Industrial Gym Vault Doors Split Open (Silent & Majestic at t = 1100ms)
+  // Take a full 1.9s to heavily, smoothly slide open to the sides
   activeTimers.push(setTimeout(() => {
     if (isCleanedUp) return;
 
     const doorL = document.getElementById('intro-door-left');
     const doorR = document.getElementById('intro-door-right');
     if (doorL && doorR) {
-      doorL.style.transition = 'transform 0.75s cubic-bezier(0.76, 0, 0.24, 1)';
-      doorR.style.transition = 'transform 0.75s cubic-bezier(0.76, 0, 0.24, 1)';
+      doorL.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
+      doorR.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
       doorL.style.transform = 'translate3d(-105%, 0, 0)';
       doorR.style.transform = 'translate3d(105%, 0, 0)';
     }
   }, 1100));
 
-  // STEP 4: Fade Out Elements at t = 1500ms
+  // STEP 4: Dissolve Center Dumbbell & Impact Stamps as website emerges (t = 1950ms)
   activeTimers.push(setTimeout(() => {
     if (isCleanedUp) return;
 
     if (dbWrapper) {
-      dbWrapper.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      dbWrapper.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
       dbWrapper.style.opacity = '0';
-      dbWrapper.style.transform = 'translate3d(0, 0, 0) scale(0.85)';
+      dbWrapper.style.transform = 'translate3d(0, 0, 0) scale(0.9)';
     }
 
     const burst = document.getElementById('intro-proto-burst');
     if (burst) {
-      burst.style.transition = 'opacity 0.3s ease';
+      burst.style.transition = 'opacity 0.5s ease';
       burst.style.opacity = '0';
     }
 
     if (floorShadow) {
-      floorShadow.style.transition = 'opacity 0.3s ease';
+      floorShadow.style.transition = 'opacity 0.5s ease';
       floorShadow.style.opacity = '0';
     }
-  }, 1500));
+  }, 1950));
 
-  // STEP 5: Complete & Interactive Website Handoff at t = 1850ms
+  // STEP 5: Complete & Interactive Website Handoff at t = 3050ms (Doors fully cleared)
   activeTimers.push(setTimeout(() => {
     if (!isCleanedUp) {
       finishIntro(false);
     }
-  }, 1850));
+  }, 3050));
 }
 
 export function revealHeroDirectly() {

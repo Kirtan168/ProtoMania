@@ -52,7 +52,11 @@ export async function renderDashboardView(container) {
         target_carbs_g: 360,
         target_fat_g: 65
       })),
-      api.getMealPlan(profile?.hostel_mode ? "hostel" : "hostel").catch(() => ({
+      api.getMealPlan(
+        profile?.hostel_mode ? "hostel" : "hostel",
+        profile?.daily_budget_inr || summary?.budget?.limit_inr || 80,
+        profile?.dietary_preference || "vegetarian"
+      ).catch(() => ({
         meals: [],
         total_protein_g: 0,
         total_calories: 0,
@@ -250,6 +254,7 @@ export async function renderDashboardView(container) {
               <div class="flex items-center space-x-2">
                 <i data-lucide="utensils" class="w-5 h-5 text-[#D8FF3E]"></i>
                 <h3 class="text-xl font-bold text-[#F4F5EF]">Today's Scheduled Meals</h3>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#D8FF3E]/10 text-[#D8FF3E] border border-[#D8FF3E]/30 font-bold">₹${budgetLimit}/day plan</span>
               </div>
               <div class="flex items-center space-x-3">
                 <button id="reset-today-logs-btn" class="text-xs text-[#858A80] hover:text-[#FF6B6B] border border-[#34382F] hover:border-[#FF6B6B]/40 px-2.5 py-1 rounded transition-colors flex items-center space-x-1 cursor-pointer" title="Reset today's consumed protein to 0g">

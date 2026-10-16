@@ -131,8 +131,13 @@ class ApiClient {
   }
 
   // --- Meals ---
-  getMealPlan(mode = "hostel") {
-    return this.request(`/api/meals/plan?mode=${mode}`);
+  getMealPlan(mode = "hostel", budget = null, diet = null) {
+    const params = new URLSearchParams();
+    if (mode) params.set("mode", mode);
+    if (budget) params.set("budget", budget);
+    if (diet) params.set("diet", diet);
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    return this.request(`/api/meals/plan${qs}`);
   }
 
   getTodaySummary() {
@@ -151,8 +156,13 @@ class ApiClient {
     return this.request("/api/meals/logs");
   }
 
-  getGroceryList(mode = "hostel") {
-    return this.request(`/api/meals/grocery-list?mode=${mode}`);
+  getGroceryList(mode = "hostel", budget = null, diet = null) {
+    const params = new URLSearchParams();
+    if (mode) params.set("mode", mode);
+    if (budget) params.set("budget", budget);
+    if (diet) params.set("diet", diet);
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    return this.request(`/api/meals/grocery-list${qs}`);
   }
 
   // --- Workouts ---

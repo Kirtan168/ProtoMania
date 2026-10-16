@@ -11,7 +11,9 @@ router = APIRouter(prefix="/api/meals", tags=["Meal Planner & Nutrition"])
 
 @router.get("/plan")
 def get_meal_plan(
-    mode: str = "hostel", # 'hostel', 'mess', 'no_cook', 'exam_week', 'veg_muscle', 'budget'
+    mode: str = "hostel", # 'hostel', 'mess', 'no_cook', 'exam_week', 'veg_muscle'
+    budget: Optional[float] = Query(None, description="Optional override for daily budget in INR"),
+    diet: Optional[str] = Query(None, description="Optional override for dietary preference"),
     user: dict = Depends(get_current_user_optional),
     db: sqlite3.Connection = Depends(get_db)
 ):
@@ -21,8 +23,8 @@ def get_meal_plan(
     # Get user profile & target budget
     cursor.execute("SELECT dietary_preference, daily_budget_inr FROM profiles WHERE user_id = ?", (user_id,))
     p_row = cursor.fetchone()
-    dietary_preference = p_row["dietary_preference"] if p_row else "vegetarian"
-    daily_budget = p_row["daily_budget_inr"] if p_row else 80.0
+    dietary_preference = diet if (diet and diet.strip()) else (p_row["dietary_preference"] if p_row else "vegetarian")
+    daily_budget = float(budget) if (budget is not None and float(budget) > 0) else (float(p_row["daily_budget_inr"]) if p_row else 80.0)
 
     # Get target protein
     cursor.execute("SELECT target_protein_g FROM calculated_targets WHERE user_id = ?", (user_id,))
@@ -149,6 +151,8 @@ def get_meal_logs(
 @router.get("/grocery-list")
 def get_grocery_list(
     mode: str = "hostel",
+    budget: Optional[float] = Query(None),
+    diet: Optional[str] = Query(None),
     user: dict = Depends(get_current_user_optional),
     db: sqlite3.Connection = Depends(get_db)
 ):
@@ -156,8 +160,8 @@ def get_grocery_list(
     cursor = db.cursor()
     cursor.execute("SELECT dietary_preference, daily_budget_inr FROM profiles WHERE user_id = ?", (user_id,))
     p_row = cursor.fetchone()
-    dietary_preference = p_row["dietary_preference"] if p_row else "vegetarian"
-    daily_budget = p_row["daily_budget_inr"] if p_row else 80.0
+    dietary_preference = diet if (diet and diet.strip()) else (p_row["dietary_preference"] if p_row else "vegetarian")
+    daily_budget = float(budget) if (budget is not None and float(budget) > 0) else (float(p_row["daily_budget_inr"]) if p_row else 80.0)
 
     daily_plan = generate_daily_meal_plan(
         dietary_preference=dietary_preference,

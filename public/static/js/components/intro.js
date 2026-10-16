@@ -1,5 +1,5 @@
 /**
- * PROTOMANIA — High-Performance Cinematic Opening Intro (v2.4)
+ * PROTOMANIA — High-Performance Cinematic Opening Intro (v2.5)
  * 
  * Performance Optimizations:
  * - 100% GPU-accelerated translate3d transforms (locked 60/120fps)
@@ -11,7 +11,7 @@
  * - Strictly guarded by isIntroActive: impossible for sound to play after intro has ended
  */
 
-import { introAudio } from "./intro_audio.js?v=2.4";
+import { introAudio } from "./intro_audio.js?v=2.5";
 
 export function initCinematicIntro(forceReplay = false) {
   // Check reduced-motion preference
@@ -45,9 +45,6 @@ export function initCinematicIntro(forceReplay = false) {
   introEl.className = 'fixed inset-0 z-[9999] overflow-hidden flex items-center justify-center select-none bg-[#0e110e]';
 
   introEl.innerHTML = `
-    <!-- PROCEDURAL FILM GRAIN OVERLAY -->
-    <div class="absolute inset-0 bg-film-grain pointer-events-none z-10 opacity-60"></div>
-
     <!-- CENTRAL PULSING SPOTLIGHT -->
     <div id="intro-spotlight" class="intro-spotlight absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full pointer-events-none z-0 bg-[radial-gradient(circle,rgba(216,255,62,0.14)_0%,rgba(156,138,255,0.05)_40%,transparent_70%)]"></div>
 
@@ -144,18 +141,18 @@ export function initCinematicIntro(forceReplay = false) {
       <!-- Instant Impact White/Neon Flash Screen -->
       <div id="intro-flash" class="absolute w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 rounded-full pointer-events-none opacity-0"></div>
 
-      <!-- Dual Concentric Shockwave Rings -->
-      <div id="intro-wave-1" class="intro-shockwave absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-4 h-4 rounded-full border-[3px] border-[#D8FF3E] pointer-events-none opacity-0"></div>
-      <div id="intro-wave-2" class="intro-shockwave absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-4 h-4 rounded-full border-[2.5px] border-[#9C8AFF] pointer-events-none opacity-0"></div>
+      <!-- Dual Concentric Shockwave Rings (Hardware GPU Scaled) -->
+      <div id="intro-wave-1" class="intro-shockwave absolute left-1/2 top-1/2 w-[700px] h-[700px] rounded-full border-[3px] border-[#D8FF3E] pointer-events-none opacity-0" style="will-change: transform, opacity; transform: translate3d(-50%, -50%, 0) scale(0.04);"></div>
+      <div id="intro-wave-2" class="intro-shockwave absolute left-1/2 top-1/2 w-[560px] h-[560px] rounded-full border-[2.5px] border-[#9C8AFF] pointer-events-none opacity-0" style="will-change: transform, opacity; transform: translate3d(-50%, -50%, 0) scale(0.04);"></div>
 
-      <!-- High-Performance Canvas for Ambient Dust & Impact Sparks -->
+      <!-- High-Performance Canvas for Impact Sparks (Runs on Impact Only) -->
       <canvas id="intro-particles-canvas" class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-[800px] h-[800px] pointer-events-none"></canvas>
 
-      <!-- FLOOR SHADOW BASE -->
-      <div id="intro-floor-shadow" class="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-28 w-44 h-8 rounded-full bg-black/80 blur-md opacity-20"></div>
+      <!-- FLOOR SHADOW BASE (Radial GPU Gradient, Zero Filter Blur) -->
+      <div id="intro-floor-shadow" class="absolute left-1/2 top-1/2 w-48 h-8 rounded-full pointer-events-none opacity-20" style="will-change: transform, opacity; transform: translate3d(-50%, 110px, 0) scale(0.35); background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 45%, transparent 70%);"></div>
 
       <!-- MASSIVE 3D CAST-IRON DUMBBELL VECTOR (Hardware GPU-Accelerated) -->
-      <div id="intro-dumbbell-wrapper" class="relative z-30" style="will-change: transform; transform: translate3d(0, -125vh, 0) rotate(-10deg); backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-style: preserve-3d;">
+      <div id="intro-dumbbell-wrapper" class="relative z-30" style="will-change: transform; transform: translate3d(0, -68vh, 0); backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-style: preserve-3d;">
         <svg id="intro-dumbbell-svg" class="w-56 h-56 sm:w-72 sm:h-72" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="dbPlateFace" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -250,12 +247,11 @@ export function initCinematicIntro(forceReplay = false) {
   document.body.appendChild(introEl);
 
   // ==========================================
-  // HIGH-PERFORMANCE PARTICLE SYSTEM (60 FPS LOCKED)
+  // HIGH-PERFORMANCE PARTICLE SYSTEM (ON-DEMAND IMPACT ONLY)
   // ==========================================
   const canvas = document.getElementById('intro-particles-canvas');
   let ctx = null;
   let particles = [];
-  let isExplosionPhase = false;
 
   if (canvas) {
     canvas.width = 800;
@@ -263,45 +259,31 @@ export function initCinematicIntro(forceReplay = false) {
     ctx = canvas.getContext('2d');
   }
 
-  function initAmbientDust() {
-    particles = [];
-    isExplosionPhase = false;
-    for (let i = 0; i < 25; i++) {
-      particles.push({
-        x: Math.random() * 800,
-        y: Math.random() * 800,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -Math.random() * 0.5 - 0.15,
-        size: Math.random() * 2 + 1,
-        color: Math.random() > 0.4 ? '#858A80' : '#D8FF3E',
-        alpha: Math.random() * 0.3 + 0.1,
-        decay: 0.001
-      });
-    }
-    renderLoop();
-  }
-
   function spawnImpactSparks() {
-    isExplosionPhase = true;
+    if (!ctx) return;
     particles = [];
     const sparkColors = ['#D8FF3E', '#FFFFFF', '#9C8AFF', '#c4ec2a', '#F4F5EF'];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 45; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 12 + 4;
+      const speed = Math.random() * 11 + 3;
       particles.push({
         x: 400,
         y: 400,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - Math.random() * 3,
-        size: Math.random() * 3.5 + 1.2,
+        vy: Math.sin(angle) * speed - Math.random() * 2.5,
+        size: Math.random() * 3.2 + 1,
         color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
         alpha: 1.0,
-        decay: Math.random() * 0.038 + 0.02
+        decay: Math.random() * 0.035 + 0.02
       });
+    }
+
+    if (!animationFrameId) {
+      renderSparksLoop();
     }
   }
 
-  function renderLoop() {
+  function renderSparksLoop() {
     if (!ctx || isCleanedUp) return;
     ctx.clearRect(0, 0, 800, 800);
 
@@ -309,16 +291,9 @@ export function initCinematicIntro(forceReplay = false) {
       const p = particles[i];
       p.x += p.vx;
       p.y += p.vy;
-
-      if (isExplosionPhase) {
-        p.vx *= 0.93;
-        p.vy = p.vy * 0.93 + 0.22;
-        p.alpha -= p.decay;
-      } else {
-        if (p.y < 0) p.y = 800;
-        if (p.x < 0) p.x = 800;
-        if (p.x > 800) p.x = 0;
-      }
+      p.vx *= 0.93;
+      p.vy = p.vy * 0.93 + 0.2;
+      p.alpha -= p.decay;
 
       if (p.alpha > 0.02) {
         ctx.globalAlpha = p.alpha;
@@ -326,17 +301,18 @@ export function initCinematicIntro(forceReplay = false) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-      } else if (isExplosionPhase) {
+      } else {
         particles.splice(i, 1);
       }
     }
 
-    if (!isCleanedUp) {
-      animationFrameId = requestAnimationFrame(renderLoop);
+    if (particles.length > 0 && !isCleanedUp) {
+      animationFrameId = requestAnimationFrame(renderSparksLoop);
+    } else {
+      animationFrameId = null;
+      if (ctx) ctx.clearRect(0, 0, 800, 800);
     }
   }
-
-  initAmbientDust();
 
   // ==========================================
   // CONTROLS & SKIP
@@ -431,51 +407,55 @@ export function initCinematicIntro(forceReplay = false) {
   const floorShadow = document.getElementById('intro-floor-shadow');
   const badge = document.getElementById('intro-anticipation-badge');
 
-  // Pre-warm GPU layer before the drop starts to eliminate drop lag
-  requestAnimationFrame(() => {
-    if (dbWrapper) {
-      const _ = dbWrapper.offsetHeight;
-    }
-  });
-
   let dropStarted = false;
   function triggerDrop() {
     if (dropStarted || isCleanedUp) return;
     dropStarted = true;
 
-    // Fade out anticipation badge / action button
+    // Fade out anticipation badge / action button immediately
     if (badge) {
+      badge.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
       badge.style.opacity = '0';
       badge.style.transform = 'translate3d(0, -25px, 0)';
       badge.style.pointerEvents = 'none';
     }
 
-    // Drop dumbbell with gravitational acceleration (0.52s)
+    // Drop dumbbell with gravitational acceleration (0.50s)
     if (dbWrapper) {
-      dbWrapper.style.transition = 'transform 0.52s cubic-bezier(0.38, 0.05, 0.72, 0.15)';
-      dbWrapper.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+      dbWrapper.style.transition = 'transform 0.50s cubic-bezier(0.5, 0, 0.75, 0.25)';
+      dbWrapper.style.transform = 'translate3d(0, 0, 0)';
     }
 
     if (floorShadow) {
-      floorShadow.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-      floorShadow.style.transform = 'translateX(-50%) translateY(110px) scale(1.1)';
+      floorShadow.style.transition = 'transform 0.50s cubic-bezier(0.5, 0, 0.75, 0.25), opacity 0.50s ease-out';
+      floorShadow.style.transform = 'translate3d(-50%, 110px, 0) scale(1.15)';
       floorShadow.style.opacity = '0.9';
     }
 
-    // Physical Impact Slam at 520ms
+    // Physical Impact Slam at exactly 500ms
     activeTimers.push(setTimeout(() => {
       if (isCleanedUp) return;
 
       // Play pure, clean, single dumbbell impact thud synchronously
       introAudio.playSlam();
 
-      // Heavy camera screen shake
+      // Heavy camera screen shake (GPU 3D composited)
       introEl.classList.add('intro-screen-shake-heavy');
-      setTimeout(() => introEl.classList.remove('intro-screen-shake-heavy'), 500);
+      setTimeout(() => introEl.classList.remove('intro-screen-shake-heavy'), 460);
 
-      // Dumbbell recoil bounce
+      // Dumbbell recoil bounce via Web Animations API (100% GPU compositor thread)
       if (dbWrapper) {
-        dbWrapper.classList.add('intro-dumbbell-recoil');
+        dbWrapper.animate([
+          { transform: 'translate3d(0, 0, 0)' },
+          { transform: 'translate3d(0, -18px, 0)' },
+          { transform: 'translate3d(0, 0, 0)' },
+          { transform: 'translate3d(0, -5px, 0)' },
+          { transform: 'translate3d(0, 0, 0)' }
+        ], {
+          duration: 350,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          fill: 'forwards'
+        });
       }
 
       // Impact flash
@@ -483,8 +463,8 @@ export function initCinematicIntro(forceReplay = false) {
       if (flash) {
         flash.style.background = 'radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(216,255,62,0.8) 30%, rgba(156,138,255,0.3) 60%, transparent 80%)';
         flash.style.opacity = '1';
-        flash.style.transition = 'opacity 0.25s ease-out';
-        setTimeout(() => { if (flash) flash.style.opacity = '0'; }, 80);
+        flash.style.transition = 'opacity 0.22s ease-out';
+        setTimeout(() => { if (flash) flash.style.opacity = '0'; }, 70);
       }
 
       // Dual shockwaves
@@ -493,7 +473,7 @@ export function initCinematicIntro(forceReplay = false) {
       if (w1) w1.classList.add('intro-shockwave-active');
       setTimeout(() => {
         if (w2 && !isCleanedUp) w2.classList.add('intro-shockwave-secondary-active');
-      }, 75);
+      }, 70);
 
       // Explosive radial sparks
       spawnImpactSparks();
@@ -504,7 +484,7 @@ export function initCinematicIntro(forceReplay = false) {
         burst.style.opacity = '1';
         burst.style.transform = 'translate(-50%, -50%) scale(1.18)';
       }
-    }, 520));
+    }, 500));
 
     // Heavy Gym Vault Doors Split Open (Silent & Majestic at 850ms, 1.9s duration)
     activeTimers.push(setTimeout(() => {
@@ -552,26 +532,27 @@ export function initCinematicIntro(forceReplay = false) {
 
   // Triggering Choreography
   if (forceReplay) {
-    // Replay mode: user clicked replay button, trigger drop after 150ms
-    activeTimers.push(setTimeout(triggerDrop, 150));
+    // Replay mode: user clicked replay button, trigger drop immediately after mount (60ms)
+    activeTimers.push(setTimeout(triggerDrop, 60));
   } else {
     // First visit mode: user clicks button or anywhere on screen to drop with sound!
-    const handleInitialGesture = async (e) => {
+    const handleInitialGesture = (e) => {
       if (e.target && (e.target.closest('#intro-mute-btn') || e.target.closest('#intro-skip-btn'))) return;
       gestureEvents.forEach(evt => window.removeEventListener(evt, handleInitialGesture));
-      await introAudio.resume();
+      // Unlock audio in background without blocking frame execution
+      introAudio.resume();
       triggerDrop();
     };
 
     gestureEvents.forEach(evt => window.addEventListener(evt, handleInitialGesture, { once: true, passive: true }));
     introEl.addEventListener('click', handleInitialGesture, { once: true, passive: true });
 
-    // Fallback auto-drop after 5.0 seconds if user does not touch anything
+    // Fallback auto-drop after 4.5 seconds if user does not touch anything
     activeTimers.push(setTimeout(() => {
       if (!dropStarted) {
         triggerDrop();
       }
-    }, 5000));
+    }, 4500));
   }
 }
 

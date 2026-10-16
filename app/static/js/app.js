@@ -4,7 +4,7 @@
 
 import { initNavbar } from "./components/navbar.js";
 import { initFooter } from "./components/footer.js";
-import { initCinematicIntro } from "./components/intro.js?v=2.4";
+import { initCinematicIntro } from "./components/intro.js?v=2.5";
 import { state } from "./state.js";
 import { api } from "./api.js";
 

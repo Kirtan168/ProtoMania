@@ -1,5 +1,5 @@
 /**
- * PROTOMANIA — High-Performance Cinematic Opening Intro (v2.3)
+ * PROTOMANIA — High-Performance Cinematic Opening Intro (v2.4)
  * 
  * Performance Optimizations:
  * - 100% GPU-accelerated translate3d transforms (locked 60/120fps)
@@ -8,9 +8,10 @@
  * - Snappy gravitational descent curve with zero sluggish lag
  * - Pure, satisfying single dumbbell impact thud with silent door slide
  * - Zero ghost audio on replay (Web Audio API direct buffer node)
+ * - Strictly guarded by isIntroActive: impossible for sound to play after intro has ended
  */
 
-import { introAudio } from "./intro_audio.js?v=2.3";
+import { introAudio } from "./intro_audio.js?v=2.4";
 
 export function initCinematicIntro(forceReplay = false) {
   // Check reduced-motion preference
@@ -26,8 +27,9 @@ export function initCinematicIntro(forceReplay = false) {
   const existing = document.getElementById('cinematic-intro');
   if (existing) existing.remove();
 
-  // Purge any prior audio to guarantee zero ghost sounds
+  // Purge any prior audio and mark intro as active
   introAudio.stopAll();
+  introAudio.isIntroActive = true;
 
   // Load sound mute preference
   const savedMute = localStorage.getItem('protomania_audio_muted') === 'true';
@@ -116,15 +118,25 @@ export function initCinematicIntro(forceReplay = false) {
       </button>
     </div>
 
-    <!-- SCENE 1: ANTICIPATION BADGE (CENTER STAGE) -->
-    <div id="intro-anticipation-badge" class="absolute z-35 top-1/2 -translate-y-24 flex flex-col items-center pointer-events-none transition-all duration-300">
-      <div class="flex items-center space-x-2 bg-[#141812]/95 border border-[#D8FF3E]/40 px-5 py-2 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(216,255,62,0.2)]">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#D8FF3E] animate-ping"></span>
-        <span class="text-xs font-mono font-bold text-[#D8FF3E] tracking-widest uppercase">
-          ${forceReplay ? 'REPLAYING 50KG PROTOCOL' : '50KG CALIBRATION PROTOCOL'}
-        </span>
+    <!-- SCENE 1: ANTICIPATION / ACTION (CENTER STAGE) -->
+    ${forceReplay ? `
+      <div id="intro-anticipation-badge" class="absolute z-35 top-1/2 -translate-y-24 flex flex-col items-center pointer-events-none transition-all duration-300">
+        <div class="flex items-center space-x-2 bg-[#141812]/95 border border-[#D8FF3E]/40 px-5 py-2 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(216,255,62,0.2)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#D8FF3E] animate-ping"></span>
+          <span class="text-xs font-mono font-bold text-[#D8FF3E] tracking-widest uppercase">REPLAYING 50KG PROTOCOL</span>
+        </div>
       </div>
-    </div>
+    ` : `
+      <div id="intro-anticipation-badge" class="absolute z-40 top-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer pointer-events-auto transition-all duration-300 text-center px-4 select-none">
+        <button id="intro-enter-btn" class="group px-7 py-3.5 sm:px-9 sm:py-4 rounded-full bg-[#D8FF3E] hover:bg-[#c4ec2a] text-[#111410] font-black text-xs sm:text-sm font-mono tracking-widest flex items-center space-x-2.5 shadow-[0_0_35px_rgba(216,255,62,0.7)] cursor-pointer hover:scale-105 active:scale-95 transition-all">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#111410] animate-ping"></span>
+          <span class="font-extrabold uppercase tracking-wider">DROP 50KG PROTOCOL 🔊</span>
+        </button>
+        <div class="text-[10px] sm:text-[11px] font-mono text-[#858A80] tracking-widest mt-3 uppercase">
+          CLICK TO ENTER WITH IMPACT SOUND
+        </div>
+      </div>
+    `}
 
     <!-- IMPACT ARENA & 3D STAGE -->
     <div id="intro-arena" class="relative z-30 flex flex-col items-center justify-center pointer-events-none">
@@ -360,6 +372,8 @@ export function initCinematicIntro(forceReplay = false) {
     activeTimers.forEach(id => clearTimeout(id));
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
+    // Completely deactivate audio engine and cut off any active voices
+    introAudio.isIntroActive = false;
     introAudio.stopAll();
 
     window.removeEventListener('keydown', handleKeydown);
@@ -429,7 +443,7 @@ export function initCinematicIntro(forceReplay = false) {
     if (dropStarted || isCleanedUp) return;
     dropStarted = true;
 
-    // Fade out anticipation badge
+    // Fade out anticipation badge / action button
     if (badge) {
       badge.style.opacity = '0';
       badge.style.transform = 'translate3d(0, -25px, 0)';
@@ -452,7 +466,7 @@ export function initCinematicIntro(forceReplay = false) {
     activeTimers.push(setTimeout(() => {
       if (isCleanedUp) return;
 
-      // Play pure, clean, single dumbbell impact thud
+      // Play pure, clean, single dumbbell impact thud synchronously
       introAudio.playSlam();
 
       // Heavy camera screen shake
@@ -541,23 +555,23 @@ export function initCinematicIntro(forceReplay = false) {
     // Replay mode: user clicked replay button, trigger drop after 150ms
     activeTimers.push(setTimeout(triggerDrop, 150));
   } else {
-    // First visit mode: auto-drop smoothly after 350ms of cinematic anticipation
-    introAudio.resume();
-
-    // Any early gesture will also immediately drop and resume audio
-    const initialGesture = (e) => {
+    // First visit mode: user clicks button or anywhere on screen to drop with sound!
+    const handleInitialGesture = async (e) => {
       if (e.target && (e.target.closest('#intro-mute-btn') || e.target.closest('#intro-skip-btn'))) return;
-      gestureEvents.forEach(evt => window.removeEventListener(evt, initialGesture));
+      gestureEvents.forEach(evt => window.removeEventListener(evt, handleInitialGesture));
+      await introAudio.resume();
       triggerDrop();
     };
-    gestureEvents.forEach(evt => window.addEventListener(evt, initialGesture, { once: true, passive: true }));
-    introEl.addEventListener('pointerdown', initialGesture, { once: true, passive: true });
 
+    gestureEvents.forEach(evt => window.addEventListener(evt, handleInitialGesture, { once: true, passive: true }));
+    introEl.addEventListener('click', handleInitialGesture, { once: true, passive: true });
+
+    // Fallback auto-drop after 5.0 seconds if user does not touch anything
     activeTimers.push(setTimeout(() => {
       if (!dropStarted) {
         triggerDrop();
       }
-    }, 350));
+    }, 5000));
   }
 }
 

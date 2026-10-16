@@ -1,10 +1,10 @@
 /**
- * PROTOMANIA Dumbbell Impact Audio Engine (v7.1 — Pure Web Audio API / Zero Ghost)
+ * PROTOMANIA Dumbbell Impact Audio Engine (v7.2 — Pure Synchronous Web Audio API)
  * 
  * Guarantees:
  * 1. ZERO ghost sounds on replay: Never queues or schedules playback on a suspended context
- * 2. Instant cutoff (<15ms) on stopAll() or skip
- * 3. 100% Web Audio API only (no HTML5 audio queuing bugs)
+ * 2. ZERO delayed sounds after intro: playSlam() is 100% synchronous and guarded by isIntroActive
+ * 3. Instant cutoff (<15ms) on stopAll() or skip
  * 4. Single impact thud only, synchronized with physical visual contact
  */
 
@@ -17,11 +17,12 @@ class CinematicAudioEngine {
     this.activeSource = null;
     this.audioUrl = '/static/audio/dumbbell_impact.wav';
     this.isPreloaded = false;
+    this.isIntroActive = false;
 
     // Start background asset preloading
     this.preloadPromise = this.preload();
 
-    // Auto-resume on the earliest user interaction anywhere in the window
+    // Auto-resume on user interactions anywhere across the window
     const unlockOnGesture = async () => {
       await this.resume();
       if (this.ctx && this.ctx.state === 'running') {
@@ -111,12 +112,18 @@ class CinematicAudioEngine {
         this.impactBuffer = await ctx.decodeAudioData(arrayBuf);
         this.isPreloaded = true;
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn("Audio preload error:", err);
+    }
   }
 
-  // Pure Dumbbell Impact Thud (single trigger, hardware accurate, ZERO ghost queue)
-  async playSlam() {
+  // Pure Dumbbell Impact Thud (strictly synchronous, ZERO ghost queue, ZERO delayed playback)
+  playSlam() {
     if (this.isMuted) return;
+    if (!this.isIntroActive) {
+      // Never play slam if intro has already ended!
+      return;
+    }
 
     // Clean up any previously active sound source
     this.stopAll();
@@ -124,30 +131,18 @@ class CinematicAudioEngine {
     const ctx = this.ensureContext();
     if (!ctx) return;
 
-    if (ctx.state === 'suspended') {
-      try {
-        await ctx.resume();
-      } catch (e) {}
-    }
-
-    // If context is still suspended by browser policy, do NOT play or queue anything!
-    // This guarantee is what prevents ghost playback on replay!
+    // CRITICAL: Strictly check state without awaiting!
+    // Awaiting ctx.resume() here causes the browser to hold a pending async frame
+    // that resolves minutes later on user scroll/click, playing sound after intro is over!
     if (ctx.state !== 'running') {
-      console.warn("AudioContext suspended by browser autoplay policy. Skipping to prevent ghost queues.");
+      console.warn("AudioContext suspended by browser autoplay policy. Skipping to prevent delayed ghost sounds.");
       return;
     }
 
-    // Wait up to 150ms if initial buffer decode is still resolving
-    if (!this.impactBuffer && this.preloadPromise) {
-      try {
-        await Promise.race([
-          this.preloadPromise,
-          new Promise(r => setTimeout(r, 150))
-        ]);
-      } catch (e) {}
+    if (!this.impactBuffer) {
+      console.warn("Impact audio buffer not decoded yet.");
+      return;
     }
-
-    if (!this.impactBuffer) return;
 
     try {
       const source = ctx.createBufferSource();

@@ -45,10 +45,16 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Preload Cinematic Audio for Instant 0ms First-Load Playback -->
+  <link rel="preload" href="/static/audio/dumbbell_impact.wav" as="fetch" type="audio/wav" crossorigin>
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body class="bg-[#111410] text-[#F4F5EF] antialiased selection:bg-[#D8FF3E] selection:text-[#111410] bg-grid-pattern relative min-h-screen overflow-x-hidden">
+
+  <!-- Preloaded Global Audio Asset (Dual Engine Fallback) -->
+  <audio id="global-intro-slam-audio" src="/static/audio/dumbbell_impact.wav" preload="auto" playsinline></audio>
 
   <!-- Background Gym Imagery & Atmospheric Silhouettes (Subtle Gen Z Aesthetics) -->
   <div class="fixed inset-0 pointer-events-none -z-20 overflow-hidden">

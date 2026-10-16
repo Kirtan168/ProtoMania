@@ -138,7 +138,7 @@ export function initCinematicIntro(forceReplay = false) {
       <div id="intro-floor-shadow" class="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-28 w-44 h-8 rounded-full bg-black/80 blur-md opacity-20"></div>
 
       <!-- MASSIVE 3D CAST-IRON DUMBBELL VECTOR (Hardware GPU-Accelerated) -->
-      <div id="intro-dumbbell-wrapper" class="relative z-30" style="will-change: transform; transform: translate3d(0, -125vh, 0) rotate(-10deg);">
+      <div id="intro-dumbbell-wrapper" class="relative z-30" style="will-change: transform; transform: translate3d(0, -125vh, 0) rotate(-10deg); backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-style: preserve-3d;">
         <svg id="intro-dumbbell-svg" class="w-56 h-56 sm:w-72 sm:h-72 filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.95)]" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="dbPlateFace" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -166,11 +166,6 @@ export function initCinematicIntro(forceReplay = false) {
               <stop offset="75%" stop-color="#858a80" />
               <stop offset="100%" stop-color="#2b3127" />
             </linearGradient>
-
-            <filter id="neonGlowLime" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
           </defs>
 
           <!-- DUMBBELL GRAPHIC GROUP -->
@@ -185,9 +180,10 @@ export function initCinematicIntro(forceReplay = false) {
             <polygon points="68,74 84,65 96,74 96,166 84,175 68,166" fill="url(#dbPlateFace)" stroke="#34382F" stroke-width="1.8" />
             <polygon points="72,80 84,73 92,80 92,160 84,167 72,160" fill="#161a15" stroke="#858a80" stroke-width="1" />
 
-            <!-- Left Collar Lock -->
+            <!-- Left Collar Lock with Hardware Vector Glow -->
             <rect x="96" y="106" width="10" height="28" rx="2" fill="url(#dbPlateShadow)" stroke="#34382F" stroke-width="1" />
-            <circle cx="101" cy="120" r="3" fill="#D8FF3E" filter="url(#neonGlowLime)" />
+            <circle cx="101" cy="120" r="5" fill="#D8FF3E" opacity="0.3" />
+            <circle cx="101" cy="120" r="2.5" fill="#D8FF3E" />
 
             <!-- Steel Knurled Barbell Shaft -->
             <rect x="106" y="112" width="28" height="16" rx="2" fill="url(#dbChromeBar)" stroke="#111410" stroke-width="1.5" />
@@ -197,11 +193,14 @@ export function initCinematicIntro(forceReplay = false) {
             <line x1="124" y1="112" x2="124" y2="128" stroke="#111410" stroke-width="1.2" stroke-dasharray="1 1" />
             <line x1="128" y1="112" x2="128" y2="128" stroke="#111410" stroke-width="1.2" stroke-dasharray="1 1" />
 
-            <circle cx="120" cy="120" r="3.5" fill="#D8FF3E" filter="url(#neonGlowLime)" />
+            <!-- Center Grip Indicator with Hardware Vector Glow -->
+            <circle cx="120" cy="120" r="6" fill="#D8FF3E" opacity="0.3" />
+            <circle cx="120" cy="120" r="3" fill="#D8FF3E" />
 
-            <!-- Right Collar Lock -->
+            <!-- Right Collar Lock with Hardware Vector Glow -->
             <rect x="134" y="106" width="10" height="28" rx="2" fill="url(#dbPlateShadow)" stroke="#34382F" stroke-width="1" />
-            <circle cx="139" cy="120" r="3" fill="#D8FF3E" filter="url(#neonGlowLime)" />
+            <circle cx="139" cy="120" r="5" fill="#D8FF3E" opacity="0.3" />
+            <circle cx="139" cy="120" r="2.5" fill="#D8FF3E" />
 
             <!-- Right Hex Plates Stack -->
             <polygon points="144,74 156,65 172,74 172,166 156,175 144,166" fill="url(#dbPlateFace)" stroke="#34382F" stroke-width="1.8" />
@@ -330,22 +329,23 @@ export function initCinematicIntro(forceReplay = false) {
   const muteText = document.getElementById('intro-mute-text');
   const skipBtn = document.getElementById('intro-skip-btn');
 
-  muteBtn?.addEventListener('click', (e) => {
+  muteBtn?.addEventListener('click', async (e) => {
     e.stopPropagation();
     const newMuted = !introAudio.isMuted;
     introAudio.setMuted(newMuted);
+    if (!newMuted) await introAudio.resume();
     localStorage.setItem('protomania_audio_muted', newMuted.toString());
     if (muteIcon) muteIcon.textContent = newMuted ? '🔇' : '🔊';
     if (muteText) muteText.textContent = newMuted ? 'MUTED' : 'SOUND ON';
   });
 
+  const gestureEvents = ['pointerdown', 'mousedown', 'keydown', 'touchstart', 'click'];
   const unlockAudioGesture = async () => {
     await introAudio.resume();
-    window.removeEventListener('click', unlockAudioGesture);
-    window.removeEventListener('touchstart', unlockAudioGesture);
+    gestureEvents.forEach(evt => window.removeEventListener(evt, unlockAudioGesture));
   };
-  window.addEventListener('click', unlockAudioGesture, { once: true });
-  window.addEventListener('touchstart', unlockAudioGesture, { once: true });
+  gestureEvents.forEach(evt => window.addEventListener(evt, unlockAudioGesture, { once: true, passive: true }));
+  introEl.addEventListener('pointerdown', unlockAudioGesture, { once: true, passive: true });
 
   function finishIntro(wasSkipped = false) {
     if (isCleanedUp) return;
@@ -358,8 +358,7 @@ export function initCinematicIntro(forceReplay = false) {
     introAudio.stopAll();
 
     window.removeEventListener('keydown', handleKeydown);
-    window.removeEventListener('click', unlockAudioGesture);
-    window.removeEventListener('touchstart', unlockAudioGesture);
+    gestureEvents.forEach(evt => window.removeEventListener(evt, unlockAudioGesture));
 
     const doorL = document.getElementById('intro-door-left');
     const doorR = document.getElementById('intro-door-right');
@@ -412,6 +411,13 @@ export function initCinematicIntro(forceReplay = false) {
   const dbWrapper = document.getElementById('intro-dumbbell-wrapper');
   const floorShadow = document.getElementById('intro-floor-shadow');
   const badge = document.getElementById('intro-anticipation-badge');
+
+  // Pre-warm GPU layer before the 250ms drop starts to eliminate first-frame drop lag
+  requestAnimationFrame(() => {
+    if (dbWrapper) {
+      const _ = dbWrapper.offsetHeight;
+    }
+  });
 
   // STEP 1: Quick, snappy anticipation (0.0s - 0.25s)
   // No 800ms sluggish delay! Drop triggers promptly at t = 250ms

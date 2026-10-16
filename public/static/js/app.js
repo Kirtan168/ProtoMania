@@ -65,32 +65,54 @@ async function initApp() {
   document.documentElement.classList.toggle("dark", savedTheme === "dark");
   document.documentElement.setAttribute("data-theme", savedTheme);
 
-  // Initialize UI Shell
-  initNavbar();
-  initFooter();
+  // Check if opening cinematic intro will play
+  const hasSeen = sessionStorage.getItem('protomania_intro_played') === 'true';
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const willPlayIntro = !hasSeen && !prefersReduced;
 
-  // Try authenticating existing session or fallback to demo student profile
-  try {
-    const user = await api.getMe();
-    state.set("user", user);
-  } catch (e) {
-    // Attempt auto-login as demo student for university review convenience
+  window.replayIntro = () => initCinematicIntro(true);
+
+  if (willPlayIntro) {
+    // 1. Immediately launch cinematic intro with 0ms delay
+    initCinematicIntro();
+
+    // 2. Initialize lightweight UI shell
+    initNavbar();
+    initFooter();
+
+    // 3. Defer heavy background routing & knapsack calculations until dumbbell has landed
+    // This frees 100% of the main thread during the gravitational drop (250ms - 770ms)
+    setTimeout(() => {
+      window.addEventListener("hashchange", router);
+      router();
+
+      // Background authentication without blocking the UI
+      api.getMe().then(user => state.set("user", user)).catch(() => {
+        api.guestLogin().then(demoRes => {
+          api.setToken(demoRes.access_token);
+          state.set("user", demoRes.user);
+        }).catch(() => {});
+      });
+    }, 1000);
+  } else {
+    // Direct boot (intro already viewed or reduced-motion enabled)
+    initNavbar();
+    initFooter();
+
+    window.addEventListener("hashchange", router);
+    router();
+
     try {
-      const demoRes = await api.guestLogin();
-      api.setToken(demoRes.access_token);
-      state.set("user", demoRes.user);
-    } catch (guestErr) {
-      console.warn("Guest session unavailable:", guestErr);
+      const user = await api.getMe();
+      state.set("user", user);
+    } catch (e) {
+      try {
+        const demoRes = await api.guestLogin();
+        api.setToken(demoRes.access_token);
+        state.set("user", demoRes.user);
+      } catch (guestErr) {}
     }
   }
-
-  // Trigger Cinematic Opening Intro (Dumbbell Drop & Gym Doors)
-  window.replayIntro = () => initCinematicIntro(true);
-  initCinematicIntro();
-
-  // Routing
-  window.addEventListener("hashchange", router);
-  router();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

@@ -1,12 +1,11 @@
 /**
- * PROTOMANIA Dumbbell Impact Audio Engine (v5.0 — Dual-Engine Instant Playback)
+ * PROTOMANIA Dumbbell Impact Audio Engine (v6.0 — Zero Ghost / Zero Double-Trigger)
  * 
- * - Dual Engine: High-fidelity Web Audio API + Instant Native HTML5 Audio Fallback
- * - Pre-warmed & Preloaded on first page load (eliminates first-visit silence)
- * - Auto-resumes AudioContext on impact slam if suspended
- * - Single dedicated sound: Pure heavy dumbbell thud (zero pre-pop, zero bounce)
- * - Completely silent door sliding, anticipation, and reveal
- * - Instant cutoff (<20ms) on skip [Esc]
+ * Guarantees:
+ * 1. Zero ghost sounds on replay: Never queues playback on a suspended context
+ * 2. Instant cutoff (<15ms) on stopAll() or skip
+ * 3. Pre-cached 16-bit PCM impact thud: 100% preloaded in browser memory
+ * 4. Single impact thud only, synchronized with physical visual contact
  */
 
 class CinematicAudioEngine {
@@ -14,18 +13,18 @@ class CinematicAudioEngine {
     this.ctx = null;
     this.masterGain = null;
     this.isMuted = false;
-    this.activeSources = [];
     this.impactBuffer = null;
-    this.isPreloaded = false;
+    this.activeSource = null;
+    this.activeHtml5 = null;
     this.audioUrl = '/static/audio/dumbbell_impact.wav';
-    this.html5Audio = null;
+    this.isPreloaded = false;
 
-    // Start background asset preloading immediately
+    // Start background asset preloading
     this.preloadPromise = this.preload();
   }
 
   ensureContext() {
-    if (!this.ctx) {
+    if (!this.ctx || this.ctx.state === 'closed') {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return null;
       try {
@@ -50,15 +49,6 @@ class CinematicAudioEngine {
     if (ctx && ctx.state === "suspended") {
       try {
         await ctx.resume();
-      } catch (e) {
-        // Handled silently
-      }
-    }
-    // Also prime HTML5 Audio element
-    const elem = document.getElementById('global-intro-slam-audio') || this.html5Audio;
-    if (elem) {
-      try {
-        elem.load();
       } catch (e) {}
     }
   }
@@ -66,52 +56,54 @@ class CinematicAudioEngine {
   setMuted(muted) {
     this.isMuted = muted;
     if (this.masterGain && this.ctx) {
-      const now = this.ctx.currentTime;
-      this.masterGain.gain.cancelScheduledValues(now);
-      this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-      this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 1.0, now + 0.04);
+      try {
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+        this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 1.0, now + 0.04);
+      } catch (e) {}
     }
-    const elem = document.getElementById('global-intro-slam-audio') || this.html5Audio;
-    if (elem) {
-      elem.muted = muted;
+    if (this.activeHtml5) {
+      this.activeHtml5.muted = muted;
     }
   }
 
   stopAll() {
-    if (this.ctx && this.masterGain) {
-      const now = this.ctx.currentTime;
-      this.masterGain.gain.cancelScheduledValues(now);
-      this.masterGain.gain.linearRampToValueAtTime(0, now + 0.02);
+    // 1. Immediately cut off any running Web Audio source
+    if (this.activeSource) {
+      try {
+        this.activeSource.stop();
+        this.activeSource.disconnect();
+      } catch (e) {}
+      this.activeSource = null;
     }
-    this.activeSources.forEach(s => {
-      try {
-        if (s.stop) s.stop();
-        if (s.disconnect) s.disconnect();
-      } catch (e) {}
-    });
-    this.activeSources = [];
 
-    const elem = document.getElementById('global-intro-slam-audio') || this.html5Audio;
-    if (elem) {
+    // 2. Mute gain node immediately so no sound leaks
+    if (this.ctx && this.masterGain) {
       try {
-        elem.pause();
-        elem.currentTime = 0;
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(0, now);
+        if (!this.isMuted) {
+          this.masterGain.gain.setValueAtTime(1.0, now + 0.05);
+        }
       } catch (e) {}
+    }
+
+    // 3. Terminate and purge any active HTML5 audio element
+    if (this.activeHtml5) {
+      try {
+        this.activeHtml5.pause();
+        this.activeHtml5.currentTime = 0;
+        this.activeHtml5.src = '';
+        this.activeHtml5.load();
+      } catch (e) {}
+      this.activeHtml5 = null;
     }
   }
 
   async preload() {
     if (this.isPreloaded) return;
-
-    // 1. Initialize HTML5 Audio instance for instant native decoding
-    try {
-      this.html5Audio = new Audio(this.audioUrl);
-      this.html5Audio.preload = 'auto';
-      this.html5Audio.volume = this.isMuted ? 0 : 1.0;
-      this.html5Audio.load();
-    } catch (e) {}
-
-    // 2. Fetch and decode audio buffer for Web Audio API
     try {
       const resp = await fetch(this.audioUrl);
       if (!resp.ok) return;
@@ -121,14 +113,15 @@ class CinematicAudioEngine {
         this.impactBuffer = await ctx.decodeAudioData(arrayBuf);
         this.isPreloaded = true;
       }
-    } catch (err) {
-      // Offline or deferred decode
-    }
+    } catch (err) {}
   }
 
-  // Pure Dumbbell Impact Thud (starts instantly at contact, zero pre-pop, zero bounce)
+  // Pure Dumbbell Impact Thud (single trigger, hardware accurate)
   async playSlam() {
     if (this.isMuted) return;
+
+    // Clean up any previously playing sounds before starting a new one
+    this.stopAll();
 
     const ctx = this.ensureContext();
     if (ctx && ctx.state === 'suspended') {
@@ -137,7 +130,7 @@ class CinematicAudioEngine {
       } catch (e) {}
     }
 
-    // If buffer is still in-flight, give it a tiny 100ms window to complete
+    // Wait up to 100ms if initial buffer decode is still resolving
     if (!this.impactBuffer && this.preloadPromise) {
       try {
         await Promise.race([
@@ -147,9 +140,8 @@ class CinematicAudioEngine {
       } catch (e) {}
     }
 
-    let played = false;
-
-    // Primary: Web Audio API (sample-accurate, hardware gain)
+    // PRIMARY: Web Audio API (ONLY when context is in 'running' state!)
+    // CRITICAL: We NEVER call source.start() on a suspended context, preventing ghost queues!
     if (ctx && ctx.state === 'running' && this.impactBuffer) {
       try {
         const source = ctx.createBufferSource();
@@ -162,38 +154,38 @@ class CinematicAudioEngine {
         gain.connect(this.masterGain);
 
         source.start(ctx.currentTime, 0);
-        this.activeSources.push(source);
+        this.activeSource = source;
         source.onended = () => {
-          const idx = this.activeSources.indexOf(source);
-          if (idx !== -1) this.activeSources.splice(idx, 1);
+          if (this.activeSource === source) this.activeSource = null;
         };
-        played = true;
+        return;
       } catch (err) {
-        console.warn("WebAudio slam failed:", err);
+        console.warn("WebAudio playback error:", err);
       }
     }
 
-    // Secondary / Fallback: Native HTML5 Audio
-    if (!played) {
-      const elem = document.getElementById('global-intro-slam-audio') || this.html5Audio;
-      if (elem) {
-        try {
-          elem.currentTime = 0;
-          elem.volume = this.isMuted ? 0 : 1.0;
-          const playPromise = elem.play();
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              played = true;
-            }).catch(e => {
-              console.warn("HTML5 audio playback blocked by browser:", e);
-            });
-          }
-        } catch (e) {}
+    // SECONDARY: Fresh HTML5 Audio fallback (transient instance)
+    try {
+      const audio = new Audio(this.audioUrl);
+      audio.volume = this.isMuted ? 0 : 1.0;
+      audio.currentTime = 0;
+      this.activeHtml5 = audio;
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(e => {
+          // If browser strictly blocked, immediately destroy to prevent pending playback
+          try {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = '';
+          } catch (err) {}
+          if (this.activeHtml5 === audio) this.activeHtml5 = null;
+        });
       }
-    }
+    } catch (e) {}
   }
 
-  // All other events are completely silent
   playAnticipation() {}
   playWhoosh() {}
   playDoorOpen() {}

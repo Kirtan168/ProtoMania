@@ -25,6 +25,9 @@ export function initCinematicIntro(forceReplay = false) {
   const existing = document.getElementById('cinematic-intro');
   if (existing) existing.remove();
 
+  // Purge any prior audio to guarantee zero ghost sounds
+  introAudio.stopAll();
+
   // Load sound mute preference
   const savedMute = localStorage.getItem('protomania_audio_muted') === 'true';
   introAudio.setMuted(savedMute);
@@ -113,12 +116,17 @@ export function initCinematicIntro(forceReplay = false) {
     </div>
 
     <!-- SCENE 1: ANTICIPATION HUD TEXT BADGE -->
-    <div id="intro-anticipation-badge" class="absolute z-35 top-1/2 -translate-y-24 flex flex-col items-center pointer-events-none transition-all duration-300">
-      <div class="flex items-center space-x-2 bg-[#141812]/90 border border-[#D8FF3E]/40 px-4 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(216,255,62,0.2)]">
-        <span class="w-2 h-2 rounded-full bg-[#D8FF3E] animate-ping"></span>
-        <span class="text-[11px] font-mono font-bold text-[#D8FF3E] tracking-widest uppercase">PREPARING YOUR SESSION</span>
+    <div id="intro-anticipation-badge" class="absolute z-35 top-1/2 -translate-y-24 flex flex-col items-center cursor-pointer pointer-events-auto transition-all duration-300 group">
+      <div class="flex items-center space-x-2.5 bg-[#141812]/95 border-2 border-[#D8FF3E] px-6 py-2.5 rounded-full backdrop-blur-md shadow-[0_0_30px_rgba(216,255,62,0.35)] group-hover:scale-105 group-hover:bg-[#D8FF3E] transition-all">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#D8FF3E] group-hover:bg-[#111410] animate-ping"></span>
+        <span id="intro-badge-title" class="text-xs font-mono font-black text-[#D8FF3E] group-hover:text-[#111410] tracking-widest uppercase">
+          ${forceReplay ? 'INITIALIZING PROTOCOL...' : 'CLICK / TAP TO ENTER'}
+        </span>
+        <span class="text-xs">⚡</span>
       </div>
-      <span class="text-[10px] font-mono text-[#858A80] tracking-wider mt-2">CALIBRATING MAXIMUM PROTEIN PROTOCOLS...</span>
+      <span id="intro-badge-subtitle" class="text-[10px] font-mono text-[#858A80] tracking-wider mt-2.5 group-hover:text-[#F4F5EF] transition-colors">
+        ${forceReplay ? '50KG DROP INCOMING...' : 'TAP ANYWHERE TO UNLEASH PROTOCOL [ 🔊 ]'}
+      </span>
     </div>
 
     <!-- IMPACT ARENA & 3D STAGE -->
@@ -406,30 +414,35 @@ export function initCinematicIntro(forceReplay = false) {
   });
 
   // ==========================================
-  // FAST, RESPONSIVE, 60FPS CHOREOGRAPHY
+  // RESPONSIVE, 60FPS CHOREOGRAPHY WITH INTERACTIVE TRIGGER
   // ==========================================
   const dbWrapper = document.getElementById('intro-dumbbell-wrapper');
   const floorShadow = document.getElementById('intro-floor-shadow');
   const badge = document.getElementById('intro-anticipation-badge');
 
-  // Pre-warm GPU layer before the 250ms drop starts to eliminate first-frame drop lag
+  // Pre-warm GPU layer before the drop starts to eliminate drop lag
   requestAnimationFrame(() => {
     if (dbWrapper) {
       const _ = dbWrapper.offsetHeight;
     }
   });
 
-  // STEP 1: Quick, snappy anticipation (0.0s - 0.25s)
-  // No 800ms sluggish delay! Drop triggers promptly at t = 250ms
-  activeTimers.push(setTimeout(() => {
-    if (isCleanedUp) return;
+  let dropStarted = false;
+  function triggerDrop() {
+    if (dropStarted || isCleanedUp) return;
+    dropStarted = true;
 
+    // Immediately resume audio context on this user gesture
+    introAudio.resume();
+
+    // Fade out anticipation badge
     if (badge) {
       badge.style.opacity = '0';
       badge.style.transform = 'translate3d(0, -25px, 0)';
+      badge.style.pointerEvents = 'none';
     }
 
-    // High gravitational drop acceleration (GPU-composited translate3d)
+    // Drop dumbbell with gravitational acceleration (0.52s)
     if (dbWrapper) {
       dbWrapper.style.transition = 'transform 0.52s cubic-bezier(0.38, 0.05, 0.72, 0.15)';
       dbWrapper.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
@@ -440,95 +453,117 @@ export function initCinematicIntro(forceReplay = false) {
       floorShadow.style.transform = 'translateX(-50%) translateY(110px) scale(1.1)';
       floorShadow.style.opacity = '0.9';
     }
-  }, 250));
 
-  // STEP 2: THE PHYSICAL IMPACT SLAM (t = 770ms)
-  activeTimers.push(setTimeout(() => {
-    if (isCleanedUp) return;
+    // Physical Impact Slam at 520ms
+    activeTimers.push(setTimeout(() => {
+      if (isCleanedUp) return;
 
-    // Play pure, clean, heavy dumbbell impact thud
-    introAudio.playSlam();
+      // Play pure, clean, single dumbbell impact thud
+      introAudio.playSlam();
 
-    // Heavy camera screen shake
-    introEl.classList.add('intro-screen-shake-heavy');
-    setTimeout(() => introEl.classList.remove('intro-screen-shake-heavy'), 500);
+      // Heavy camera screen shake
+      introEl.classList.add('intro-screen-shake-heavy');
+      setTimeout(() => introEl.classList.remove('intro-screen-shake-heavy'), 500);
 
-    // Dumbbell recoil bounce
-    if (dbWrapper) {
-      dbWrapper.classList.add('intro-dumbbell-recoil');
-    }
+      // Dumbbell recoil bounce
+      if (dbWrapper) {
+        dbWrapper.classList.add('intro-dumbbell-recoil');
+      }
 
-    // Impact flash
-    const flash = document.getElementById('intro-flash');
-    if (flash) {
-      flash.style.background = 'radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(216,255,62,0.8) 30%, rgba(156,138,255,0.3) 60%, transparent 80%)';
-      flash.style.opacity = '1';
-      flash.style.transition = 'opacity 0.25s ease-out';
-      setTimeout(() => { if (flash) flash.style.opacity = '0'; }, 80);
-    }
+      // Impact flash
+      const flash = document.getElementById('intro-flash');
+      if (flash) {
+        flash.style.background = 'radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(216,255,62,0.8) 30%, rgba(156,138,255,0.3) 60%, transparent 80%)';
+        flash.style.opacity = '1';
+        flash.style.transition = 'opacity 0.25s ease-out';
+        setTimeout(() => { if (flash) flash.style.opacity = '0'; }, 80);
+      }
 
-    // Dual shockwaves
-    const w1 = document.getElementById('intro-wave-1');
-    const w2 = document.getElementById('intro-wave-2');
-    if (w1) w1.classList.add('intro-shockwave-active');
-    setTimeout(() => {
-      if (w2 && !isCleanedUp) w2.classList.add('intro-shockwave-secondary-active');
-    }, 75);
+      // Dual shockwaves
+      const w1 = document.getElementById('intro-wave-1');
+      const w2 = document.getElementById('intro-wave-2');
+      if (w1) w1.classList.add('intro-shockwave-active');
+      setTimeout(() => {
+        if (w2 && !isCleanedUp) w2.classList.add('intro-shockwave-secondary-active');
+      }, 75);
 
-    // Explosive radial sparks
-    spawnImpactSparks();
+      // Explosive radial sparks
+      spawnImpactSparks();
 
-    // Proto Mark burst stamp
-    const burst = document.getElementById('intro-proto-burst');
-    if (burst) {
-      burst.style.opacity = '1';
-      burst.style.transform = 'translate(-50%, -50%) scale(1.18)';
-    }
-  }, 770));
+      // Proto Mark burst stamp
+      const burst = document.getElementById('intro-proto-burst');
+      if (burst) {
+        burst.style.opacity = '1';
+        burst.style.transform = 'translate(-50%, -50%) scale(1.18)';
+      }
+    }, 520));
 
-  // STEP 3: Heavy Industrial Gym Vault Doors Split Open (Silent & Majestic at t = 1100ms)
-  // Take a full 1.9s to heavily, smoothly slide open to the sides
-  activeTimers.push(setTimeout(() => {
-    if (isCleanedUp) return;
+    // Heavy Gym Vault Doors Split Open (Silent & Majestic at 850ms)
+    activeTimers.push(setTimeout(() => {
+      if (isCleanedUp) return;
 
-    const doorL = document.getElementById('intro-door-left');
-    const doorR = document.getElementById('intro-door-right');
-    if (doorL && doorR) {
-      doorL.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
-      doorR.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
-      doorL.style.transform = 'translate3d(-105%, 0, 0)';
-      doorR.style.transform = 'translate3d(105%, 0, 0)';
-    }
-  }, 1100));
+      const doorL = document.getElementById('intro-door-left');
+      const doorR = document.getElementById('intro-door-right');
+      if (doorL && doorR) {
+        doorL.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
+        doorR.style.transition = 'transform 1.9s cubic-bezier(0.4, 0, 0.2, 1)';
+        doorL.style.transform = 'translate3d(-105%, 0, 0)';
+        doorR.style.transform = 'translate3d(105%, 0, 0)';
+      }
+    }, 850));
 
-  // STEP 4: Dissolve Center Dumbbell & Impact Stamps as website emerges (t = 1950ms)
-  activeTimers.push(setTimeout(() => {
-    if (isCleanedUp) return;
+    // Dissolve Center Dumbbell & Impact Stamps as website emerges (at 1700ms)
+    activeTimers.push(setTimeout(() => {
+      if (isCleanedUp) return;
 
-    if (dbWrapper) {
-      dbWrapper.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
-      dbWrapper.style.opacity = '0';
-      dbWrapper.style.transform = 'translate3d(0, 0, 0) scale(0.9)';
-    }
+      if (dbWrapper) {
+        dbWrapper.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+        dbWrapper.style.opacity = '0';
+        dbWrapper.style.transform = 'translate3d(0, 0, 0) scale(0.9)';
+      }
 
-    const burst = document.getElementById('intro-proto-burst');
-    if (burst) {
-      burst.style.transition = 'opacity 0.5s ease';
-      burst.style.opacity = '0';
-    }
+      const burst = document.getElementById('intro-proto-burst');
+      if (burst) {
+        burst.style.transition = 'opacity 0.5s ease';
+        burst.style.opacity = '0';
+      }
 
-    if (floorShadow) {
-      floorShadow.style.transition = 'opacity 0.5s ease';
-      floorShadow.style.opacity = '0';
-    }
-  }, 1950));
+      if (floorShadow) {
+        floorShadow.style.transition = 'opacity 0.5s ease';
+        floorShadow.style.opacity = '0';
+      }
+    }, 1700));
 
-  // STEP 5: Complete & Interactive Website Handoff at t = 3050ms (Doors fully cleared)
-  activeTimers.push(setTimeout(() => {
-    if (!isCleanedUp) {
-      finishIntro(false);
-    }
-  }, 3050));
+    // Complete & Interactive Website Handoff at 2800ms (Doors fully cleared)
+    activeTimers.push(setTimeout(() => {
+      if (!isCleanedUp) {
+        finishIntro(false);
+      }
+    }, 2800));
+  }
+
+  // Triggering Choreography
+  if (forceReplay) {
+    // Replay mode: user already clicked the replay button, trigger drop after 150ms
+    activeTimers.push(setTimeout(triggerDrop, 150));
+  } else {
+    // First visit mode: user taps anywhere on screen to enter with sound
+    const gestureEvents = ['pointerdown', 'mousedown', 'keydown', 'touchstart', 'click'];
+    const handleInitialGesture = (e) => {
+      if (e.target && (e.target.closest('#intro-mute-btn') || e.target.closest('#intro-skip-btn'))) return;
+      gestureEvents.forEach(evt => window.removeEventListener(evt, handleInitialGesture));
+      triggerDrop();
+    };
+    gestureEvents.forEach(evt => window.addEventListener(evt, handleInitialGesture, { once: true, passive: true }));
+    introEl.addEventListener('pointerdown', handleInitialGesture, { once: true, passive: true });
+
+    // Auto-drop fallback in case user does not touch screen for 2.2s
+    activeTimers.push(setTimeout(() => {
+      if (!dropStarted) {
+        triggerDrop();
+      }
+    }, 2200));
+  }
 }
 
 export function revealHeroDirectly() {

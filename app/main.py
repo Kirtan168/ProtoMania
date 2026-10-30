@@ -75,9 +75,21 @@ def get_index_html() -> str:
 async def serve_home():
     return HTMLResponse(content=get_index_html())
 
-@app.get("/developers", response_class=HTMLResponse)
-async def serve_developers():
-    return HTMLResponse(content=get_index_html())
+@app.get("/download/agile-backlog")
+async def download_agile_backlog():
+    candidates = [
+        STATIC_DIR / "downloads" / "PROTOMANIA_Agile_Epics_and_User_Stories.docx",
+        Path.cwd() / "app" / "static" / "downloads" / "PROTOMANIA_Agile_Epics_and_User_Stories.docx",
+        Path("/var/task/app/static/downloads/PROTOMANIA_Agile_Epics_and_User_Stories.docx")
+    ]
+    for p in candidates:
+        if p.exists():
+            return FileResponse(
+                path=str(p),
+                filename="PROTOMANIA_Agile_Epics_and_User_Stories.docx",
+                media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+    return HTMLResponse(status_code=404, content="Agile Backlog document not found")
 
 # Catch-all client-side router fallback so direct URLs like /dashboard, /optimizer, /meals, /workouts, /wrapped, /developers work seamlessly
 @app.get("/{full_path:path}", response_class=HTMLResponse)

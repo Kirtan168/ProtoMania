@@ -1,0 +1,196 @@
+﻿"Issue Type","Summary","Description","Epic Name","Epic Link","Story Points","Priority","Sprint","Labels","Status"
+"Epic","EPIC-OPT: Algorithmic Student Budget Protein Optimizer","Theme: Cost-constrained deterministic nutrition optimization.
+
+Goal: Allow broke college students to input their daily budget (₹40–₹200/day) and algorithmically generate the highest-protein combination of affordable Indian staples within hostel cooking limits.
+
+Key Capabilities: Knapsack linear budget solver, living reality filters (Hostel kettle / Mess survival / Zero-cook), custom Kirana price overrides, and Protein Price Radar.","Student Budget Protein Optimizer","","","Highest","","epic,optimizer,nutrition,knapsack","To Do"
+"Epic","EPIC-PLAN: 7-Day Day-Wise Diet Planner & Bulk Campus Procurement","Theme: Practical, varied day-by-day hostel meal execution and raw ingredient procurement.
+
+Goal: Provide a structured, day-by-day (Monday to Sunday) recipe schedule with daily variety (Moong/Besan Chilla, Egg Bhurji, Paneer Bhurji, Soya Pulao, Chicken Curry, Tawa Fish) so students avoid dietary fatigue and can buy ingredients in bulk.
+
+Key Capabilities: Interactive Monday–Sunday timeline tabs, Veg/Egg/Non-Veg preference switcher, 1-click bulk 7-day grocery list with raw weights, daily pocket money tracker, and +50 XP meal logging.","7-Day Diet Planner & Procurement","","","High","","epic,meal-planner,7day-schedule,grocery","To Do"
+"Epic","EPIC-GENZ: Gen-Z Gamification, Campus Social Squads & AI Fitness Buddy","Theme: Student habit retention, peer motivation, and conversational AI guidance.
+
+Goal: Keep students motivated through gamified levels, consistency streaks, private campus hostel squads, monthly shareable recaps, and an AI buddy answering dorm cooking and mess survival questions.
+
+Key Capabilities: Leveling from Iron Cadet to Campus Beast, privacy-first squad leaderboards, Broke but Building emergency solver, conversational AI buddy, and Spotify-style Fitness Wrapped recap cards.","Gamification, Squads & AI Buddy","","","Medium","","epic,gamification,squads,ai-assistant","To Do"
+"Story","US-01: 5-Step Student Onboarding & Target Engine","User Story:
+As an Indian college student starting my fitness journey,
+I want a 5-step onboarding wizard calculating my BMR, TDEE, and daily protein targets based on my biometrics and budget,
+So that I have a scientifically tailored plan without hiring an expensive coach.
+
+Acceptance Criteria:
+- GIVEN a new or guest student user on `#/onboarding`
+- WHEN they input age, height, weight, activity level, and daily budget (₹)
+- THEN the system computes deterministic BMR using Mifflin-St Jeor and WHO activity multipliers, saves profile, displays Day 1 baseline targets (starting protein at 0g consumed), and awards +150 Onboarding XP.","","Student Budget Protein Optimizer","5","High","Sprint 1","onboarding,bmr-calculator,mvp,sprint1","To Do"
+"Story","US-02: Heuristic Knapsack Budget Protein Solver","User Story:
+As a broke college hosteler,
+I want to input my exact daily pocket money (e.g., ₹60, ₹80, ₹100, ₹120) and have the system algorithmically assemble the maximum protein combination,
+So that I never waste money on low-protein junk food.
+
+Acceptance Criteria:
+- GIVEN a target budget and dietary preference
+- WHEN the student triggers the optimizer via POST /api/optimizer/solve
+- THEN a constrained greedy knapsack algorithm returns a feasible food allocation, itemizing total cost, total protein (g), leftover change, and efficiency metrics.","","Student Budget Protein Optimizer","8","High","Sprint 1","knapsack-algorithm,optimizer,core-engine,sprint1","To Do"
+"Story","US-03: Real-Time Student Living Reality Filters","User Story:
+As a hosteler without a kitchen,
+I want to toggle between 'Hostel Mode' (kettle only), 'Mess Survival', and 'Zero-Cook',
+So that the optimizer only recommends foods I can actually prepare in my dorm room.
+
+Acceptance Criteria:
+- GIVEN the food optimizer and meal views
+- WHEN the student selects 'Zero-Cook' or 'Hostel Mode'
+- THEN foods requiring induction/gas stoves or refrigeration are filtered out, leaving kettle-friendly foods like soya chunks, sattu, roasted peanuts, and bananas.","","Student Budget Protein Optimizer","5","High","Sprint 1","hostel-mode,filters,student-reality,sprint1","To Do"
+"Story","US-07: Protein Price Radar (₹ per 10g Protein Index)","User Story:
+As a smart student shopper,
+I want to view a real-time price radar ranking all Indian staples by cost per 10 grams of protein,
+So that I know which grocery items provide the highest nutritional ROI.
+
+Acceptance Criteria:
+- GIVEN the #/radar view
+- WHEN the page loads
+- THEN a sorted bar graph and price table render staples from lowest cost/10g protein (Soya Chunks at ₹4.5/10g, Sattu at ₹7.5/10g) to expensive commercial proteins, highlighting 'Campus Value Kings'.","","Student Budget Protein Optimizer","3","Medium","Sprint 1","price-radar,cost-efficiency,analytics,sprint1","To Do"
+"Story","US-08: Interactive 7-Day Day-Wise Schedule Navigation","User Story:
+As a fitness-focused student,
+I want to navigate my meal plan day-by-day (Monday to Sunday) with distinct recipes and day themes,
+So that I don’t get bored eating the same static meal every day.
+
+Acceptance Criteria:
+- GIVEN the Diet Plans view (`#/meals`)
+- WHEN the student clicks on pill buttons [Mon], [Tue], [Wed], [Thu], [Fri], [Sat], [Sun]
+- THEN the timeline immediately updates that day's specific meal cards (Breakfast, Lunch, Snack, Dinner), planned cost, macros, and preparation protocol with zero page refresh.","","7-Day Diet Planner & Procurement","8","High","Sprint 1","7day-plan,day-wise,recipes,sprint1","To Do"
+"Story","US-09: Multi-Dietary Preference Switcher (Veg / Egg / Non-Veg)","User Story:
+As an eggetarian or vegetarian lifter,
+I want to switch my dietary preference on the fly,
+So that all 7 days immediately populate with compliant Indian recipes (e.g., Egg Bhurji & Masala Omelette vs. Moong Chilla & Paneer Bhurji).
+
+Acceptance Criteria:
+- GIVEN the meal plan controls bar
+- WHEN the user clicks '🌱 Veg', '🥚 Egg', or '🍗 Non-Veg'
+- THEN the schedule re-renders with certified diet-compliant meals and updates the user profile state.","","7-Day Diet Planner & Procurement","3","High","Sprint 1","diet-switcher,vegetarian,eggetarian,sprint1","To Do"
+"Story","US-11: Daily Real-Time Macro & Pocket Money Tracker Dashboard","User Story:
+As a busy student,
+I want to see a live visual dashboard of my planned vs. consumed protein, calories, and remaining pocket money for today,
+So that I know exactly where I stand at any moment.
+
+Acceptance Criteria:
+- GIVEN the student opens `#/dashboard`
+- WHEN the dashboard loads
+- THEN animated counters display today's consumed protein (starting at 0% for new onboardings), budget spent, budget remaining, and meal checklist.","","7-Day Diet Planner & Procurement","5","High","Sprint 1","dashboard,macro-tracker,budget-tally,sprint1","To Do"
+"Story","US-12: Single-Tap Meal Consumption Logging with XP","User Story:
+As a student eating a scheduled meal,
+I want to click 'Mark Eaten',
+So that my daily consumed protein increases and I earn Anabolic XP toward leveling up.
+
+Acceptance Criteria:
+- GIVEN any meal card in `#/meals` or `#/dashboard`
+- WHEN the student taps 'Mark Eaten (+50 XP)'
+- THEN POST /api/meals/log records the meal, the button updates to 'Logged ✓', a success toast appears, and the user's total XP increases by +50.","","7-Day Diet Planner & Procurement","3","High","Sprint 1","meal-logging,xp-reward,gamification,sprint1","To Do"
+"Story","US-13: Hostel Kettle & Desk Cooking Preparation Protocols","User Story:
+As a hosteler cooking in a dorm room,
+I want clear 2-sentence micro-recipes detailing exact preparation steps (under 10 minutes),
+So that I can cook without elaborate kitchen equipment.
+
+Acceptance Criteria:
+- GIVEN any meal card on the timeline
+- WHEN viewed by the student
+- THEN it presents prep time (e.g., '8 mins'), cooking method ('kettle_or_stove'), and actionable hostel instructions (e.g., 'Boil soya chunks in electric kettle for 4 mins, squeeze out excess water, toss with chaat masala').","","7-Day Diet Planner & Procurement","3","Medium","Sprint 1","kettle-cooking,recipes,hostel-hacks,sprint1","To Do"
+"Story","US-15: Student XP Leveling, Anabolic Cadet Ranks & Consistency Streaks","User Story:
+As a student building daily discipline,
+I want to accumulate XP and climb fitness ranks (from Level 1: Iron Cadet up to Campus Beast),
+So that maintaining my diet feels like an engaging video game.
+
+Acceptance Criteria:
+- GIVEN a logged-in or guest student session
+- WHEN they log meals (+50 XP) or complete daily consistency check-ins
+- THEN their streak counter increments, their level progress bar advances, and milestone level-up toasts trigger.","","Gamification, Squads & AI Buddy","5","Medium","Sprint 1","gamification,streaks,leveling,sprint1","To Do"
+"Story","US-04: Campus Kirana Custom Price Override Tool","User Story:
+As a student whose campus canteen charges different prices than national averages (e.g., ₹7/egg instead of ₹6),
+I want to override food unit prices,
+So that my optimized budget matches my local Kirana reality.
+
+Acceptance Criteria:
+- GIVEN any food card in the optimizer directory
+- WHEN the user edits the unit price and clicks 'Update Price'
+- THEN POST /api/optimizer/price-override persists the custom rate in food_price_overrides and recalculates the knapsack allocation with the updated price.","","Student Budget Protein Optimizer","5","Medium","Sprint 2","price-override,kirana,customization,sprint2","To Do"
+"Story","US-05: Smart High-Protein Substitutions Engine","User Story:
+As a student who dislikes certain foods (or when an item is out of stock at the campus store),
+I want to click a 'Swap' button on any allocated food,
+So that I can see comparable protein alternatives within the same price band.
+
+Acceptance Criteria:
+- GIVEN a solved meal item (e.g., Soya Chunks 50g)
+- WHEN the student clicks the swap button (POST /api/optimizer/substitute)
+- THEN the modal surfaces at least 3 smart swaps (e.g., Roasted Bhuna Chana or Sattu) that fit within ±₹5 and maintain protein within 15%.","","Student Budget Protein Optimizer","5","Medium","Sprint 2","substitutions,smart-swaps,flexibility,sprint2","To Do"
+"Story","US-06: The '₹50 Broke Student Challenge' Solver","User Story:
+As a student at month-end with almost zero funds,
+I want a 1-click solver that maximizes protein strictly under ₹50/day,
+So that I maintain muscle even during severe financial crunches.
+
+Acceptance Criteria:
+- GIVEN the optimizer view
+- WHEN the student taps '₹50 Broke Challenge'
+- THEN GET /api/optimizer/50-rupee-challenge returns an ultra-lean staple combo (Sattu drink + Soya chunks + Peanuts) delivering over 65g protein for under ₹48.","","Student Budget Protein Optimizer","3","Medium","Sprint 2","50-rupee-challenge,extreme-budget,month-end,sprint2","To Do"
+"Story","US-10: One-Click 7-Day Bulk Grocery Haul Generator","User Story:
+As a hosteler who visits the market once a week,
+I want to click 'Generate 7-Day Grocery List',
+So that I receive an aggregated raw shopping list with total quantities (e.g., 500g Sattu, 14 Eggs, 350g Oats) and bulk buying hacks.
+
+Acceptance Criteria:
+- GIVEN the Diet Plans view
+- WHEN the student clicks 'Generate 7-Day Grocery List'
+- THEN a modal opens displaying aggregated weekly spend, average daily cost, bulk shopping items with shelf-life tags, and campus procurement tips (e.g., buying a 30-egg tray to save ₹2/egg).","","7-Day Diet Planner & Procurement","5","High","Sprint 2","grocery-list,bulk-haul,shopping-tips,sprint2","To Do"
+"Story","US-14: Budget-Saving Ingredient Swaps on Meal Cards","User Story:
+As a student looking to save extra pocket money,
+I want each meal card to feature a 'Budget-Saving Swap' tip,
+So that I know how to trim costs if my funds run low before month-end.
+
+Acceptance Criteria:
+- GIVEN any active day's meal cards
+- WHEN the card renders
+- THEN a dedicated green-bordered tip box suggests a practical money-saving swap (e.g., 'Swap 100g paneer for 60g soya chunks to save ₹28 while gaining +6g protein').","","7-Day Diet Planner & Procurement","3","Medium","Sprint 2","money-saving,budget-tips,meal-card,sprint2","To Do"
+"Story","US-16: Privacy-First Campus & Hostel Squad Leaderboards","User Story:
+As a hosteler lifting with floor-mates,
+I want to join or create a private college squad with an invite code,
+So that we can compete on consistency streaks and XP without revealing sensitive biometric weights.
+
+Acceptance Criteria:
+- GIVEN the `#/squad` view
+- WHEN a user creates a squad or enters an invite code
+- THEN they join the squad leaderboard; rankings show XP and streak days only, completely anonymizing body weight and personal medical notes.","","Gamification, Squads & AI Buddy","8","Medium","Sprint 2","squads,leaderboard,peer-accountability,privacy,sprint2","To Do"
+"Story","US-17: 'Broke but Building' Emergency Solver","User Story:
+As a student with random loose change in my pocket (e.g., ₹15 or ₹25),
+I want to enter that exact amount and instantly receive the highest-protein street or canteen snack available,
+So that I don't buy junk chips.
+
+Acceptance Criteria:
+- GIVEN the `#/broke-building` interactive tool
+- WHEN the student enters an amount between ₹10 and ₹50
+- THEN POST /api/genz/broke-building returns street-smart combos (e.g., ₹15 = 2 Boiled Eggs with black pepper or 40g roasted bhuna chana).","","Gamification, Squads & AI Buddy","3","Medium","Sprint 2","broke-building,street-protein,emergency-solver,sprint2","To Do"
+"Story","US-18: Conversational AI Fitness Buddy (Campus & Hostel Engine)","User Story:
+As a confused college lifter,
+I want to chat with an AI buddy in natural student lingo,
+So that I can ask questions about kettle cooking, mess food survival, and cheap protein on campus.
+
+Acceptance Criteria:
+- GIVEN the `#/assistant` chat view
+- WHEN the user sends a query (e.g., 'How to get 30g protein for ₹20 in my room?')
+- THEN POST /api/ai/chat responds with structured, realistic advice citing verified Indian staples, with zero hallucination.","","Gamification, Squads & AI Buddy","8","Medium","Sprint 2","ai-buddy,gemini,chatbot,hostel-expert,sprint2","To Do"
+"Story","US-19: Spotify-Style 'Fitness Wrapped' Monthly Recap Card","User Story:
+As an active student user,
+I want a shareable graphical summary card of my monthly progress (total grams of protein consumed, money saved, consistency streak),
+So that I can post it on Instagram or WhatsApp stories.
+
+Acceptance Criteria:
+- GIVEN the `#/wrapped` view
+- WHEN the monthly recap generates
+- THEN a visually striking card displays total protein consumed (kg), campus ranking percentile, money saved vs. whey protein, and a 'Share to Story' download button.","","Gamification, Squads & AI Buddy","5","Low","Sprint 2","wrapped,monthly-recap,viral-loop,social-share,sprint2","To Do"
+"Story","US-20: Hostel Mess Menu OCR & Plate Vision Helper","User Story:
+As a hosteler eating at a campus mess,
+I want to upload a photo of the weekly mess noticeboard menu,
+So that the AI can highlight which dishes have the highest protein content.
+
+Acceptance Criteria:
+- GIVEN the `#/optimizer` or `#/assistant` tool
+- WHEN a student uploads an image of a mess menu schedule
+- THEN POST /api/genz/vision-menu parses the meal text, identifies protein-rich options (Dal, Rajma, Chole, Dahi, Paneer day), and advises supplemental staples to bridge the protein gap.","","Gamification, Squads & AI Buddy","8","Low","Sprint 2","vision-ocr,mess-menu,multimodal,ai,sprint2","To Do"

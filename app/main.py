@@ -107,6 +107,22 @@ async def download_jira_csv():
             )
     return HTMLResponse(status_code=404, content="Jira CSV import file not found")
 
+@app.get("/download/prd-docx")
+async def download_prd_docx():
+    candidates = [
+        STATIC_DIR / "downloads" / "PROTOMANIA_Product_Strategy_and_PRD.docx",
+        Path.cwd() / "app" / "static" / "downloads" / "PROTOMANIA_Product_Strategy_and_PRD.docx",
+        Path("/var/task/app/static/downloads/PROTOMANIA_Product_Strategy_and_PRD.docx")
+    ]
+    for p in candidates:
+        if p.exists():
+            return FileResponse(
+                path=str(p),
+                filename="PROTOMANIA_Product_Strategy_and_PRD.docx",
+                media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+    return HTMLResponse(status_code=404, content="PRD Word document not found")
+
 # Catch-all client-side router fallback so direct URLs like /dashboard, /optimizer, /meals, /workouts, /wrapped, /developers work seamlessly
 @app.get("/{full_path:path}", response_class=HTMLResponse)
 async def catch_all(full_path: str):

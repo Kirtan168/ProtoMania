@@ -1,0 +1,96 @@
+﻿"Issue Type","Summary","Description","Epic Name","Epic Link","Story Points","Priority","Sprint","Labels","Status"
+"Epic","EPIC-FUT: Future Campus Innovations & Mess Integration","Theme: Advanced Campus Intelligence, Mess Integrations, and Zero-Friction Automation.
+
+Goal: Extend PROTOMANIA into an indispensable campus utility by integrating directly with hostel mess menus, camera vision OCR, WhatsApp conversational logging, and campus offline commerce partnerships.
+
+Scope: Hostel mess timetable parser, noticeboard OCR camera scanner, Quick-Commerce cart export, WhatsApp bot, roommate expense splitter, campus tuck shop QR discount pass, exam week fuel mode, crowd-sourced mess ratings, micronutrient radar, and community kettle recipe hub.","Future Campus Innovations & Mess Integration","","","High","Roadmap / Future Sprints","future-roadmap,epic,campus-mess,innovation","Backlog"
+"Story","FUT-01: Interactive Hostel Mess Menu Integration & Deficit Compensator","User Story:
+As a hostel resident eating mandatory mess food,
+I want to select my university/hostel or input my hostel's weekly mess timetable on the diet page,
+So that the app automatically calculates how much protein the mess provides and recommends the exact cheap snacks needed to bridge the remaining deficit within my budget.
+
+Acceptance Criteria:
+- GIVEN the student navigates to the Diet Plans page (`#/meals`)
+- WHEN they switch to 'Mess Survival Mode' and input their weekly mess schedule (e.g., Tuesday Lunch: Kadhi Pakoda + Rice + Salad)
+- THEN the system calculates the mess nutritional yield (~8g protein, 520 kcal), flags the protein deficit (e.g., Need +72g more protein to hit 80g target), and algorithmically generates supplemental pocket-money snacks (e.g., 50g Sattu shake + 2 boiled eggs = +25g protein for ₹22) to complete the day within their declared stipend.","","Future Campus Innovations & Mess Integration","8","High","Roadmap / Future Sprints","mess-menu,deficit-calculator,hostel-mode,future","Backlog"
+"Story","FUT-02: Mess Noticeboard Camera OCR & WhatsApp PDF Menu Importer","User Story:
+As a lazy hosteler who doesn't want to type out a 7-day mess timetable manually,
+I want to snap a photo of the printed hostel mess noticeboard (or upload a PDF sent on the hostel WhatsApp group),
+So that Vision AI parses the schedule into my weekly meal planner in under 5 seconds.
+
+Acceptance Criteria:
+- GIVEN the Mess Menu settings page
+- WHEN the student uploads an image or PDF of their mess timetable
+- THEN the multimodal OCR pipeline extracts day-by-day Breakfast, Lunch, Snacks, and Dinner, maps the Indian dish names (e.g., Rajma, Aloo Gobi, Sambhar, Egg Curry), displays a preview for user confirmation, and populates the 7-day schedule.","","Future Campus Innovations & Mess Integration","8","High","Roadmap / Future Sprints","vision-ocr,camera-scanner,multimodal,future","Backlog"
+"Story","FUT-03: Campus Quick-Commerce (Blinkit/Zepto/Instamart) 1-Click Cart Export","User Story:
+As a student viewing my generated 7-Day Bulk Grocery Haul,
+I want to click 'Export to Blinkit / Zepto / Instamart',
+So that all raw items (e.g., 500g Sattu, 30-egg crate, 1kg Rolled Oats) are pre-loaded into an online grocery cart with student discount codes applied.
+
+Acceptance Criteria:
+- GIVEN the 7-day grocery modal (`#/meals`)
+- WHEN the student clicks 'Buy Wholesale on Quick-Commerce'
+- THEN the system generates a deep-link with SKU mappings to local delivery apps, sorting by the cheapest vendor available in the campus pincode.","","Future Campus Innovations & Mess Integration","5","Medium","Roadmap / Future Sprints","quick-commerce,grocery-cart,affiliate,future","Backlog"
+"Story","FUT-04: WhatsApp & Telegram Conversational Micro-Logging Bot","User Story:
+As an active student who forgets to open the website after every meal,
+I want to send a quick WhatsApp text or voice note (e.g., 'Bhai 2 boiled ande aur ek glass sattu piya'),
+So that my daily dashboard automatically updates and awards +50 XP without opening a browser.
+
+Acceptance Criteria:
+- GIVEN a student linked via their mobile number
+- WHEN they message the PROTOMANIA WhatsApp bot in English, Hindi, or Hinglish
+- THEN NLP extracts the food items, calculates protein and calories, updates their database meal_logs, and replies with an instant summary: 'Logged 23g Protein! You have 42g left to hit today\'s target. +50 XP!'","","Future Campus Innovations & Mess Integration","8","High","Roadmap / Future Sprints","whatsapp-bot,micro-logging,nlp,retention,future","Backlog"
+"Story","FUT-05: Roommate & Flatmate Shared Cooking Expense Splitter","User Story:
+As a student sharing an apartment or hostel floor with gym buddies,
+I want to link my profile with my flatmates for shared bulk cooking (e.g., boiling 12 eggs or making a 6-serving chicken curry),
+So that the system splits the ingredient costs equally while logging individual protein shares accurately.
+
+Acceptance Criteria:
+- GIVEN a group of 2–4 flatmates linked in a shared cooking squad
+- WHEN one user logs a batch meal (e.g., Batch: Besan Chilla for 3 people)
+- THEN the grocery expense is split across their pocket-money trackers, and each user receives their individual macro allocation.","","Future Campus Innovations & Mess Integration","5","Medium","Roadmap / Future Sprints","roommates,expense-splitter,batch-cooking,future","Backlog"
+"Story","FUT-06: Campus Tuck Shop / Local Kirana QR Code Discount Pass","User Story:
+As a broke student buying daily eggs or milk from the campus tuck shop,
+I want to scan a PROTOMANIA Student Pass QR code at partnered campus stores,
+So that I receive a 5%–10% discount on healthy high-protein staples.
+
+Acceptance Criteria:
+- GIVEN the student's mobile dashboard
+- WHEN they present their digital 'ProtoPass QR' to a verified campus tuck shop vendor
+- THEN the merchant scans it, applies the negotiated student discount, and logs the purchase directly into the student's food budget.","","Future Campus Innovations & Mess Integration","5","Medium","Roadmap / Future Sprints","campus-tuckshop,qr-pass,loyalty,discounts,future","Backlog"
+"Story","FUT-07: Exam-Week Late-Night 'Brain Fuel & Anti-Carb-Coma' Mode","User Story:
+As an engineering or medical student during mid-term and semester exams,
+I want an 'Exam-Week Brain Fuel' toggle,
+So that the meal planner avoids heavy, sleep-inducing refined carbs (preventing afternoon lethargy) and recommends light, sustained-energy protein snacks with caffeine hacks.
+
+Acceptance Criteria:
+- GIVEN the Living Mode switcher
+- WHEN the student selects 'Exam Week'
+- THEN the planner eliminates high-glycemic lethargy-inducing heavy meals (e.g., heavy mess fried rice), prioritizing roasted chana, dark roast black coffee, dahi with fruits, and light chillas designed to sustain focus without afternoon slumps.","","Future Campus Innovations & Mess Integration","3","Medium","Roadmap / Future Sprints","exam-week,brain-fuel,caffeine-hacks,focus,future","Backlog"
+"Story","FUT-08: College Mess 'Crowd-Sourced Food Quality & Protein Rating'","User Story:
+As a hosteler walking into the canteen,
+I want to view live ratings from my college peers on today's mess food (e.g., 'Is today\'s mess dal watery or thick?', 'How oily is the egg bhurji?'),
+So that I know whether to eat in the mess or activate my backup kettle meal.
+
+Acceptance Criteria:
+- GIVEN the Mess Menu tab on `#/meals`
+- WHEN students on the same campus vote on today's meal quality (1 to 5 stars + thickness/oil tags)
+- THEN a live community badge displays: 'Today\'s Lunch: Watery Dal Alert (Estimated only 4g protein) — Backup snack recommended.'","","Future Campus Innovations & Mess Integration","5","Low","Roadmap / Future Sprints","mess-rating,crowd-sourced,canteen-quality,future","Backlog"
+"Story","FUT-09: Indian Student Micronutrient Deficiency Radar (Vit B12, D3, Iron)","User Story:
+As a student feeling constant fatigue,
+I want the system to track common Indian vegetarian deficiencies (Vitamin B12, Vitamin D3, Iron, Zinc),
+So that my diet plan incorporates low-cost dietary sources (fortified milk, sunlight timings, amla, curry leaves) without expensive blood panels.
+
+Acceptance Criteria:
+- GIVEN a vegetarian or vegan student profile
+- WHEN the optimizer evaluates their 7-day intake
+- THEN an advisory card warns about common bioavailability bottlenecks (e.g., non-heme iron absorption) and suggests pairing chana with lemon/vitamin C to double absorption.","","Future Campus Innovations & Mess Integration","5","Low","Roadmap / Future Sprints","micronutrients,b12,vitamin-d,iron,health,future","Backlog"
+"Story","FUT-10: Community Hostel Kettle Hack Recipe Voting & Submissions","User Story:
+As a creative hosteler who invented a clever kettle cooking technique,
+I want to submit my recipe (e.g., 'Kettle Poached Eggs on Toasted Bread' or 'Oatmeal Sattu Mug Cake'),
+So that other college students across India can vote on it and have it featured in the official budget planner.
+
+Acceptance Criteria:
+- GIVEN the Community Hub view
+- WHEN a user posts a recipe with prep time, rupee cost, and photo
+- THEN peer students can upvote; recipes reaching 100+ campus upvotes automatically enter the knapsack food catalog as verified community meals.","","Future Campus Innovations & Mess Integration","5","Low","Roadmap / Future Sprints","ugc,community-recipes,kettle-hacks,voting,future","Backlog"

@@ -123,6 +123,22 @@ async def download_prd_docx():
             )
     return HTMLResponse(status_code=404, content="PRD Word document not found")
 
+@app.get("/download/future-stories-csv")
+async def download_future_stories_csv():
+    candidates = [
+        STATIC_DIR / "downloads" / "jira_future_user_stories.csv",
+        Path.cwd() / "app" / "static" / "downloads" / "jira_future_user_stories.csv",
+        Path("/var/task/app/static/downloads/jira_future_user_stories.csv")
+    ]
+    for p in candidates:
+        if p.exists():
+            return FileResponse(
+                path=str(p),
+                filename="jira_future_user_stories.csv",
+                media_type="text/csv"
+            )
+    return HTMLResponse(status_code=404, content="Future User Stories CSV file not found")
+
 # Catch-all client-side router fallback so direct URLs like /dashboard, /optimizer, /meals, /workouts, /wrapped, /developers work seamlessly
 @app.get("/{full_path:path}", response_class=HTMLResponse)
 async def catch_all(full_path: str):

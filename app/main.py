@@ -139,6 +139,25 @@ async def download_future_stories_csv():
             )
     return HTMLResponse(status_code=404, content="Future User Stories CSV file not found")
 
+@app.get("/download/prd-csv")
+@app.get("/download/confluence-csv")
+async def download_confluence_prd_csv():
+    candidates = [
+        STATIC_DIR / "downloads" / "confluence_prd_and_strategy.csv",
+        Path.cwd() / "app" / "static" / "downloads" / "confluence_prd_and_strategy.csv",
+        Path.cwd() / "public" / "static" / "downloads" / "confluence_prd_and_strategy.csv",
+        Path("/var/task/app/static/downloads/confluence_prd_and_strategy.csv"),
+        Path("/var/task/public/static/downloads/confluence_prd_and_strategy.csv")
+    ]
+    for p in candidates:
+        if p.exists():
+            return FileResponse(
+                path=str(p),
+                filename="confluence_prd_and_strategy.csv",
+                media_type="text/csv"
+            )
+    return HTMLResponse(status_code=404, content="Confluence PRD & Strategy CSV file not found")
+
 # Catch-all client-side router fallback so direct URLs like /dashboard, /optimizer, /meals, /workouts, /wrapped, /developers work seamlessly
 @app.get("/{full_path:path}", response_class=HTMLResponse)
 async def catch_all(full_path: str):
